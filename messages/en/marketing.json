@@ -257,5 +257,121 @@
       "primary": "Screen my hotel",
       "secondary": "Request a study"
     }
+  },
+  "caseStudy": {
+    "meta": {
+      "title": "Djerba case study",
+      "description": "A {rooms}-room beach hotel in Djerba with a pool, screened with our engine: plant size, payback range, CO₂ and what would change the answer."
+    },
+    "hero": {
+      "eyebrow": "Case study",
+      "title": "Djerba.",
+      "titleSub": "One hotel, screened honestly.",
+      "facts": "{rooms} rooms · Djerba · heated pool · {stars}-star beach hotel",
+      "photoAlt": "Illustration of a beach hotel by the sea in Djerba.",
+      "note": "A typical hotel, not a client. Its demand comes from our per-room profiles for Djerba."
+    },
+    "verdict": {
+      "label": "Verdict",
+      "plant": "{kwe} kWe engine + {kwc} kWc absorption chiller",
+      "payback": "Payback {range}, central {central} years"
+    },
+    "demand": {
+      "title": "Two days in the hotel's life.",
+      "lede": "The engine follows the hotel's electricity demand and switches off below half load. The grey area is demand; the colour is what the engine supplies.",
+      "summer": "Summer day",
+      "winter": "Winter day",
+      "summerNote": "Peak demand {peak} kW. The engine runs flat out from morning to midnight.",
+      "winterNote": "Demand only {low} to {high} kW. A big engine would sit below its minimum load.",
+      "chartLabel": "{season}: hourly electricity demand peaks at {peak} kW; the engine supplies up to {engine} kW.",
+      "legendDemand": "Hotel electricity demand",
+      "legendEngine": "Engine output",
+      "hours": "Hour of the day",
+      "kw": "kW"
+    },
+    "smaller": {
+      "title": "Why the plant got smaller.",
+      "lede": "Our first model sized the engine for summer. That engine idled most of the winter.",
+      "winter": {
+        "title": "Winter is the test",
+        "body": "In winter the hotel runs at {occupancy}% occupancy and needs only {low} to {high} kW of electricity, for {days} days a year."
+      },
+      "minLoad": {
+        "title": "Engines hate half load",
+        "body": "Below {pct}% of its rating, the engine switches off. A {oldKwe} kWe engine would be off most winter days."
+      },
+      "hours": {
+        "title": "Hours pay the bills",
+        "body": "The {oldKwe} kWe engine runs about {oldHours} full-load hours a year. The {kwe} kWe engine runs about {hours}."
+      },
+      "result": "The smaller plant pays back in about {central} years in the central case. The summer-sized one would take about {oldYears}."
+    },
+    "results": {
+      "title": "The results, as ranges.",
+      "lede": "Each rail runs from the favourable to the unfavourable case. The dot is the central case."
+    },
+    "options": {
+      "title": "Two ways to build it.",
+      "lede": "Most of the value is year-round hot water and pool heat, not summer cooling. So a smaller engine without a chiller can pay back faster.",
+      "trigeneration": "Trigeneration",
+      "chp": "CHP only",
+      "chpNote": "Hot water and pool heat, no chiller. The chiller can be added later.",
+      "trigenerationNote": "Electricity, hot water and some summer cooling.",
+      "plant": "Plant",
+      "payback": "Payback",
+      "capex": "Investment",
+      "savings": "Savings a year",
+      "co2": "CO₂ avoided a year",
+      "hours": "Full-load hours",
+      "noChiller": "no chiller",
+      "fte": "With FTE (eligibility unconfirmed)"
+    },
+    "moves": {
+      "title": "What moves the payback.",
+      "lede": "One input at a time, from the central {years} years."
+    },
+    "cta": {
+      "title": "Is your hotel like this one?",
+      "lede": "Screen it in two minutes, or ask for a study with your own bills.",
+      "primary": "Screen my hotel",
+      "secondary": "Request a study"
+    }
+  },
+  "about": {
+    "meta": {
+      "title": "About",
+      "description": "A small Tunisian team building an honest screening tool for hotel trigeneration."
+    },
+    "hero": {
+      "eyebrow": "About",
+      "title": "Screening,",
+      "titleSub": "honestly.",
+      "lede": "Trigeneration can cut a hotel's energy bill, but only in the right hotel. We built a tool that says so, with every assumption on the table."
+    },
+    "mission": {
+      "title": "What we believe.",
+      "items": {
+        "honest": { "title": "Say no early", "body": "Most hotels are not a fit yet. Telling them in two minutes saves everyone a costly study." },
+        "ranges": { "title": "Ranges, not promises", "body": "Every money and CO₂ figure is a range, with the central case marked and the sources cited." },
+        "independent": { "title": "Independent advice", "body": "We don't sell engines. We screen, study and compare installers' quotes for you." }
+      }
+    },
+    "team": {
+      "title": "The team.",
+      "lede": "Four people, four roles.",
+      "photo": "Photo of {name}",
+      "members": {
+        "mohamed": { "name": "Mohamed", "role": "Lead, platform and integration" },
+        "hamza": { "name": "Hamza", "role": "Energy engine and reports" },
+        "ahmed": { "name": "Ahmed", "role": "Sizing tool and dashboard" },
+        "gaith": { "name": "Gaith", "role": "Design and pages" }
+      }
+    },
+    "contact": {
+      "title": "Talk to us.",
+      "lede": "A question about your hotel, or about how we calculate? Write to us.",
+      "primary": "Request a study",
+      "email": "Email {email}"
+    }
   }
 }

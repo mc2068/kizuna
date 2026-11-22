@@ -50,6 +50,6 @@ test.describe('services and pricing', () => {
   test('ends with CTAs to the tool and the study request', async ({ page }) => {
     await page.goto('/services');
     await expect(page.getByRole('link', { name: 'Screen my hotel' })).toHaveAttribute('href', /^\/tool\?/);
-    await expect(page.getByRole('link', { name: 'Request a study' }).last()).toHaveAttribute('href', '/request-study');
+    await expect(page.getByRole('main').getByRole('link', { name: 'Request a study' }).last()).toHaveAttribute('href', '/request-study');
   });
 });
