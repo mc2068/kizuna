@@ -12,6 +12,7 @@ import type {
   LeadDetail,
   LeadFile,
   LeadFilters,
+  LeadCounts,
   LeadNote,
   LeadStatus,
   Profile,
@@ -45,8 +46,8 @@ export interface DataStore {
   insertLead(row: NewLead): Promise<string>;
   /** Newest first. Admins only, [] otherwise. */
   listLeads(query: LeadQuery): Promise<Lead[]>;
-  /** One status per lead. Admins only, [] otherwise. */
-  leadStatuses(): Promise<LeadStatus[]>;
+  /** Leads per status. Admins only, all zero otherwise. */
+  leadCounts(): Promise<LeadCounts>;
   lead(id: string): Promise<LeadDetail | null>;
   /** The mutations below log their own events; actorId is the signed-in admin. */
   setLeadStatus(id: string, status: LeadStatus, actorId: string): Promise<Lead>;
@@ -63,8 +64,17 @@ export function isSupabaseConfigured(): boolean {
 let chosen: DataStore | undefined;
 
 export function store(): DataStore {
-  chosen ??= isSupabaseConfigured() ? supabaseStore : fakeStore;
+  chosen ??= pick();
   return chosen;
+}
+
+function pick(): DataStore {
+  if (isSupabaseConfigured()) return supabaseStore;
+  // A production deploy with a missing variable must not quietly keep study requests in memory.
+  if (process.env.NODE_ENV === 'production' && process.env.ALLOW_FAKE_DB !== '1') {
+    throw new Error('Supabase is not configured: set NEXT_PUBLIC_SUPABASE_URL (or ALLOW_FAKE_DB=1 for a demo build).');
+  }
+  return fakeStore;
 }
 
 /** Tests only: force one adapter (undefined = choose from the environment again). */

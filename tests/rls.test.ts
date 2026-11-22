@@ -3,7 +3,7 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 import { DEMO_SHARE_TOKEN, DEMO_USERS } from '@/lib/db/fake/seed';
 import type { Supabase } from '@/lib/supabase/server';
-import { anonClient, clientFor, resetData, runSupabaseTests } from './supabase/local';
+import { anonClient, clientFor, resetData, runSupabaseTests, serviceClient } from './supabase/local';
 
 const project = { hotel_name: 'Hotel A', inputs: { rooms: 300 }, results: { engineKwe: 200 }, engine_version: 'test' };
 
@@ -28,7 +28,12 @@ describe.runIf(runSupabaseTests)('row-level security', () => {
     await resetData();
     anon = anonClient();
     [userA, userB, admin] = await Promise.all([clientFor('userA'), clientFor('userB'), clientFor('mohamed')]);
-    const { data, error } = await userA.from('projects').insert(project).select('id, share_token').single();
+    // Projects are inserted by the server (service role), like saveProject does.
+    const { data, error } = await serviceClient()
+      .from('projects')
+      .insert({ ...project, owner_id: DEMO_USERS.userA.id })
+      .select('id, share_token')
+      .single();
     if (error) throw error;
     projectA = data;
     const upload = await admin.storage.from('lead-files').upload(filePath, new Blob(['%PDF-1.4 rls']), { contentType: 'application/pdf' });
@@ -49,12 +54,20 @@ describe.runIf(runSupabaseTests)('row-level security', () => {
       const del = await userB.from('projects').delete().eq('id', projectA.id).select('id');
       expect(del.data).toEqual([]);
       const still = await userA.from('projects').select('hotel_name').eq('id', projectA.id).single();
-      expect(still.data?.hotel_name).toBe('Hotel A');
+      expect(still.data?.hotel_name).not.toBe('Hijacked');
     });
 
-    it('nobody creates a project for someone else, and anonymous cannot create one', async () => {
+    it('nobody inserts a project directly: results are computed on the server', async () => {
+      expect((await userA.from('projects').insert({ ...project, owner_id: DEMO_USERS.userA.id })).error).not.toBeNull();
       expect((await userB.from('projects').insert({ ...project, owner_id: DEMO_USERS.userA.id })).error).not.toBeNull();
       expect((await anon.from('projects').insert(project)).error).not.toBeNull();
+    });
+
+    it('the owner may rename their project but not change its results or share token', async () => {
+      const rename = await userA.from('projects').update({ hotel_name: 'Hotel A, renamed' }).eq('id', projectA.id).select('hotel_name');
+      expect(rename.data).toEqual([{ hotel_name: 'Hotel A, renamed' }]);
+      expect((await userA.from('projects').update({ results: { engineKwe: 9999 } }).eq('id', projectA.id)).error).not.toBeNull();
+      expect((await userA.from('projects').update({ share_token: 'mine' }).eq('id', projectA.id)).error).not.toBeNull();
     });
 
     it('the share link RPC returns only the five public fields, to anyone', async () => {
@@ -96,6 +109,17 @@ describe.runIf(runSupabaseTests)('row-level security', () => {
     it('an admin cannot write a note in another admin’s name', async () => {
       const forged = await admin.from('lead_notes').insert({ lead_id: 'L-1047', body: 'hi', author_id: DEMO_USERS.hamza.id });
       expect(forged.error).not.toBeNull();
+    });
+
+    it('an admin changes only the status and owner, never the request itself', async () => {
+      for (const patch of [{ results: {} }, { email: 'x@y.example' }, { consent: true }]) {
+        expect((await admin.from('leads').update(patch).eq('id', 'L-1047')).error, Object.keys(patch)[0]).not.toBeNull();
+      }
+    });
+
+    it('an admin uploads only under an existing lead', async () => {
+      const r = await admin.storage.from('lead-files').upload('L-9999/orphan.pdf', new Blob(['x']));
+      expect(r.error).not.toBeNull();
     });
 
     it('a lead can only be owned by an admin', async () => {

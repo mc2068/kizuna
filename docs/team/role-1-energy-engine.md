@@ -121,14 +121,16 @@ in src/components/layout/ (Role 3), used by src/app/layout.tsx; <AdminShell/> fo
 CONTRACT 3, data (Role 4, Supabase; typed functions in src/lib/db/*.ts; everyone calls these, never
 Supabase directly). Tables: profiles(id = auth uid, role 'user' | 'admin', full_name);
 projects(id, owner_id, hotel_name, inputs jsonb, results jsonb, engine_version, share_token unique,
-created_at, updated_at); leads(id, project_id null, hotel_name, city, rooms, contact_name, email, phone,
-message, consent bool, inputs jsonb, results jsonb, status 'new'|'contacted'|'quoted'|'won'|'lost',
-owner_id -> admin profile, created_at); lead_notes(id, lead_id, author_id, body, created_at);
+created_at, updated_at); leads(id text 'L-1001', project_id null, hotel_name, city, rooms, contact_name,
+email, phone, message, consent bool, inputs jsonb, results jsonb, engine_version, status
+'new'|'contacted'|'quoted'|'won'|'lost', owner_id -> admin profile (default: fewest open leads), created_at); lead_notes(id, lead_id, author_id, body, created_at);
 lead_events(id, lead_id, kind 'created'|'status'|'owner'|'email'|'note'|'file', data jsonb, actor_id,
 created_at); lead_files(id, lead_id, path, name, size, uploaded_by, created_at). Private Storage bucket
 'lead-files', admins only. RLS: users see only their own projects; anyone can read a project by its
 share_token through getSharedProject; leads, notes, events, files: admins only (insert of a lead is open
-via the server action). Functions: getMyProjects(), getProject(id), saveProject({hotelName, inputs}),
+via the server action). Projects and leads are inserted by the server with the service role (results are
+server-computed); owners may only rename or delete a project, admins may only change a lead's status and
+owner. Database triggers log the created, status, owner, note and file events; the server logs emails. Functions: getMyProjects(), getProject(id), saveProject({hotelName, inputs}),
 deleteProject(id), getSharedProject(token), submitStudyRequest(form) -> {ok, leadId} | {ok:false, error},
 listLeads({status?, city?, mine?}), getLeadCounts(), getLead(id), setLeadStatus(id, status),
 assignLead(id, ownerId), addLeadNote(id, body), uploadLeadFile(id, file), getLeadFileUrl(fileId),

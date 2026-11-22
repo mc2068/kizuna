@@ -2,6 +2,7 @@ import { ENGINE_VERSION, sizeHotel } from '@/lib/engine';
 import { currentAdmin, requireAdmin } from './auth';
 import { store } from './store';
 import {
+  emptyLeadCounts,
   LEAD_STATUSES,
   type Lead,
   type LeadCounts,
@@ -32,7 +33,7 @@ export async function submitStudyRequest(form: StudyRequestForm | FormData): Pro
   }
   const f = parsed.data;
   // Honeypot filled: pretend it worked, store nothing.
-  if (f.website) return { ok: true, leadId: crypto.randomUUID() };
+  if (f.website) return { ok: true, leadId: `L-${1000 + Math.floor(Math.random() * 9000)}` };
 
   const inputs = { rooms: f.rooms, city: f.city, pool: f.pool, elecPrice: f.elecPrice };
   // Link a saved project only if it belongs to the person sending the request.
@@ -64,10 +65,8 @@ export async function listLeads(filters: LeadFilters = {}): Promise<Lead[]> {
 
 /** Number of leads per status (all zero for non-admins). */
 export async function getLeadCounts(): Promise<LeadCounts> {
-  const counts = Object.fromEntries(LEAD_STATUSES.map((s) => [s, 0])) as LeadCounts;
-  if (!(await currentAdmin())) return counts;
-  for (const s of await store().leadStatuses()) counts[s] += 1;
-  return counts;
+  if (!(await currentAdmin())) return emptyLeadCounts();
+  return store().leadCounts();
 }
 
 /** Admins only (others get null). Notes, events and files newest first. */

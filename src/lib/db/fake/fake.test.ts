@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { getCurrentUser } from '@/lib/db';
-import { describeDataLayer } from '../contract';
+import { describeDataLayer } from '../contract.suite';
 import { setStoreForTests } from '../store';
 import { resetFakeDb, setFakeUser } from './memory';
 import { DEMO_USERS } from './seed';

@@ -27,8 +27,10 @@ export function renderSeedSql(): string {
     '-- Local development only: invented hotels, people and placeholder team emails.',
     '-- The demo users have no password; sign in with a magic link (Mailpit: http://127.0.0.1:54324).',
     '',
-    '-- Historic rows: skip the triggers so the seeded history is not logged twice.',
-    'set session_replication_role = replica;',
+    '-- The seeded history is written below: switch off the event triggers so it is not logged twice.',
+    'alter table public.leads disable trigger leads_log_created;',
+    'alter table public.lead_notes disable trigger lead_notes_log;',
+    'alter table public.lead_files disable trigger lead_files_log;',
     '',
     'insert into auth.users (instance_id, id, aud, role, email, encrypted_password, email_confirmed_at,',
     '  raw_app_meta_data, raw_user_meta_data, created_at, updated_at,',
@@ -52,7 +54,8 @@ export function renderSeedSql(): string {
     '',
     'insert into public.profiles (id, role, full_name, created_at) values',
     values(people.map((p, i) => [lit(p.id), lit(p.role), lit(p.fullName), joined(i)])),
-    'on conflict (id) do nothing;',
+    '-- on_auth_user_created already made each profile with role user: set the real role.',
+    'on conflict (id) do update set role = excluded.role, full_name = excluded.full_name, created_at = excluded.created_at;',
     '',
     'insert into public.projects (id, owner_id, hotel_name, inputs, results, engine_version, share_token, created_at, updated_at) values',
     values(
@@ -86,7 +89,9 @@ export function renderSeedSql(): string {
     values(t.files.map((f) => [lit(f.leadId), lit(f.path), lit(f.name), lit(f.size), lit(f.uploadedBy), lit(f.createdAt)])),
     ';',
     '',
-    'set session_replication_role = origin;',
+    'alter table public.leads enable trigger leads_log_created;',
+    'alter table public.lead_notes enable trigger lead_notes_log;',
+    'alter table public.lead_files enable trigger lead_files_log;',
     '',
   ];
   return out.join('\n');

@@ -39,7 +39,7 @@ export async function createUserClient(): Promise<Supabase> {
 
 let serviceClient: Supabase | undefined;
 
-/** Bypasses RLS. Only for writes no visitor may make directly: inserting a study request. */
+/** Bypasses RLS. Only for writes no visitor may make directly: rows holding server-computed results. */
 export function createServiceClient(): Supabase {
   serviceClient ??= createClient<Database>(url(), env('SUPABASE_SERVICE_ROLE_KEY'), {
     auth: { persistSession: false, autoRefreshToken: false },

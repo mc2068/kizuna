@@ -4,7 +4,7 @@ import { execSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { createClient } from '@supabase/supabase-js';
 import pg from 'pg';
-import type { DemoUser } from '@/lib/db/contract';
+import type { DemoUser } from '@/lib/db/contract.suite';
 import { DEMO_USERS } from '@/lib/db/fake/seed';
 import type { Supabase } from '@/lib/supabase/server';
 import type { Database } from '@/lib/supabase/types';

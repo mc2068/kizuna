@@ -1,12 +1,13 @@
 // The Supabase DataStore. Every read and write runs as the signed-in visitor, so the RLS policies in
-// supabase/migrations decide what they see; only insertLead uses the service role.
+// supabase/migrations decide what they see. Only the two inserts whose rows carry server-computed
+// results use the service role: insertProject (for the verified user) and insertLead.
 // Lead events (created, status, owner, note, file) are written by database triggers.
 import type { PostgrestError } from '@supabase/supabase-js';
 import type { City, SizingInput, SizingResult } from '@/lib/engine';
 import { createServiceClient, createUserClient } from '@/lib/supabase/server';
-import type { Tables } from '@/lib/supabase/types';
+import type { Tables, TablesUpdate } from '@/lib/supabase/types';
 import type { DataStore } from '../store';
-import type { Lead, LeadEvent, LeadFile, LeadNote, Profile, Project } from '../types';
+import { emptyLeadCounts, LEAD_STATUSES, type Lead, type LeadEvent, type LeadFile, type LeadNote, type Profile, type Project } from '../types';
 import { isUuid, safeFileName } from '../validation';
 
 const BUCKET = 'lead-files';
@@ -73,6 +74,15 @@ const toFile = (r: Tables<'lead_files'>): LeadFile => ({
   createdAt: r.created_at,
 });
 
+/** The two columns an admin may change (see the column grants in the migration). */
+async function updateLead(id: string, patch: Pick<TablesUpdate<'leads'>, 'status' | 'owner_id'>): Promise<Lead> {
+  const sb = await createUserClient();
+  const { data, error } = await sb.from('leads').update(patch).eq('id', id).select('*').maybeSingle();
+  if (error) fail(error);
+  if (!data) throw new Error('Lead not found.');
+  return toLead(data);
+}
+
 const newestFirst = <T extends { createdAt: string }>(a: T, b: T) => b.createdAt.localeCompare(a.createdAt);
 
 export const supabaseStore: DataStore = {
@@ -112,7 +122,7 @@ export const supabaseStore: DataStore = {
     const sb = await createUserClient();
     const { data: auth } = await sb.auth.getUser();
     if (!auth.user) throw new Error('You must be signed in.');
-    const { data, error } = await sb
+    const { data, error } = await createServiceClient()
       .from('projects')
       .insert({ owner_id: auth.user.id, hotel_name: hotelName, inputs, results, engine_version: engineVersion })
       .select('*')
@@ -183,11 +193,18 @@ export const supabaseStore: DataStore = {
     return data.map(toLead);
   },
 
-  async leadStatuses() {
+  async leadCounts() {
     const sb = await createUserClient();
-    const { data, error } = await sb.from('leads').select('status');
-    if (error) fail(error);
-    return data.map((r) => r.status);
+    const counts = emptyLeadCounts();
+    // One count per status (exact, so it never stops at the API's row limit).
+    await Promise.all(
+      LEAD_STATUSES.map(async (status) => {
+        const { count, error } = await sb.from('leads').select('id', { count: 'exact', head: true }).eq('status', status);
+        if (error) fail(error);
+        counts[status] = count ?? 0;
+      }),
+    );
+    return counts;
   },
 
   async lead(id) {
@@ -209,21 +226,14 @@ export const supabaseStore: DataStore = {
     };
   },
 
+  // actorId is not needed: the triggers log auth.uid() as the actor.
   async setLeadStatus(id, status) {
-    const sb = await createUserClient();
-    const { data, error } = await sb.from('leads').update({ status }).eq('id', id).select('*').maybeSingle();
-    if (error) fail(error);
-    if (!data) throw new Error('Lead not found.');
-    return toLead(data);
+    return updateLead(id, { status });
   },
 
   async assignLead(id, ownerId) {
     if (!isUuid(ownerId)) throw new Error('A lead can only be owned by an admin.');
-    const sb = await createUserClient();
-    const { data, error } = await sb.from('leads').update({ owner_id: ownerId }).eq('id', id).select('*').maybeSingle();
-    if (error) fail(error);
-    if (!data) throw new Error('Lead not found.');
-    return toLead(data);
+    return updateLead(id, { owner_id: ownerId });
   },
 
   async addLeadNote(id, body, actorId) {

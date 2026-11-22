@@ -1,7 +1,7 @@
 // The in-memory DataStore: used when Supabase is not configured, so every page has data with
 // no database. It applies the same access rules as the RLS policies in supabase/migrations.
 import type { DataStore, LeadQuery, NewLead, NewProject } from '../store';
-import type { Lead, LeadEvent, LeadFile, LeadStatus, Project } from '../types';
+import { emptyLeadCounts, type Lead, type LeadEvent, type LeadFile, type LeadStatus, type Project } from '../types';
 import { safeFileName } from '../validation';
 import { db, newId, now } from './memory';
 import { ADMINS, toProfile } from './seed';
@@ -98,8 +98,10 @@ export const fakeStore: DataStore = {
       .map((l) => structuredClone(l));
   },
 
-  async leadStatuses() {
-    return isAdmin() ? db().leads.map((l) => l.status) : [];
+  async leadCounts() {
+    const counts = emptyLeadCounts();
+    if (isAdmin()) for (const l of db().leads) counts[l.status] += 1;
+    return counts;
   },
 
   async lead(id) {

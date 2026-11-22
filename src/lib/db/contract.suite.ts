@@ -182,11 +182,11 @@ export function describeDataLayer(driver: ContractDriver): void {
       expect(Object.keys(r.fieldErrors ?? {}).sort()).toEqual(['consent', 'email']);
     });
 
-    it('silently drops spam that fills the honeypot', async () => {
+    it('silently drops spam that fills the honeypot, with an id that looks real', async () => {
       await as('mohamed');
       const before = (await listLeads()).length;
       const r = await submitStudyRequest({ ...validRequest, website: 'http://spam.example' });
-      expect(r.ok).toBe(true);
+      expect(r).toMatchObject({ ok: true, leadId: expect.stringMatching(/^L-\d{4}$/) });
       expect((await listLeads()).length).toBe(before);
     });
   });

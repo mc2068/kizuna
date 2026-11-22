@@ -253,17 +253,19 @@ create policy "Read own profile" on public.profiles
 create policy "Admins read all profiles" on public.profiles
   for select to authenticated using ((select public.is_admin()));
 
--- Projects: the owner does everything with their own rows; nobody else sees them
--- (the share link goes through get_shared_project).
+-- Projects: the owner reads, renames and deletes their own rows; nobody else sees them (the share
+-- link goes through get_shared_project). Results are computed on the server, so visitors cannot
+-- insert a project or change its results: saveProject inserts with the service role for the
+-- verified user, and the only column a visitor may update is hotel_name.
 create policy "Owners read own projects" on public.projects
   for select to authenticated using (owner_id = (select auth.uid()));
-create policy "Owners create own projects" on public.projects
-  for insert to authenticated with check (owner_id = (select auth.uid()));
-create policy "Owners update own projects" on public.projects
+create policy "Owners rename own projects" on public.projects
   for update to authenticated
   using (owner_id = (select auth.uid())) with check (owner_id = (select auth.uid()));
 create policy "Owners delete own projects" on public.projects
   for delete to authenticated using (owner_id = (select auth.uid()));
+revoke insert, update on public.projects from anon, authenticated;
+grant update (hotel_name) on public.projects to authenticated;
 
 -- Leads: admins only. No insert policy: study requests are inserted by the server (service role).
 create policy "Admins read leads" on public.leads
@@ -272,6 +274,9 @@ create policy "Admins update leads" on public.leads
   for update to authenticated using ((select public.is_admin())) with check ((select public.is_admin()));
 create policy "Admins delete leads" on public.leads
   for delete to authenticated using ((select public.is_admin()));
+-- What the pipeline changes. The request itself (contact, inputs, results, consent) stays as sent.
+revoke insert, update on public.leads from anon, authenticated;
+grant update (status, owner_id) on public.leads to authenticated;
 
 create policy "Admins read notes" on public.lead_notes
   for select to authenticated using ((select public.is_admin()));
@@ -294,6 +299,8 @@ revoke execute on function public.next_lead_owner() from public, anon, authentic
 revoke execute on function public.handle_new_user() from public, anon, authenticated;
 revoke execute on function public.check_lead_owner() from public, anon, authenticated;
 revoke execute on function public.log_lead_event() from public, anon, authenticated;
+revoke execute on function public.get_shared_project(text) from public;
+revoke execute on function public.is_admin() from public, anon;
 grant execute on function public.get_shared_project(text) to anon, authenticated;
 grant execute on function public.is_admin() to authenticated;
 
@@ -304,7 +311,12 @@ on conflict (id) do nothing;
 
 create policy "Admins read lead files" on storage.objects
   for select to authenticated using (bucket_id = 'lead-files' and (select public.is_admin()));
+-- Objects live under <lead id>/..., and only for a lead that exists.
 create policy "Admins upload lead files" on storage.objects
-  for insert to authenticated with check (bucket_id = 'lead-files' and (select public.is_admin()));
+  for insert to authenticated with check (
+    bucket_id = 'lead-files'
+    and (select public.is_admin())
+    and exists (select 1 from public.leads where id = (storage.foldername(name))[1])
+  );
 create policy "Admins delete lead files" on storage.objects
   for delete to authenticated using (bucket_id = 'lead-files' and (select public.is_admin()));
