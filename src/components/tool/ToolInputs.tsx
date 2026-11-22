@@ -211,7 +211,7 @@ export function ToolInputs() {
         <div className="mt-3">
           <label
             htmlFor={ids.priceAmount}
-            className={`block text-[13px] ${flat ? 'text-[var(--ink,#1d1d1f)]' : 'text-[var(--faint,#86868b)]'}`}
+            className={`block text-[13px] ${flat ? 'text-[var(--ink,#1d1d1f)]' : 'text-[var(--muted,#6e6e73)]'}`}
           >
             {t('price.amountLabel')}
           </label>
@@ -247,7 +247,7 @@ export function ToolInputs() {
               }}
               className="w-32 rounded-xl border border-[var(--line,#d2d2d7)] bg-white px-3 py-2 text-base tabular-nums disabled:bg-[var(--tile,#f5f5f7)] disabled:text-[var(--faint,#86868b)] aria-invalid:border-[var(--heat,#e5484d)] focus-visible:outline-4 focus-visible:outline-[rgba(0,125,250,.35)]"
             />
-            <span className={`text-[13px] ${flat ? 'text-[var(--muted,#6e6e73)]' : 'text-[var(--faint,#86868b)]'}`}>
+            <span className={`text-[13px] ${flat ? 'text-[var(--muted,#6e6e73)]' : 'text-[var(--muted,#6e6e73)]'}`}>
               {t('price.amountUnit')}
             </span>
           </div>

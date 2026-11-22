@@ -1,7 +1,48 @@
 // The result ranges the tool shows, in display order, and the axes their rails share.
 // Strings live under tool.results.metrics.<id> in messages/en/tool.json; numbers come from @/lib/present.
 import type { PlantOption, ScenarioResult } from '@/lib/engine';
-import { MAX_SHOWN_PAYBACK_YEARS } from '@/lib/present';
+import {
+  MAX_SHOWN_PAYBACK_YEARS,
+  RANGE_KIND,
+  formatHours,
+  formatKw,
+  formatPercent,
+  formatTnd,
+  formatTonnes,
+  formatRange,
+  formatYears,
+  type FormattedRange,
+  type RangeKey,
+  type RangeKind,
+} from '@/lib/present';
+
+const FORMAT: Record<RangeKind, (n: number) => string> = {
+  tnd: formatTnd,
+  years: formatYears,
+  kw: (n) => formatKw(n),
+  tonnes: formatTonnes,
+  percent: formatPercent,
+  hours: formatHours,
+};
+
+/**
+ * The present helper that formats one value of an engine field ("9 years", "1.75 M TND"): the same
+ * text formatRange() gives each end, so a tween can format the values in between.
+ */
+export function formatterFor(key: RangeKey): (n: number) => string {
+  return FORMAT[RANGE_KIND[key]];
+}
+
+/** A range's raw values in a fixed order, for tweens: [favourable, central, unfavourable]. */
+export function rangeValues(range: FormattedRange): [number, number, number] {
+  return [range.values.favourable, range.values.central, range.values.unfavourable];
+}
+
+/** formatRange(...).text for raw [favourable, central, unfavourable] values, e.g. mid-tween. */
+export function rangeText(key: RangeKey, [favourable, central, unfavourable]: readonly number[]): string {
+  const at = (v: number) => ({ [key]: v }) as unknown as ScenarioResult;
+  return formatRange({ favourable: at(favourable), central: at(central), unfavourable: at(unfavourable) }, key).text;
+}
 
 export type MetricId = 'payback' | 'capex' | 'savings' | 'co2' | 'flh' | 'pes' | 'peak';
 

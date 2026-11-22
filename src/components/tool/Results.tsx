@@ -9,6 +9,7 @@ import { formatRange, verdictTone, warningText } from '@/lib/present';
 import { AssumptionsTable } from './AssumptionsTable';
 import { ResultsCards, usePlantText } from './ResultsCards';
 import { ResultsOptions, badgeTone } from './ResultsOptions';
+import { Collapse, usePop } from './motion';
 import { fasterOption } from './results-metrics';
 import { useTool } from './ToolState';
 
@@ -25,10 +26,11 @@ function Verdict() {
   const { result } = useTool();
   const tone = verdictTone(result.verdict);
   const faster = fasterOption(result.options);
+  const badge = usePop<HTMLSpanElement>(tone);
 
   return (
-    <div className={`mt-12 border-l-4 pl-5 sm:pl-7 ${toneAccent[tone]}`}>
-      <span className={`inline-block rounded-full px-3 py-1.5 text-xs leading-none font-semibold ${badgeTone[tone]}`}>
+    <div className={`mt-12 border-l-4 pl-5 transition-colors duration-300 motion-reduce:transition-none sm:pl-7 ${toneAccent[tone]}`}>
+      <span ref={badge} className={`inline-block rounded-full px-3 py-1.5 text-xs leading-none font-semibold ${badgeTone[tone]}`}>
         {t(`verdict.${tone}`)}
       </span>
       <h3 className="mt-4 max-w-3xl text-3xl leading-[1.08] font-semibold sm:text-[44px]">
@@ -36,7 +38,7 @@ function Verdict() {
       </h3>
       <p className="mt-3 max-w-2xl text-lg text-[var(--muted,#6e6e73)]">{t(`results.verdict.${tone}.body`)}</p>
 
-      {result.warnings.length > 0 ? (
+      <Collapse show={result.warnings.length > 0}>
         <div className="mt-6 max-w-2xl rounded-2xl bg-[var(--tile,#f5f5f7)] px-5 py-4">
           <h4 className="font-sans text-sm font-semibold tracking-normal">{t('results.warnings')}</h4>
           <ul className="mt-2 space-y-1.5 text-[15px]">
@@ -48,13 +50,15 @@ function Verdict() {
             ))}
           </ul>
         </div>
-      ) : null}
+      </Collapse>
 
-      {faster ? (
-        <p className="mt-5 max-w-2xl text-[15px] tabular-nums">
-          {t('results.faster', { plant: plantText(faster), years: formatRange(faster, 'paybackYears').central })}
-        </p>
-      ) : null}
+      <Collapse show={faster != null}>
+        {faster ? (
+          <p className="mt-5 max-w-2xl text-[15px] tabular-nums">
+            {t('results.faster', { plant: plantText(faster), years: formatRange(faster, 'paybackYears').central })}
+          </p>
+        ) : null}
+      </Collapse>
     </div>
   );
 }
@@ -100,9 +104,11 @@ export function Results() {
     <>
       <Verdict />
       <ResultsCards option={result} />
-      {faster && result.options.trigeneration ? (
-        <ResultsOptions trigeneration={result.options.trigeneration} faster={faster} />
-      ) : null}
+      <Collapse show={faster != null && result.options.trigeneration != null}>
+        {faster && result.options.trigeneration ? (
+          <ResultsOptions trigeneration={result.options.trigeneration} faster={faster} />
+        ) : null}
+      </Collapse>
       <AssumptionsTable assumptions={result.assumptions} />
       <NextStep />
     </>

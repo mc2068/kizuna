@@ -4,11 +4,12 @@
 // central case (Contract 1 result.hourly). Tabs pick the need (electricity, hot water, cooling);
 // a segmented control picks the season. The chart stays mounted, so a new season or new inputs
 // morph the curves in place. A visually hidden table carries the same numbers for screen readers.
-import { useId, useMemo, useRef, useState, useSyncExternalStore } from 'react';
+import { useId, useMemo, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Area, CartesianGrid, ComposedChart, Line, XAxis, YAxis, type TooltipContentProps } from 'recharts';
 import { ChartContainer, ChartTooltip, type ChartConfig } from '@/components/ui/chart';
 import { formatKw, formatPercent } from '@/lib/present';
+import { TWEEN_S, useNoMotion } from './motion';
 import { useTool } from './ToolState';
 import {
   HOUR_TICKS,
@@ -24,24 +25,11 @@ import {
   type Series,
 } from './hourly-data';
 
-const ANIMATION_MS = 500;
+/** Curves morph in place over the same time as the numbers tween. */
+const ANIMATION_MS = TWEEN_S * 1000;
 
 /** Axis ticks are chart gridlines, not engine numbers: plain en-GB grouping, the unit sits above the axis. */
 const axisNumber = new Intl.NumberFormat('en-GB', { maximumFractionDigits: 1 });
-
-const REDUCED_MOTION = '(prefers-reduced-motion: reduce)';
-function subscribeReducedMotion(onChange: () => void) {
-  const query = window.matchMedia(REDUCED_MOTION);
-  query.addEventListener('change', onChange);
-  return () => query.removeEventListener('change', onChange);
-}
-function usePrefersReducedMotion(): boolean {
-  return useSyncExternalStore(
-    subscribeReducedMotion,
-    () => window.matchMedia(REDUCED_MOTION).matches,
-    () => true, // server: no animation until the client knows
-  );
-}
 
 // Written out in full so Tailwind's scanner sees every class.
 const tabClass =
@@ -50,7 +38,7 @@ const tabClass =
   'not-aria-selected:text-[var(--ink,#1d1d1f)] not-aria-selected:hover:bg-black/5';
 const segmentClass =
   'relative flex-1 cursor-pointer rounded-full px-4 py-1.5 text-center text-[15px] font-medium ' +
-  'text-[var(--muted,#6e6e73)] transition-[background-color,color,box-shadow] has-checked:bg-white ' +
+  'text-[#515154] transition-[background-color,color,box-shadow] has-checked:bg-white ' +
   'has-checked:text-[var(--ink,#1d1d1f)] has-checked:shadow-[0_1px_3px_rgba(0,0,0,.12)] ' +
   'has-focus-visible:outline-4 has-focus-visible:outline-[rgba(0,125,250,.35)]';
 
@@ -89,7 +77,7 @@ export function HourlyChart() {
   const t = useTranslations('tool.hourly');
   const { result, resultInputs } = useTool();
   const uid = useId();
-  const reducedMotion = usePrefersReducedMotion();
+  const reducedMotion = useNoMotion();
   const [season, setSeason] = useState<Season>('summer');
   const [tab, setTab] = useState<HourlyTab>('elec');
   const tabRefs = useRef<Record<HourlyTab, HTMLButtonElement | null>>({ elec: null, heat: null, cool: null });

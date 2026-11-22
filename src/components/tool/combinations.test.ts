@@ -4,7 +4,7 @@
 import { createTranslator } from 'next-intl';
 import { describe, expect, it } from 'vitest';
 import { CITIES, sizeHotel, type PlantOption, type SizingInput } from '@/lib/engine';
-import { MAX_SHOWN_PAYBACK_YEARS, formatKw, formatRange, verdictTone, warningText } from '@/lib/present';
+import { MAX_SHOWN_PAYBACK_YEARS, formatKw, formatRange, verdictTone, warningText, type Translate } from '@/lib/present';
 import engineMessages from '../../../messages/en/engine.json';
 import toolMessages from '../../../messages/en/tool.json';
 import { HOURLY_TABS, SEASONS, TABLE_COLUMNS, dayFigures, tabScale } from './hourly-data';
@@ -21,7 +21,7 @@ const COMBINATIONS: SizingInput[] = CITIES.flatMap((city) =>
 );
 
 const tTool = createTranslator({ locale: 'en', messages: { tool: toolMessages }, namespace: 'tool' });
-const tEngine = createTranslator({ locale: 'en', messages: { engine: engineMessages }, namespace: 'engine' });
+const tEngine = createTranslator({ locale: 'en', messages: { engine: engineMessages }, namespace: 'engine' }) as unknown as Translate;
 
 /** A string the page shows: non-empty, and no sign of a missing or broken number. */
 function expectText(s: string) {

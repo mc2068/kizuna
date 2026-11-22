@@ -5,9 +5,10 @@
 import { useTranslations } from 'next-intl';
 import type { PlantOption } from '@/lib/engine';
 import { formatRange, verdictTone, type VerdictTone } from '@/lib/present';
+import { Tween } from './motion';
 import { RangeRail } from './RangeRail';
 import { usePlantText, useRailLabel } from './ResultsCards';
-import { COMPARE_RAILS, METRICS, metric, scalesFor, type MetricId } from './results-metrics';
+import { COMPARE_RAILS, METRICS, metric, rangeText, rangeValues, scalesFor, type MetricId } from './results-metrics';
 
 // Same pills as the summary (ToolSummary), Contract 2 token names with fallbacks.
 export const badgeTone: Record<VerdictTone, string> = {
@@ -40,7 +41,7 @@ function OptionColumn({
     >
       <div className="flex flex-wrap items-center gap-2">
         <span
-          className={`rounded-full px-2.5 py-1 text-[11px] leading-none font-semibold ${headline ? 'bg-[#e3e3e8] text-[var(--muted,#6e6e73)]' : 'bg-[var(--btn,#0071e3)] text-white'}`}
+          className={`rounded-full px-2.5 py-1 text-[11px] leading-none font-semibold ${headline ? 'bg-[#e3e3e8] text-[#515154]' : 'bg-[var(--btn,#0071e3)] text-white'}`}
         >
           {headline ? t('results.options.headline') : t('results.options.faster')}
         </span>
@@ -60,12 +61,13 @@ function OptionColumn({
           const range = formatRange(option, m.key);
           const title = t(`results.metrics.${id}.title`);
           return (
-            <div key={id} className="border-t border-[#e3e3e8] pt-4 pb-3">
-              <div className="flex flex-wrap items-baseline justify-between gap-x-3">
-                <dt className="text-[13px] text-[var(--muted,#6e6e73)]">{title}</dt>
-                <dd className="text-[15px] font-medium tabular-nums">{range.text}</dd>
-              </div>
-              <div className="mt-1">
+            // dt and both dd sit directly in the group div, as a valid <dl> needs; the rail wraps to its own line.
+            <div key={id} className="flex flex-wrap items-baseline justify-between gap-x-3 border-t border-[#e3e3e8] pt-4 pb-3">
+              <dt className="text-[13px] text-[var(--muted,#6e6e73)]">{title}</dt>
+              <dd className="text-[15px] font-medium tabular-nums">
+                <Tween value={rangeValues(range)} format={(v) => rangeText(m.key, v)} />
+              </dd>
+              <dd className="mt-1 w-full">
                 <RangeRail
                   range={range}
                   metric={m.key}
@@ -74,7 +76,7 @@ function OptionColumn({
                   tone="light"
                   size="sm"
                 />
-              </div>
+              </dd>
             </div>
           );
         })}
@@ -87,7 +89,7 @@ function OptionColumn({
         <div className="flex flex-wrap items-baseline justify-between gap-x-3 border-t border-[#e3e3e8] py-2.5">
           <dt className="text-[13px] text-[var(--muted,#6e6e73)]">
             {t('results.options.fte')}
-            <span className="block text-xs text-[var(--faint,#86868b)]">{t('results.metrics.payback.fteFlag')}</span>
+            <span className="block text-xs text-[var(--muted,#6e6e73)]">{t('results.metrics.payback.fteFlag')}</span>
           </dt>
           <dd className="text-[15px] font-medium tabular-nums">{formatRange(option, 'paybackYearsWithFte').text}</dd>
         </div>

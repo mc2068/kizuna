@@ -5,8 +5,9 @@
 import { useTranslations } from 'next-intl';
 import type { PlantOption } from '@/lib/engine';
 import { formatKw, formatRange, formatTnd, type FormattedRange } from '@/lib/present';
+import { Tween } from './motion';
 import { RangeRail } from './RangeRail';
-import { METRICS, scalesFor, type MetricId } from './results-metrics';
+import { METRICS, formatterFor, rangeText, rangeValues, scalesFor, type MetricId } from './results-metrics';
 
 /** "200 kWe engine + 64 kWc chiller" or "100 kWe engine, no chiller". */
 export function usePlantText() {
@@ -29,7 +30,10 @@ function Extra({ id, option }: { id: MetricId; option: PlantOption }) {
   if (id === 'payback') {
     return (
       <>
-        {t('payback.fte', { range: formatRange(option, 'paybackYearsWithFte').text })}{' '}
+        <Tween
+          value={rangeValues(formatRange(option, 'paybackYearsWithFte'))}
+          format={(v) => t('payback.fte', { range: rangeText('paybackYearsWithFte', v) })}
+        />{' '}
         <span className="mt-1 inline-block rounded-full border border-[#48484a] px-2 py-0.5 text-[11px] whitespace-nowrap text-[#d2d2d7]">
           {t('payback.fteFlag')}
         </span>
@@ -37,7 +41,12 @@ function Extra({ id, option }: { id: MetricId; option: PlantOption }) {
     );
   }
   if (id === 'savings') {
-    return t('savings.demandCharge', { value: formatTnd(option.scenarios.favourable.demandChargeSavingTnd) });
+    return (
+      <Tween
+        value={option.scenarios.favourable.demandChargeSavingTnd}
+        format={(v) => t('savings.demandCharge', { value: formatTnd(v) })}
+      />
+    );
   }
   return null;
 }
@@ -52,16 +61,20 @@ export function ResultsCards({ option }: { option: PlantOption }) {
       <h3 className="max-w-3xl text-3xl leading-[1.08] font-semibold sm:text-[40px]">{t('cardsHeading')}</h3>
       <div className="mt-5 flex flex-wrap gap-2.5">
         <span className="rounded-full border border-[#424245] px-3 py-1 text-[13px] text-[#d2d2d7] tabular-nums">
-          {t('plant.engine', { kwe: formatKw(option.engineKwe, 'kWe') })}
+          <Tween value={option.engineKwe} format={(v) => t('plant.engine', { kwe: formatKw(v, 'kWe') })} />
         </span>
         <span className="rounded-full border border-[#424245] px-3 py-1 text-[13px] text-[#d2d2d7] tabular-nums">
-          {option.chillerKwc > 0 ? t('plant.chiller', { kwc: formatKw(option.chillerKwc, 'kWc') }) : t('plant.noChiller')}
+          <Tween
+            value={option.chillerKwc}
+            format={(v) => (v > 0 ? t('plant.chiller', { kwc: formatKw(v, 'kWc') }) : t('plant.noChiller'))}
+          />
         </span>
       </div>
 
       <ul className="mt-8 border-t border-[#333]">
         {METRICS.map((m) => {
           const range = formatRange(option, m.key);
+          const format = formatterFor(m.key);
           const title = t(`metrics.${m.id}.title`);
           const single = range.favourable === range.central && range.unfavourable === range.central;
           return (
@@ -80,15 +93,23 @@ export function ResultsCards({ option }: { option: PlantOption }) {
               </div>
               <div className="lg:text-right">
                 <p className="font-display text-[34px] leading-none font-semibold tracking-[-0.045em] whitespace-nowrap tabular-nums">
-                  {range.central}
+                  <Tween value={range.values.central} format={format} />
                 </p>
                 <p className="mt-2 text-[13px] leading-snug text-[#86868b] tabular-nums">
                   {single ? (
                     t('sameInAll')
                   ) : (
                     <>
-                      <span className="block">{t('favourableValue', { value: range.favourable })}</span>
-                      <span className="block">{t('unfavourableValue', { value: range.unfavourable })}</span>
+                      <Tween
+                        className="block"
+                        value={range.values.favourable}
+                        format={(v) => t('favourableValue', { value: format(v) })}
+                      />
+                      <Tween
+                        className="block"
+                        value={range.values.unfavourable}
+                        format={(v) => t('unfavourableValue', { value: format(v) })}
+                      />
                     </>
                   )}
                 </p>
