@@ -5,6 +5,7 @@
 // - #11 adds <HourlyChart /> after it.
 // Both read the current result with useTool() from ./ToolState.
 import { useTranslations } from 'next-intl';
+import { HourlyChart } from './HourlyChart';
 
 export function ResultsSection({ children }: { children?: React.ReactNode }) {
   const t = useTranslations('tool.results');
@@ -19,6 +20,7 @@ export function ResultsSection({ children }: { children?: React.ReactNode }) {
       </h2>
       <p className="mt-3 max-w-2xl text-lg text-[var(--muted,#6e6e73)]">{t('intro')}</p>
       {children}
+      <HourlyChart />
     </section>
   );
 }

@@ -69,5 +69,51 @@
   "results": {
     "heading": "Full results",
     "intro": "Savings, investment, CO₂ and the hourly dashboard for this hotel, each as a favourable, central and unfavourable case."
+  },
+  "hourly": {
+    "heading": "A typical day, hour by hour.",
+    "intro": "What the hotel needs each hour and what the plant supplies, for the plant above in the central case.",
+    "seasonLabel": "Season",
+    "seasons": {
+      "summer": "Summer",
+      "winter": "Winter"
+    },
+    "seasonName": {
+      "summer": "Summer day",
+      "winter": "Winter day"
+    },
+    "tabsLabel": "Energy",
+    "tabs": {
+      "elec": "Electricity",
+      "heat": "Hot water",
+      "cool": "Cooling"
+    },
+    "series": {
+      "elecDemand": "Hotel demand, excl. cooling",
+      "engineElec": "Engine",
+      "gridImport": "Grid import",
+      "heatDemand": "Heat demand",
+      "recoveredHeat": "Recovered heat",
+      "coolDemand": "Cooling demand",
+      "chillerCool": "Absorption chiller"
+    },
+    "hour": "{hour}:00",
+    "unit": "kW",
+    "season": {
+      "summer": "In summer the hotel needs cooling more than heat. The engine runs from early morning, and its spare heat drives the absorption chiller through the hot afternoon.",
+      "summerNoChiller": "In summer the hotel needs cooling more than heat. This plant has no absorption chiller, so its heat goes to hot water{pool, select, true { and the pool} other {}} only.",
+      "winter": "In winter the engine runs on hot water{pool, select, true { and pool heat} other {}}: there is almost no cooling, so its heat goes to showers, kitchens{pool, select, true {, laundry and the pool} other { and laundry}}. That year-round heat is where the plant earns its keep."
+    },
+    "caption": {
+      "elec": "{share} of the day’s electricity comes from the engine, the rest from the grid.{start, select, none { The engine stays off all day.} other { The engine starts at {start}:00; the grid covers the night.}} Engine and grid also power the electric chillers, so their stack can sit above the dashed demand line.",
+      "heat": "Recovered heat covers {share} of the day’s {pool, select, true {hot water and pool heat} other {hot water}}; gas boilers do the rest.{season, select, summer { Heat above the demand line drives the absorption chiller.} other {}}",
+      "cool": "The absorption chiller makes {share} of the day’s cooling; electric chillers do the rest. That is small on purpose: the plant is sized for year-round heat, not for summer peaks.",
+      "coolNoChiller": "This plant has no absorption chiller, so electric chillers do all the cooling. The plant is sized for year-round heat, not for summer peaks."
+    },
+    "chartLabel": "{tab}, {season}: power in kW for each hour from 00:00 to 23:00",
+    "table": {
+      "caption": "{season}, central case: power in kW for each hour",
+      "hour": "Hour"
+    }
   }
 }
