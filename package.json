@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run && node --test engine/",
+    "test": "vitest run && node --test \"engine/**/*.test.mjs\"",
     "e2e": "playwright test"
   },
   "packageManager": "pnpm@10.20.0",
