@@ -1,1 +1,219 @@
-{}
+{
+  "meta": {
+    "title": "Sizing tool",
+    "description": "Screen a Tunisian hotel for trigeneration: plant size, payback and savings as ranges, in real time."
+  },
+  "page": {
+    "title": "Screen your hotel.",
+    "intro": "Four answers, results in real time. Every number is a range, because the inputs are."
+  },
+  "inputs": {
+    "heading": "Your hotel",
+    "rooms": {
+      "label": "Rooms.",
+      "hint": "How big is the hotel?",
+      "unit": "rooms",
+      "valueText": "{rooms} rooms",
+      "min": "50",
+      "max": "800"
+    },
+    "city": {
+      "label": "Location.",
+      "hint": "Where is it?",
+      "options": {
+        "djerba": { "name": "Djerba", "note": "Island coast" },
+        "sousse": { "name": "Sousse", "note": "Sahel coast" },
+        "hammamet": { "name": "Hammamet", "note": "Gulf coast" },
+        "tozeur": { "name": "Tozeur", "note": "Saharan oasis" }
+      }
+    },
+    "pool": {
+      "label": "Pool.",
+      "hint": "Is it heated?",
+      "switch": "Heated pool",
+      "on": "Yes: adds heat demand all year",
+      "off": "No pool: rooms, kitchen and laundry only"
+    },
+    "price": {
+      "label": "Electricity price.",
+      "hint": "Optional.",
+      "tou": "STEG time-of-use",
+      "touDefault": "Default",
+      "touNote": "Medium-voltage tariff, hour by hour, before VAT",
+      "flat": "Flat price",
+      "flatNote": "One price for every kWh, if your contract has one",
+      "amountLabel": "Flat price in TND per kWh, before VAT",
+      "amountUnit": "TND/kWh",
+      "invalid": "Enter a price between 0 and 2 TND/kWh."
+    }
+  },
+  "summary": {
+    "heading": "Your result",
+    "engine": "{kwe} kWe engine",
+    "chiller": "+ {kwc} kWc absorption chiller",
+    "noChiller": "No chiller: hot water and pool heat only",
+    "payback": "Payback, central case",
+    "rangeShort": "{favourable} to {unfavourable}",
+    "rangeAxisMin": "0",
+    "rangeAxisMax": "30+ yrs",
+    "seeResults": "See full results",
+    "seeResultsShort": "Results",
+    "fine": "Estimates before VAT. The dot marks the central case; a feasibility study confirms the numbers for your site.",
+    "announce": "{verdict}. {kwe} kWe engine. Payback {range}."
+  },
+  "verdict": {
+    "good": "Good fit",
+    "maybe": "Possible fit, needs a study",
+    "weak": "Weak fit"
+  },
+  "results": {
+    "heading": "Full results",
+    "intro": "Savings, investment, CO₂ and the hourly dashboard for this hotel, each as a favourable, central and unfavourable case.",
+    "verdict": {
+      "good": {
+        "title": "A good fit.",
+        "body": "The central case pays back in 6 years or less. A feasibility study turns these ranges into a quote for your site."
+      },
+      "maybe": {
+        "title": "A possible fit. It needs a study.",
+        "body": "The central case pays back in 6 to 10 years. Your real bills and an installer quote decide which end of the range you land on."
+      },
+      "weak": {
+        "title": "A weak fit. A plant probably won't pay here.",
+        "body": "We would rather say so now than sell you an engine that sits idle. Trigeneration tends to pay where a hotel is large, open all year, has a heated pool or spa and is on the gas network."
+      }
+    },
+    "warnings": "What holds it back",
+    "faster": "A smaller plant, {plant}, pays back faster: {years} in the central case. Both options are compared below.",
+    "plant": {
+      "engine": "{kwe} engine",
+      "chiller": "{kwc} absorption chiller",
+      "noChiller": "No chiller",
+      "both": "{kwe} engine + {kwc} chiller",
+      "engineOnly": "{kwe} engine, no chiller"
+    },
+    "cardsHeading": "The numbers, as ranges.",
+    "scenarioNote": "Each rail runs from 0 and is read low to high. The bright dot is the central case; the span runs between the favourable and unfavourable cases, the choices an enthusiastic installer and a sceptical reviewer would make, not statistical bounds. Money is in TND, before VAT.",
+    "metrics": {
+      "payback": {
+        "title": "Payback",
+        "description": "Years to earn back the plant",
+        "fte": "With the FTE subsidy: {range}.",
+        "fteFlag": "FTE eligibility unconfirmed"
+      },
+      "capex": {
+        "title": "Investment",
+        "description": "Installed: engine, chiller and connections"
+      },
+      "savings": {
+        "title": "Annual savings",
+        "description": "Per year, after gas and maintenance",
+        "demandCharge": "A STEG demand-charge saving of {value} a year is counted in the favourable case only."
+      },
+      "co2": {
+        "title": "CO₂ avoided",
+        "description": "Per year, against the grid and a gas boiler"
+      },
+      "flh": {
+        "title": "Full-load hours",
+        "description": "Engine output in a year divided by its rating. Below about 4,000 a plant rarely pays."
+      },
+      "pes": {
+        "title": "Primary energy saving",
+        "description": "Fuel saved against buying power and burning gas separately (EU method). 10% or more counts as high-efficiency."
+      },
+      "peak": {
+        "title": "Peak grid relief",
+        "description": "kW taken off the STEG grid at the summer peak, if the engine is running then"
+      }
+    },
+    "rail": "{title}: favourable {favourable}, central {central}, unfavourable {unfavourable}",
+    "options": {
+      "heading": "Two ways in.",
+      "intro": "The smaller plant pays back faster. Most of the value is year-round hot water and pool heat, not summer cooling, so a chiller can be added later.",
+      "trigeneration": "Trigeneration",
+      "trigenerationNote": "Electricity, hot water and cooling",
+      "chpOnly": "CHP only",
+      "chpOnlyNote": "Electricity, hot water and pool heat, no chiller",
+      "bestAny": "Best of any size",
+      "bestAnyNote": "A smaller engine with a small chiller",
+      "headline": "Shown above",
+      "faster": "Faster payback",
+      "fte": "Payback with FTE"
+    },
+    "assumptions": {
+      "summary": "Assumptions and sources",
+      "count": "{count} parameters, each with three values",
+      "intro": "Every parameter the engine uses, with the value it takes in each case and where it comes from. Values marked ESTIMATE wait for a real quote or measurement.",
+      "caption": "Engine parameters by scenario",
+      "name": "Parameter",
+      "favourable": "Favourable",
+      "central": "Central",
+      "unfavourable": "Unfavourable",
+      "unit": "Unit",
+      "source": "Source",
+      "yes": "Yes",
+      "no": "No",
+      "newTab": "(opens in a new tab)",
+      "method": "How the model works: Sources and method",
+      "methodShort": "Sources and method",
+      "see": "See:"
+    },
+    "cta": {
+      "heading": "Next step.",
+      "body": "A feasibility study replaces our assumptions with your bills, your gas connection and an installer quote.",
+      "request": "Request a study",
+      "save": "Save this project",
+      "saveSoon": "Saving projects comes with accounts, soon."
+    },
+    "favourableValue": "Favourable {value}",
+    "unfavourableValue": "Unfavourable {value}",
+    "sameInAll": "The same in every case"
+  },
+  "hourly": {
+    "heading": "A typical day, hour by hour.",
+    "intro": "What the hotel needs each hour and what the plant supplies, for the plant above in the central case.",
+    "seasonLabel": "Season",
+    "seasons": {
+      "summer": "Summer",
+      "winter": "Winter"
+    },
+    "seasonName": {
+      "summer": "Summer day",
+      "winter": "Winter day"
+    },
+    "tabsLabel": "Energy",
+    "tabs": {
+      "elec": "Electricity",
+      "heat": "Hot water",
+      "cool": "Cooling"
+    },
+    "series": {
+      "elecDemand": "Hotel demand, excl. cooling",
+      "engineElec": "Engine",
+      "gridImport": "Grid import",
+      "heatDemand": "Heat demand",
+      "recoveredHeat": "Recovered heat",
+      "coolDemand": "Cooling demand",
+      "chillerCool": "Absorption chiller"
+    },
+    "hour": "{hour}:00",
+    "unit": "kW",
+    "season": {
+      "summer": "In summer the hotel needs cooling more than heat. The engine runs from early morning, and its spare heat drives the absorption chiller through the hot afternoon.",
+      "summerNoChiller": "In summer the hotel needs cooling more than heat. This plant has no absorption chiller, so its heat goes to hot water{pool, select, true { and the pool} other {}} only.",
+      "winter": "In winter the engine runs on hot water{pool, select, true { and pool heat} other {}}: there is almost no cooling, so its heat goes to showers, kitchens{pool, select, true {, laundry and the pool} other { and laundry}}. That year-round heat is where the plant earns its keep."
+    },
+    "caption": {
+      "elec": "{share} of the day’s electricity comes from the engine, the rest from the grid.{start, select, none { The engine stays off all day.} other { The engine starts at {start}:00; the grid covers the night.}} Engine and grid also power the electric chillers, so their stack can sit above the dashed demand line.",
+      "heat": "Recovered heat covers {share} of the day’s {pool, select, true {hot water and pool heat} other {hot water}}; gas boilers do the rest.{season, select, summer { Heat above the demand line drives the absorption chiller.} other {}}",
+      "cool": "The absorption chiller makes {share} of the day’s cooling; electric chillers do the rest. That is small on purpose: the plant is sized for year-round heat, not for summer peaks.",
+      "coolNoChiller": "This plant has no absorption chiller, so electric chillers do all the cooling. The plant is sized for year-round heat, not for summer peaks."
+    },
+    "chartLabel": "{tab}, {season}: power in kW for each hour from 00:00 to 23:00",
+    "table": {
+      "caption": "{season}, central case: power in kW for each hour",
+      "hour": "Hour"
+    }
+  }
+}
