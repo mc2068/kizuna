@@ -5,6 +5,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { screen } from '@testing-library/react';
 import { sizeHotel } from '@/lib/engine';
+import { siteConfig } from '@/config/site';
 import { ALL_REFERENCES as references } from './marketing/references';
 import { isActive, isAdminPath, MAIN_NAV } from './layout/nav';
 import { initials } from './layout/AdminShell';
@@ -134,7 +135,7 @@ describe('site-wide rules', () => {
   it('the product name is written in one place only (siteConfig.name)', () => {
     const offenders = files
       .filter((f) => !f.replace(/\\/g, '/').endsWith('src/config/site.ts') && !f.replace(/\\/g, '/').endsWith('src/content/method.ts'))
-      .filter((f) => readFileSync(f, 'utf8').includes('[PRODUCT NAME]'));
+      .filter((f) => readFileSync(f, 'utf8').includes(siteConfig.name));
     expect(offenders.map((f) => path.relative(process.cwd(), f))).toEqual([]);
   });
 

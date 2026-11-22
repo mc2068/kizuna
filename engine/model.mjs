@@ -1,4 +1,4 @@
-// [PRODUCT NAME] sizing engine, reference model v2.
+// Enerwise sizing engine, reference model v2.
 // Pure ES module: no DOM, no network, deterministic. The TypeScript port (ADR 0002) must match its tests.
 //
 // What changed from v1 (mc2068/kizuna-trigeneration site/js/engine.js), see docs/engine/spec.md:

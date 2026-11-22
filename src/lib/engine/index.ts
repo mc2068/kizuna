@@ -1,4 +1,4 @@
-// Contract 1: the [PRODUCT NAME] sizing engine. Import from '@/lib/engine', never from the files inside.
+// Contract 1: the sizing engine. Import from '@/lib/engine', never from the files inside.
 // The scaffold's src/lib/engine/fake.ts is kept for tests only.
 
 export * from './types';

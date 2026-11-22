@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest';
+import { siteConfig } from '@/config/site';
 import { sizeHotel, ENGINE_VERSION } from '@/lib/engine';
 import { formatRange } from '@/lib/present';
 import { composeStudyRequestEmails, parseAddressList, sendStudyRequestEmails, setMailerForTests, type EmailLead } from '.';
@@ -51,7 +52,7 @@ describe('study request emails', () => {
     expect(hotel.text).toContain('What happens next');
     expect(hotel.text).toContain(formatRange(results, 'annualSavingsTnd').text);
     expect(hotel.html).toContain('http://localhost:3000/privacy');
-    expect(hotel.text).toContain('[PRODUCT NAME]');
+    expect(hotel.text).toContain(siteConfig.name);
     // The hotel never sees internal links.
     expect(hotel.html).not.toContain('/admin');
   });

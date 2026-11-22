@@ -1,4 +1,4 @@
-// The [PRODUCT NAME] PDF report as plain data (#23): every string and every chart series the PDF shows, built
+// The PDF report as plain data (#23): every string and every chart series the PDF shows, built
 // from a STORED snapshot (project.results), never recomputed. Report.tsx only lays this out, so this file is
 // where "the PDF shows the same numbers as the web page" is tested: every number goes through @/lib/present.
 

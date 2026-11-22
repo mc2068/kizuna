@@ -1,4 +1,4 @@
-# [PRODUCT NAME]
+# Enerwise
 
 Trigeneration (CCHP) sizing and feasibility studies for Tunisian hotels. Next.js + Supabase web app.
 
@@ -64,7 +64,7 @@ cp .env.example .env.local   # then paste the keys from `pnpm exec supabase stat
 
 ### Google OAuth
 
-1. Google Cloud console, APIs & Services: configure the OAuth consent screen (External, app name `[PRODUCT NAME]`, scopes `email`, `profile`, `openid`).
+1. Google Cloud console, APIs & Services: configure the OAuth consent screen (External, app name `Enerwise`, scopes `email`, `profile`, `openid`).
 2. Credentials, Create credentials, OAuth client ID, type **Web application**. Authorised redirect URIs (Google redirects to Supabase, not to the site):
    - local: `http://127.0.0.1:54321/auth/v1/callback`
    - cloud: `https://<project-ref>.supabase.co/auth/v1/callback`
@@ -83,7 +83,7 @@ Supabase only sends people back to URLs on this list, for magic links and Google
 Supabase's built-in mailer is limited to a few emails an hour and is for testing only. In the Supabase dashboard, Authentication, Emails, SMTP Settings, enable custom SMTP:
 
 - Host `smtp.resend.com`, port `465`, username `resend`, password: a Resend API key (can be the same as `RESEND_API_KEY`).
-- Sender email: an address on the domain verified in Resend (same as `EMAIL_FROM`), sender name `[PRODUCT NAME]`.
+- Sender email: an address on the domain verified in Resend (same as `EMAIL_FROM`), sender name `Enerwise`.
 - Then raise Authentication, Rate Limits, "emails sent per hour" (for example to 30).
 
 ## What is real and what is fake (scaffold, #3)

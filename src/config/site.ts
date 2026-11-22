@@ -1,6 +1,6 @@
-// The product name is not decided. Read it from here, never hard-code it, so it is swapped once.
+// The product name. Read it from here, never hard-code it, so a rename is one change.
 export const siteConfig = {
-  name: '[PRODUCT NAME]',
+  name: 'Enerwise',
   description: 'Make your own energy. Only if it pays. Free trigeneration screening for Tunisian hotels.',
   url: siteUrl(),
   locale: 'en',

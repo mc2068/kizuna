@@ -1,4 +1,4 @@
-// Every constant of the [PRODUCT NAME] sizing engine, with its source. Port of engine/model.mjs (v2).
+// Every constant of the sizing engine, with its source. Port of engine/model.mjs (v2).
 // ADR 0002: assumptions live here, versioned and tested, not in the database.
 
 import { OCCUPANCY } from './profiles';
