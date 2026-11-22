@@ -21,6 +21,14 @@ pnpm build && pnpm e2e   # Playwright smoke test of every route against `pnpm st
 pnpm test:engine-reference   # the v2 reference model in engine/
 ```
 
+## CI
+
+`.github/workflows/ci.yml` runs on every pull request and on pushes to the default branch, with no secrets:
+
+- **Typecheck, lint, unit tests**: `pnpm typecheck`, `pnpm lint`, `pnpm test`, `pnpm test:engine-reference`.
+- **Build and Playwright**: `pnpm build`, then the smoke test against `pnpm start` on the in-memory fake. On failure the HTML report is uploaded as the `playwright-report` artifact.
+- **Database tests**: starts local Supabase in the runner, uploads the demo files, then `pnpm test:db`.
+
 ## Local database (Supabase)
 
 Needs Docker. The site runs without it (on the fake), so this is only for work on data, auth or admin.
