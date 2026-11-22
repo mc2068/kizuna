@@ -51,5 +51,71 @@
     "accessed": "Accessed {date}"
   },
   "engineVersion": "Engine version {version}",
-  "disclaimer": "A screening estimate, not a quote. A feasibility study uses your own bills and an installer quote."
+  "disclaimer": "A screening estimate, not a quote. A feasibility study uses your own bills and an installer quote.",
+  "twin": {
+    "metaTitle": "Virtual site",
+    "eyebrow": "Digital twin",
+    "title": "Virtual site.",
+    "titleSub": "One summer day, hour by hour.",
+    "intro": "Where the hotel’s energy comes from and where it goes. Same hotel, same demand: A is the hotel today, B is the same hotel with the trigeneration plant.",
+    "sectionLabel": "The virtual site",
+    "context": "{rooms, number} rooms · {city, select, djerba {Djerba} sousse {Sousse} hammamet {Hammamet} tozeur {Tozeur} other {{city}}} · {pool, select, true {pool} other {no pool}} · plant {engineKwe, number} kWe + {chillerKwc, number} kWc · central case",
+    "now": {
+      "hour": "Hour",
+      "until": "to {to}",
+      "engineOn": "Engine running at {kw}",
+      "engineOff": "Engine off",
+      "grid": "Grid electricity this hour",
+      "less": "less from the grid than today",
+      "same": "Same as today: the engine is off, so B runs like A."
+    },
+    "play": "Play the day",
+    "pause": "Pause",
+    "chart": {
+      "label": "Hour of the day",
+      "help": "Grid electricity over the day. Pick an hour.",
+      "a": "A · Today",
+      "b": "B · With the plant",
+      "saved": "Grid electricity saved",
+      "engineOff": "Engine off"
+    },
+    "hourLabel": "{from} to {to}",
+    "view": "Show",
+    "sideA": "A · Today",
+    "sideASub": "Grid electricity, electric chillers, gas boiler",
+    "sideB": "B · With the plant",
+    "sideBSub": "Gas engine and absorption chiller; boiler and chillers as backup",
+    "nodes": {
+      "grid": "Grid\n(STEG)",
+      "gas": "Natural\ngas",
+      "engine": "Gas\nengine",
+      "boiler": "Gas\nboiler",
+      "switchboard": "Switchboard",
+      "electricChillers": "Electric\nchillers",
+      "absorptionChiller": "Absorption\nchiller",
+      "hotelElec": "Hotel\nelectricity",
+      "cooling": "Air\nconditioning",
+      "hotWater": "Hot water\nand pool"
+    },
+    "notInstalled": "Not installed",
+    "off": "Off",
+    "legend": {
+      "title": "Energy type",
+      "fuel": "Gas (fuel)",
+      "elec": "Electricity",
+      "heat": "Heat",
+      "cool": "Cold",
+      "width": "Arrow width is proportional to kW in the chosen hour."
+    },
+    "totals": {
+      "grid": "Grid",
+      "gas": "Gas",
+      "losses": "Lost as heat",
+      "unused": "Engine heat not needed"
+    },
+    "diagramLabel": "{side}: energy flows at {hour}",
+    "honesty": "Virtual site built from published benchmarks<refs></refs> and the sizing engine’s central case. A typical summer day, not measured data.",
+    "sources": "Sources and method",
+    "toolLink": "Try another hotel in the sizing tool"
+  }
 }
