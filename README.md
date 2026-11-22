@@ -42,7 +42,39 @@ cp .env.example .env.local   # then paste the keys from `pnpm exec supabase stat
 
 - Schema, RLS policies, triggers and the private `lead-files` bucket: `supabase/migrations/`. After a change, run `pnpm db:reset` and `pnpm db:types` (regenerates `src/lib/supabase/types.ts`).
 - Demo data has one source, `src/lib/db/fake/seed.ts`. `pnpm db:seed` renders it into `supabase/seed.sql`; `pnpm test` fails while that file is stale (for example after an engine change).
-- Seeded users: the four admins (`mohamed@team.example`, `hamza@`, `ahmed@`, `gaith@`) and two hotel users (`a@hotel.example`, `b@hotel.example`). Sign-in arrives with #7; local emails go to Mailpit at http://127.0.0.1:54324.
+- Seeded users: the four admins (`mohamed@team.example`, `hamza@`, `ahmed@`, `gaith@`) and two hotel users (`a@hotel.example`, `b@hotel.example`). Sign in as any of them with a magic link: local emails go to Mailpit at http://127.0.0.1:54324.
+
+## Sign-in (#7)
+
+- **Pages**: `/sign-in` (email magic link and "Continue with Google", accepts `?next=/some/path`), `/auth/callback` (exchanges the code, then redirects to `next`; only same-origin paths, see `src/lib/auth/paths.ts`). Sign out with `<SignOutButton/>` from `src/components/auth/sign-out-button.tsx`, or call `signOut` from `src/lib/auth/actions.ts`.
+- **Protection** (`src/proxy.ts`, Next 16's name for middleware): refreshes the Supabase session on every request; `/projects` redirects signed-out visitors to `/sign-in?next=...`; `/admin/**` answers 404 to everyone but admins. `src/app/projects/layout.tsx` and `src/app/admin/layout.tsx` repeat the checks as a backstop. To protect a new path, add it to `accessFor` in `src/lib/auth/paths.ts`.
+- **Save before sign-in** (#21): send people to `signInPath('/tool?...')` and they come back to that URL once signed in.
+- **On the fake** (no Supabase) there is nothing to sign in to: the form says sign-in is unavailable and `FAKE_DB_USER` decides who is signed in. Sign out still works (until the server restarts).
+- **Making someone an admin**: `update public.profiles set role = 'admin' where id = (select id from auth.users where email = '...');` in the SQL editor.
+
+### Google OAuth
+
+1. Google Cloud console, APIs & Services: configure the OAuth consent screen (External, app name `[PRODUCT NAME]`, scopes `email`, `profile`, `openid`).
+2. Credentials, Create credentials, OAuth client ID, type **Web application**. Authorised redirect URIs (Google redirects to Supabase, not to the site):
+   - local: `http://127.0.0.1:54321/auth/v1/callback`
+   - cloud: `https://<project-ref>.supabase.co/auth/v1/callback`
+3. **Local**: put the client ID and secret in `supabase/.env` (git-ignored) as `SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID` and `SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET`, set `enabled = true` under `[auth.external.google]` in `supabase/config.toml`, then `pnpm db:start` again.
+4. **Cloud**: Supabase dashboard, Authentication, Sign In / Providers, Google: enable, paste the client ID and secret.
+
+### Redirect URLs (Supabase dashboard, Authentication, URL Configuration)
+
+Supabase only sends people back to URLs on this list, for magic links and Google alike.
+
+- **Site URL**: the production URL, e.g. `https://<your-domain>`.
+- **Redirect URLs**: `https://<your-domain>/**`, `https://*-<vercel-team-slug>.vercel.app/**` (every Vercel preview), and `http://localhost:3000/**`. Locally the same list is `additional_redirect_urls` in `supabase/config.toml`.
+
+### Auth emails through Resend (production)
+
+Supabase's built-in mailer is limited to a few emails an hour and is for testing only. In the Supabase dashboard, Authentication, Emails, SMTP Settings, enable custom SMTP:
+
+- Host `smtp.resend.com`, port `465`, username `resend`, password: a Resend API key (can be the same as `RESEND_API_KEY`).
+- Sender email: an address on the domain verified in Resend (same as `EMAIL_FROM`), sender name `[PRODUCT NAME]`.
+- Then raise Authentication, Rate Limits, "emails sent per hour" (for example to 30).
 
 ## What is real and what is fake (scaffold, #3)
 

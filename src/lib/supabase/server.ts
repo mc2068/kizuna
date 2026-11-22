@@ -1,4 +1,4 @@
-// Server-side Supabase clients. Only src/lib/db uses these; pages call '@/lib/db'.
+// Server-side Supabase clients. Only src/lib/db and src/lib/auth use these; pages call '@/lib/db'.
 import { createServerClient } from '@supabase/ssr';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from './types';
@@ -17,7 +17,7 @@ let userClientOverride: (() => Supabase) | undefined;
 
 /**
  * A client acting as the signed-in visitor (from the auth cookies), so every query runs under RLS.
- * In Server Components cookies cannot be written; the session refresh in middleware (#7) handles that.
+ * In Server Components cookies cannot be written; the session refresh in src/proxy.ts handles that.
  */
 export async function createUserClient(): Promise<Supabase> {
   if (userClientOverride) return userClientOverride();
@@ -30,7 +30,7 @@ export async function createUserClient(): Promise<Supabase> {
         try {
           for (const { name, value, options } of toSet) cookieStore.set(name, value, options);
         } catch {
-          // Called from a Server Component: ignore, the middleware refreshes the session.
+          // Called from a Server Component: ignore, src/proxy.ts refreshes the session.
         }
       },
     },
