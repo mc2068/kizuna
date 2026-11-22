@@ -1,1 +1,73 @@
-{}
+{
+  "meta": {
+    "title": "Sizing tool",
+    "description": "Screen a Tunisian hotel for trigeneration: plant size, payback and savings as ranges, in real time."
+  },
+  "page": {
+    "title": "Screen your hotel.",
+    "intro": "Four answers, results in real time. Every number is a range, because the inputs are."
+  },
+  "inputs": {
+    "heading": "Your hotel",
+    "rooms": {
+      "label": "Rooms.",
+      "hint": "How big is the hotel?",
+      "unit": "rooms",
+      "valueText": "{rooms} rooms",
+      "min": "50",
+      "max": "800"
+    },
+    "city": {
+      "label": "Location.",
+      "hint": "Where is it?",
+      "options": {
+        "djerba": { "name": "Djerba", "note": "Island coast" },
+        "sousse": { "name": "Sousse", "note": "Sahel coast" },
+        "hammamet": { "name": "Hammamet", "note": "Gulf coast" },
+        "tozeur": { "name": "Tozeur", "note": "Saharan oasis" }
+      }
+    },
+    "pool": {
+      "label": "Pool.",
+      "hint": "Is it heated?",
+      "switch": "Heated pool",
+      "on": "Yes: adds heat demand all year",
+      "off": "No pool: rooms, kitchen and laundry only"
+    },
+    "price": {
+      "label": "Electricity price.",
+      "hint": "Optional.",
+      "tou": "STEG time-of-use",
+      "touDefault": "Default",
+      "touNote": "Medium-voltage tariff, hour by hour, before VAT",
+      "flat": "Flat price",
+      "flatNote": "One price for every kWh, if your contract has one",
+      "amountLabel": "Flat price in TND per kWh, before VAT",
+      "amountUnit": "TND/kWh",
+      "invalid": "Enter a price between 0 and 2 TND/kWh."
+    }
+  },
+  "summary": {
+    "heading": "Your result",
+    "engine": "{kwe} kWe engine",
+    "chiller": "+ {kwc} kWc absorption chiller",
+    "noChiller": "No chiller: hot water and pool heat only",
+    "payback": "Payback, central case",
+    "rangeShort": "{favourable} to {unfavourable}",
+    "rangeAxisMin": "0",
+    "rangeAxisMax": "30+ yrs",
+    "seeResults": "See full results",
+    "seeResultsShort": "Results",
+    "fine": "Estimates before VAT. The dot marks the central case; a feasibility study confirms the numbers for your site.",
+    "announce": "{verdict}. {kwe} kWe engine. Payback {range}."
+  },
+  "verdict": {
+    "good": "Good fit",
+    "maybe": "Possible fit, needs a study",
+    "weak": "Weak fit"
+  },
+  "results": {
+    "heading": "Full results",
+    "intro": "Savings, investment, CO₂ and the hourly dashboard for this hotel, each as a favourable, central and unfavourable case."
+  }
+}
