@@ -58,6 +58,10 @@ export type LeadEvent = {
   id: string;
   leadId: string;
   kind: LeadEventKind;
+  /**
+   * Depends on kind. 'email': { template: 'team-new-lead' | 'hotel-confirmation', to: string[],
+   * status: 'sent' | 'failed' | 'skipped', providerId?: string, error?: string } (EmailLog in '@/lib/email').
+   */
   data: Record<string, unknown>;
   /** null = the system (e.g. an email sent automatically). */
   actorId: string | null;

@@ -13,6 +13,7 @@ import type {
   LeadFile,
   LeadFilters,
   LeadCounts,
+  LeadEventKind,
   LeadNote,
   LeadStatus,
   Profile,
@@ -55,6 +56,14 @@ export interface DataStore {
   addLeadNote(id: string, body: string, actorId: string): Promise<LeadNote>;
   uploadLeadFile(id: string, file: File, actorId: string): Promise<LeadFile>;
   leadFileUrl(fileId: string): Promise<string | null>;
+  /** Server-side: a History event written by the system (actor null), e.g. an email sent automatically. */
+  addLeadEvent(leadId: string, kind: LeadEventKind, data: Record<string, unknown>): Promise<void>;
+
+  /**
+   * Server-side rate limit: records one attempt for `key` and returns true, or returns false (recording
+   * nothing) when `key` already made `limit` attempts in the last `windowSeconds`.
+   */
+  takeRateLimitSlot(key: string, limit: number, windowSeconds: number): Promise<boolean>;
 }
 
 export function isSupabaseConfigured(): boolean {

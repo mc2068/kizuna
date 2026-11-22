@@ -1,7 +1,7 @@
 // The Contract 3 behaviour suite. It runs against both stores: the in-memory fake
 // (src/lib/db/fake/fake.test.ts, every `pnpm test`) and local Supabase (tests/supabase-db.test.ts,
 // `pnpm test:db`), so the two cannot drift apart.
-import { beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
   addLeadNote,
   assignLead,
@@ -21,6 +21,7 @@ import {
   uploadLeadFile,
 } from '@/lib/db';
 import { DEMO_SHARE_TOKEN, DEMO_USERS } from '@/lib/db/fake/seed';
+import { setMailerForTests, type OutgoingEmail } from '@/lib/email';
 import { ENGINE_VERSION, type SizingInput } from '@/lib/engine';
 
 export type DemoUser = 'mohamed' | 'hamza' | 'userA' | 'userB';
@@ -53,7 +54,12 @@ export function describeDataLayer(driver: ContractDriver): void {
   beforeEach(async () => {
     await driver.reset();
     await as('mohamed');
+    setMailerForTests(null);
   });
+  afterEach(() => setMailerForTests(undefined));
+
+  /** A unique client IP per test, so the rate limit never leaks between tests or runs. */
+  const freshIp = () => `203.0.113.${Math.floor(Math.random() * 250) + 1}-${crypto.randomUUID()}`;
 
   describe('getCurrentUser', () => {
     it('returns the signed-in user with their role', async () => {
@@ -153,7 +159,64 @@ export function describeDataLayer(driver: ContractDriver): void {
       expect(lead).toMatchObject({ status: 'new', hotelName: 'Hotel Test', city: 'sousse', rooms: 250 });
       expect(lead!.results.engineKwe).toBeGreaterThan(0);
       expect(lead!.engineVersion).toBe(ENGINE_VERSION);
-      expect(lead!.events.map((e) => e.kind)).toEqual(['created']);
+      expect(lead!.events.map((e) => e.kind).sort()).toEqual(['created', 'email', 'email']);
+    });
+
+    it('emails the team and the hotel and logs each send in History', async () => {
+      const sent: OutgoingEmail[] = [];
+      setMailerForTests({ send: async (email) => (sent.push(email), { id: `msg-${sent.length}` }) });
+      process.env.TEAM_NOTIFY_EMAIL = 'team@kizuna.example, ops@kizuna.example';
+      try {
+        await as(null);
+        const r = await submitStudyRequest(validRequest);
+        expect(r.ok).toBe(true);
+        const leadId = (r as { leadId: string }).leadId;
+        expect(sent.map((e) => e.to)).toEqual(expect.arrayContaining([['team@kizuna.example', 'ops@kizuna.example'], ['leila@hotel.example']]));
+        const team = sent.find((e) => e.to.includes('team@kizuna.example'))!;
+        expect(team.html).toContain(`/admin/leads/${leadId}`);
+        expect(team.replyTo).toEqual(['leila@hotel.example']);
+        await as('mohamed');
+        const emails = (await getLead(leadId))!.events.filter((e) => e.kind === 'email');
+        expect(emails.map((e) => e.data).sort((a, b) => String(a.template).localeCompare(String(b.template)))).toEqual([
+          { template: 'hotel-confirmation', to: ['leila@hotel.example'], status: 'sent', providerId: expect.stringMatching(/^msg-/) },
+          { template: 'team-new-lead', to: ['team@kizuna.example', 'ops@kizuna.example'], status: 'sent', providerId: expect.stringMatching(/^msg-/) },
+        ]);
+        expect(emails.every((e) => e.actorId === null)).toBe(true);
+      } finally {
+        delete process.env.TEAM_NOTIFY_EMAIL;
+      }
+    });
+
+    it('still saves the lead when email fails, and logs the error', async () => {
+      setMailerForTests({ send: async () => Promise.reject(new Error('Resend is down')) });
+      const r = await submitStudyRequest(validRequest);
+      expect(r.ok).toBe(true);
+      const lead = await getLead((r as { leadId: string }).leadId);
+      const emails = lead!.events.filter((e) => e.kind === 'email').map((e) => e.data);
+      // No TEAM_NOTIFY_EMAIL: the team email is skipped; the hotel one fails with the provider's error.
+      expect(emails).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ template: 'team-new-lead', status: 'skipped', error: 'TEAM_NOTIFY_EMAIL is not set.' }),
+          expect.objectContaining({ template: 'hotel-confirmation', status: 'failed', error: 'Resend is down' }),
+        ]),
+      );
+    });
+
+    it('allows 5 requests per client IP per hour, then refuses', async () => {
+      const ip = freshIp();
+      for (let i = 0; i < 5; i++) expect((await submitStudyRequest(validRequest, { ip })).ok).toBe(true);
+      const before = (await listLeads()).length;
+      const blocked = await submitStudyRequest(validRequest, { ip });
+      expect(blocked).toMatchObject({ ok: false, error: expect.stringContaining('Too many requests') });
+      expect((await listLeads()).length).toBe(before);
+      expect((await submitStudyRequest(validRequest, { ip: freshIp() })).ok).toBe(true);
+    });
+
+    it('does not count invalid or honeypot requests against the limit', async () => {
+      const ip = freshIp();
+      for (let i = 0; i < 6; i++) await submitStudyRequest({ ...validRequest, consent: false }, { ip });
+      for (let i = 0; i < 6; i++) await submitStudyRequest({ ...validRequest, website: 'spam' }, { ip });
+      expect((await submitStudyRequest(validRequest, { ip })).ok).toBe(true);
     });
 
     it('assigns the admin with the fewest open leads', async () => {

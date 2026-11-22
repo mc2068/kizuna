@@ -1,11 +1,12 @@
 // The Supabase DataStore. Every read and write runs as the signed-in visitor, so the RLS policies in
 // supabase/migrations decide what they see. Only the two inserts whose rows carry server-computed
 // results use the service role: insertProject (for the verified user) and insertLead.
-// Lead events (created, status, owner, note, file) are written by database triggers.
+// Lead events (created, status, owner, note, file) are written by database triggers; email events
+// (addLeadEvent) and the study request rate limit (takeRateLimitSlot) also use the service role.
 import type { PostgrestError } from '@supabase/supabase-js';
 import type { City, SizingInput, SizingResult } from '@/lib/engine';
 import { createServiceClient, createUserClient } from '@/lib/supabase/server';
-import type { Tables, TablesUpdate } from '@/lib/supabase/types';
+import type { Json, Tables, TablesUpdate } from '@/lib/supabase/types';
 import type { DataStore } from '../store';
 import { emptyLeadCounts, LEAD_STATUSES, type Lead, type LeadEvent, type LeadFile, type LeadNote, type Profile, type Project } from '../types';
 import { isUuid, safeFileName } from '../validation';
@@ -270,5 +271,22 @@ export const supabaseStore: DataStore = {
     if (!row) return null;
     const { data } = await sb.storage.from(BUCKET).createSignedUrl(row.path, FILE_URL_TTL);
     return data?.signedUrl ?? null;
+  },
+
+  async addLeadEvent(leadId, kind, data) {
+    const { error } = await createServiceClient()
+      .from('lead_events')
+      .insert({ lead_id: leadId, kind, data: data as NonNullable<Json>, actor_id: null });
+    if (error) fail(error, 'Lead not found.');
+  },
+
+  async takeRateLimitSlot(key, limit, windowSeconds) {
+    const { data, error } = await createServiceClient().rpc('take_study_request_slot', {
+      p_key: key,
+      p_limit: limit,
+      p_window_seconds: windowSeconds,
+    });
+    if (error) fail(error);
+    return data;
   },
 };

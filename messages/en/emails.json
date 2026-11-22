@@ -1,0 +1,55 @@
+{
+  "cities": {
+    "djerba": "Djerba",
+    "sousse": "Sousse",
+    "hammamet": "Hammamet",
+    "tozeur": "Tozeur"
+  },
+  "yes": "Yes",
+  "no": "No",
+  "notGiven": "Not given",
+  "stegTariff": "STEG time-of-use tariff",
+  "pricePerKwh": "{price} TND/kWh",
+  "summary": {
+    "verdict": "Verdict",
+    "plant": "Suggested plant",
+    "plantValue": "{engineKwe} kWe engine, {chillerKwc} kWc absorption chiller",
+    "noChiller": "{engineKwe} kWe engine, no absorption chiller",
+    "payback": "Payback",
+    "savings": "Yearly savings",
+    "capex": "Investment"
+  },
+  "teamNewLead": {
+    "subject": "New study request: {hotel} ({city}, {rooms} rooms)",
+    "preview": "{contact} asked for a feasibility study. Screening verdict: {verdict}.",
+    "heading": "New study request",
+    "intro": "{contact} asked for a feasibility study for {hotel}.",
+    "contact": "Contact",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "hotel": "Hotel",
+    "city": "City",
+    "rooms": "Rooms",
+    "pool": "Heated pool",
+    "elecPrice": "Electricity price",
+    "message": "Message",
+    "screening": "Screening (computed on the server)",
+    "open": "Open lead {id} in the admin",
+    "footer": "Engine version {version}. Reply to this email to write to the hotel."
+  },
+  "hotelConfirmation": {
+    "subject": "We received your study request for {hotel}",
+    "preview": "Thank you, {contact}. Here is what happens next.",
+    "heading": "Thank you, {contact}",
+    "intro": "We received your request for a trigeneration feasibility study for {hotel}. Your reference is {id}.",
+    "nextHeading": "What happens next",
+    "next1": "A member of our team reviews your screening and contacts you by email or phone.",
+    "next2": "For the study we ask for 12 months of energy bills and arrange a site visit.",
+    "next3": "We send you the price of the study first. You decide then, with no obligation.",
+    "summaryHeading": "Your screening",
+    "summaryNote": "A screening estimate for {rooms} rooms in {city}, not a quote. The feasibility study uses your own bills and an installer quote.",
+    "privacy": "We use your details only to answer this request. Our privacy notice:",
+    "signature": "The {product} team"
+  }
+}
