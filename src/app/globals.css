@@ -1,0 +1,10 @@
+/* Role 3 (Gaith) owns this file: design tokens (Contract 2) and the shadcn variables go here. */
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+body {
+  background: #fbfbfd;
+  color: #1d1d1f;
+}
