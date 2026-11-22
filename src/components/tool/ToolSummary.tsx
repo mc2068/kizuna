@@ -5,11 +5,9 @@
 // Detailed cards (#10) and the hourly dashboard (#11) live under the configurator, in #results.
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { formatRange, verdictTone, type VerdictTone } from '@/lib/present';
+import { MAX_SHOWN_PAYBACK_YEARS, formatRange, verdictTone, type VerdictTone } from '@/lib/present';
 import { useTool } from './ToolState';
 
-/** Payback rail scale; longer paybacks sit at the right end. */
-const RAIL_MAX_YEARS = 30;
 /** Screen readers hear the result once the visitor stops changing inputs. */
 const ANNOUNCE_DELAY_MS = 700;
 
@@ -22,13 +20,13 @@ const badgeTone: Record<VerdictTone, string> = {
 function useSummary() {
   const { result } = useTool();
   const tone = verdictTone(result.verdict);
-  // Text from the presentation helpers; raw numbers only to place the rail.
-  const payback = formatRange(result, 'paybackYears', 'years');
-  const p = result.scenarios;
+  // Text from the presentation helpers; their raw values only place the rail.
+  const payback = formatRange(result, 'paybackYears');
+  const v = payback.values;
   const rail = {
-    low: Math.min(p.favourable.paybackYears, p.unfavourable.paybackYears),
-    central: p.central.paybackYears,
-    high: Math.max(p.favourable.paybackYears, p.unfavourable.paybackYears),
+    low: Math.min(v.favourable, v.unfavourable),
+    central: v.central,
+    high: Math.max(v.favourable, v.unfavourable),
   };
   return { result, tone, payback, rail };
 }
@@ -45,7 +43,7 @@ function VerdictBadge({ tone, label, className = '' }: { tone: VerdictTone; labe
 }
 
 function PaybackRail({ low, central, high }: { low: number; central: number; high: number }) {
-  const pct = (v: number) => (Math.min(v, RAIL_MAX_YEARS) / RAIL_MAX_YEARS) * 100;
+  const pct = (v: number) => (Math.min(v, MAX_SHOWN_PAYBACK_YEARS) / MAX_SHOWN_PAYBACK_YEARS) * 100;
   return (
     <div className="relative mt-3 h-[22px]" aria-hidden="true">
       <div className="absolute inset-x-0 top-[10px] h-0.5 rounded bg-[#dcdce1]" />
