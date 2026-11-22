@@ -272,6 +272,25 @@ export type Database = {
           },
         ];
       };
+      study_request_attempts: {
+        Row: {
+          created_at: string;
+          id: number;
+          key: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          created_at?: string;
+          id?: never;
+          key: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: never;
+          key?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: {
       [_ in never]: never;
@@ -289,6 +308,10 @@ export type Database = {
       };
       is_admin: { Args: Record<PropertyKey, never>; Returns: boolean };
       next_lead_owner: { Args: Record<PropertyKey, never>; Returns: string };
+      take_study_request_slot: {
+        Args: { p_key: string; p_limit: number; p_window_seconds: number };
+        Returns: boolean;
+      };
     };
     Enums: {
       lead_event_kind: "created" | "status" | "owner" | "email" | "note" | "file";
