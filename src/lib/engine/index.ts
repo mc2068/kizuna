@@ -7,5 +7,17 @@ export type { Evaluation } from './model';
 export { PARAMS, FIXED, STEG_TOU } from './params';
 export type { Param, ParamKey, ParamSet, TouSlot } from './params';
 
-/** Stored with every saved run. Bump on any change to the engine's output (major = numbers change). */
-export const ENGINE_VERSION = '2.0.0';
+export { ENGINE_VERSION } from './version';
+export {
+  sizingInputSchema,
+  snapshot,
+  safeSnapshot,
+  isStale,
+  rerun,
+  parseToolSearchParams,
+  toToolSearchParams,
+  ROOMS_RANGE,
+  ELEC_PRICE_RANGE,
+  DEFAULT_INPUT,
+} from './snapshot';
+export type { Snapshot, SnapshotErrors, SafeSnapshot, SearchParamsLike } from './snapshot';
