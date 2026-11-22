@@ -1,6 +1,6 @@
 // Presentation helpers (Contract 1). SIMPLE VERSIONS from the scaffold (#3);
 // Hamza replaces them in #12. The UI never formats engine numbers itself.
-import type { PlantOption, ScenarioResult, Verdict } from '@/lib/engine';
+import type { PlantOption, Scenario, ScenarioResult, Verdict } from '@/lib/engine';
 
 const number = new Intl.NumberFormat('en-GB', { maximumFractionDigits: 2 });
 
@@ -16,37 +16,40 @@ export function formatTnd(n: number): string {
 
 export type RangeKind = 'tnd' | 'years' | 'tonnes' | 'kw' | 'hours' | 'percent';
 
-const UNIT: Record<Exclude<RangeKind, 'tnd'>, (n: number) => string> = {
-  years: (n) => `${number.format(n)} years`,
-  tonnes: (n) => `${number.format(n)} t/yr`,
-  kw: (n) => `${number.format(n)} kW`,
-  hours: (n) => `${number.format(n)} h/yr`,
-  percent: (n) => `${number.format(Math.round(n * 100))}%`,
+/** How each kind shows a bare value, and the unit that follows it. */
+const KIND: Record<RangeKind, { value: (n: number) => string; unit: string }> = {
+  tnd: { value: tndValue, unit: ' TND' },
+  years: { value: (n) => number.format(n), unit: ' years' },
+  tonnes: { value: (n) => number.format(n), unit: ' t/yr' },
+  kw: { value: (n) => number.format(n), unit: ' kW' },
+  hours: { value: (n) => number.format(n), unit: ' h/yr' },
+  percent: { value: (n) => number.format(Math.round(n * 100)), unit: '%' },
 };
 
 export type FormattedRange = { favourable: string; central: string; unfavourable: string; text: string };
 
-/** Favourable end first, then unfavourable, with the central case marked. */
+type Scenarios = Record<Scenario, ScenarioResult>;
+
+/**
+ * Favourable end first, then unfavourable, with the central case marked:
+ * "5 to 21.5 years (9 central)". Pass a plant option (or the result) or its scenarios.
+ */
 export function formatRange(
-  option: Pick<PlantOption, 'scenarios'>,
+  source: Pick<PlantOption, 'scenarios'> | Scenarios,
   key: keyof ScenarioResult,
   kind: RangeKind,
 ): FormattedRange {
-  const { favourable, central, unfavourable } = option.scenarios;
-  if (kind === 'tnd') {
-    const [f, c, u] = [favourable[key], central[key], unfavourable[key]];
-    return {
-      favourable: formatTnd(f),
-      central: formatTnd(c),
-      unfavourable: formatTnd(u),
-      text: `${tndValue(f)} to ${formatTnd(u)} (${formatTnd(c)} central)`,
-    };
-  }
-  const fmt = UNIT[kind];
-  const out = { favourable: fmt(favourable[key]), central: fmt(central[key]), unfavourable: fmt(unfavourable[key]) };
-  const bareF = number.format(kind === 'percent' ? Math.round(favourable[key] * 100) : favourable[key]);
-  const bareC = number.format(kind === 'percent' ? Math.round(central[key] * 100) : central[key]);
-  return { ...out, text: `${bareF} to ${out.unfavourable} (${bareC} central)` };
+  const scenarios: Scenarios = 'scenarios' in source ? source.scenarios : source;
+  const { value, unit } = KIND[kind];
+  const bare = (s: Scenario) => value(scenarios[s][key]);
+  const full = (s: Scenario) => bare(s) + unit;
+  const central = kind === 'tnd' ? full('central') : bare('central');
+  return {
+    favourable: full('favourable'),
+    central: full('central'),
+    unfavourable: full('unfavourable'),
+    text: `${bare('favourable')} to ${full('unfavourable')} (${central} central)`,
+  };
 }
 
 export type VerdictTone = 'good' | 'maybe' | 'weak';

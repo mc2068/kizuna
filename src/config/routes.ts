@@ -19,7 +19,7 @@ export const ROUTES: Route[] = [
   { path: '/request-study', key: 'requestStudy', owner: 'Gaith', access: 'public' },
   { path: '/privacy', key: 'privacy', owner: 'Gaith', access: 'public' },
   { path: '/projects', key: 'projects', owner: 'Ahmed', access: 'signed-in' },
-  { path: '/p/demo-token', key: 'sharedProject', owner: 'Ahmed', access: 'public' },
+  { path: '/p/demo-djerba', key: 'sharedProject', owner: 'Ahmed', access: 'public' },
   { path: '/sign-in', key: 'signIn', owner: 'Mohamed', access: 'public' },
   { path: '/admin', key: 'admin', owner: 'Gaith', access: 'admin' },
   { path: '/admin/leads/L-1047', key: 'adminLead', owner: 'Ahmed', access: 'admin' },

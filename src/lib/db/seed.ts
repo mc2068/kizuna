@@ -1,7 +1,8 @@
-// Demo data for the in-memory fake, ported from prototypes/ui/admin-data.js (PR #2).
+// Demo data for the in-memory fake, ported from prototypes/ui/admin-data.js
+// (on branch claude/project-thread-quu722, PR #2).
 // Hotels, people and emails are invented. #6 moves the same data to supabase/seed.sql.
 import { ENGINE_VERSION, sizeHotel, type City } from '@/lib/engine';
-import type { CurrentUser, Lead, LeadEvent, LeadFile, LeadNote, LeadStatus, Profile } from './types';
+import type { CurrentUser, Lead, LeadEvent, LeadFile, LeadNote, LeadStatus, Profile, Project } from './types';
 
 export const ADMINS: (Profile & { email: string })[] = [
   { id: 'admin-mohamed', role: 'admin', fullName: 'Mohamed Chakroun', email: 'mohamed@team.example' },
@@ -9,6 +10,12 @@ export const ADMINS: (Profile & { email: string })[] = [
   { id: 'admin-ahmed', role: 'admin', fullName: 'Ahmed', email: 'ahmed@team.example' },
   { id: 'admin-gaith', role: 'admin', fullName: 'Gaith', email: 'gaith@team.example' },
 ];
+
+/** The public profile of a team member (no email). */
+export const toProfile = ({ id, role, fullName }: Profile): Profile => ({ id, role, fullName });
+
+/** Share token of the seeded demo project: /p/demo-djerba works out of the box. */
+export const DEMO_SHARE_TOKEN = 'demo-djerba';
 
 const asUser = (p: (typeof ADMINS)[number] | { id: string; email: string; role: 'user' }): CurrentUser => ({
   id: p.id,
@@ -65,10 +72,19 @@ export type FakeTables = {
   notes: LeadNote[];
   events: LeadEvent[];
   files: (LeadFile & { contentType: string; bytes: Uint8Array })[];
+  projects: Project[];
 };
 
 export function seedTables(): FakeTables {
-  const t: FakeTables = { leads: [], notes: [], events: [], files: [] };
+  const demoInputs = { rooms: 300, city: 'djerba' as const, pool: true, elecPrice: null };
+  const t: FakeTables = {
+    leads: [], notes: [], events: [], files: [],
+    projects: [{
+      id: 'project-demo-djerba', ownerId: ADMINS[0].id, hotelName: 'Demo hotel, Djerba (300 rooms)',
+      inputs: demoInputs, results: sizeHotel(demoInputs), engineVersion: ENGINE_VERSION,
+      shareToken: DEMO_SHARE_TOKEN, createdAt: '2026-11-20T09:00:00.000Z', updatedAt: '2026-11-20T09:00:00.000Z',
+    }],
+  };
   let n = 0;
   const id = (p: string) => `${p}-${++n}`;
   const event = (leadId: string, kind: LeadEvent['kind'], when: string, actorId: string | null, data: Record<string, unknown> = {}) =>

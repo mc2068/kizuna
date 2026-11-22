@@ -1,7 +1,7 @@
 import { ENGINE_VERSION, sizeHotel } from '@/lib/engine';
 import { isAdmin, requireAdmin } from './auth';
 import { db, newId, now } from './fake-store';
-import { ADMINS } from './seed';
+import { ADMINS, toProfile } from './seed';
 import {
   LEAD_STATUSES,
   type Lead,
@@ -56,9 +56,12 @@ export async function submitStudyRequest(form: StudyRequestForm | FormData): Pro
   if (f.website) return { ok: true, leadId: newId() };
 
   const inputs = { rooms: f.rooms, city: f.city, pool: f.pool, elecPrice: f.elecPrice };
+  // Link a saved project only if it belongs to the person sending the request.
+  const me = db().user;
+  const projectId = db().projects.some((p) => p.id === f.projectId && p.ownerId === me?.id) ? f.projectId! : null;
   const lead: Lead = {
     id: newId(),
-    projectId: f.projectId ?? null,
+    projectId,
     hotelName: f.hotelName,
     city: f.city,
     rooms: f.rooms,
@@ -75,7 +78,7 @@ export async function submitStudyRequest(form: StudyRequestForm | FormData): Pro
     createdAt: now(),
   };
   db().leads.push(lead);
-  addEvent(lead.id, 'created', null, { source: f.projectId ? 'saved project' : 'website form' });
+  addEvent(lead.id, 'created', null, { source: projectId ? 'saved project' : 'website form' });
   return { ok: true, leadId: lead.id };
 }
 
@@ -111,7 +114,7 @@ export async function getLead(id: string): Promise<LeadDetail | null> {
   const store = db();
   return structuredClone({
     ...lead,
-    owner: owner ? { id: owner.id, role: owner.role, fullName: owner.fullName } : null,
+    owner: owner ? toProfile(owner) : null,
     notes: store.notes.filter((n) => n.leadId === id).sort(newestFirst),
     events: store.events.filter((e) => e.leadId === id).sort(newestFirst),
     files: store.files

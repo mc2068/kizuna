@@ -18,6 +18,7 @@ import {
   uploadLeadFile,
 } from '@/lib/db';
 import { FAKE_USERS, resetFakeDb, setFakeUser } from '@/lib/db/fake-store';
+import { DEMO_SHARE_TOKEN } from '@/lib/db/seed';
 import { ENGINE_VERSION, type SizingInput } from '@/lib/engine';
 
 const demoInputs: SizingInput = { rooms: 300, city: 'djerba', pool: true, elecPrice: null };
@@ -103,7 +104,25 @@ describe('projects', () => {
   });
 });
 
+describe('seeded demo project', () => {
+  it('is readable by anyone through /p/demo-djerba', async () => {
+    setFakeUser(null);
+    expect(await getSharedProject(DEMO_SHARE_TOKEN)).toMatchObject({ hotelName: expect.stringContaining('Djerba') });
+  });
+});
+
 describe('submitStudyRequest', () => {
+  it('links a saved project only when the sender owns it', async () => {
+    setFakeUser(FAKE_USERS.userA);
+    const mine = await saveProject({ hotelName: 'Hotel A', inputs: demoInputs });
+    const linked = await submitStudyRequest({ ...validRequest, projectId: mine.id });
+    setFakeUser(FAKE_USERS.userB);
+    const forged = await submitStudyRequest({ ...validRequest, projectId: mine.id });
+    setFakeUser(FAKE_USERS.mohamed);
+    expect((await getLead((linked as { leadId: string }).leadId))!.projectId).toBe(mine.id);
+    expect((await getLead((forged as { leadId: string }).leadId))!.projectId).toBeNull();
+  });
+
   it('saves a lead with status new, server-side results and a created event', async () => {
     setFakeUser(null);
     const r = await submitStudyRequest(validRequest);

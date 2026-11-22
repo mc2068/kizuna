@@ -1,5 +1,5 @@
 import { db } from './fake-store';
-import { ADMINS } from './seed';
+import { ADMINS, toProfile } from './seed';
 import type { CurrentUser, Profile } from './types';
 
 export async function getCurrentUser(): Promise<CurrentUser | null> {
@@ -9,7 +9,7 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
 /** Team members who can own leads. Admins only, like the RLS policy (others get []). */
 export async function listAdmins(): Promise<Profile[]> {
   if (db().user?.role !== 'admin') return [];
-  return ADMINS.map(({ id, role, fullName }) => ({ id, role, fullName }));
+  return ADMINS.map(toProfile);
 }
 
 export function requireUser(): CurrentUser {

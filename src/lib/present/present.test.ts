@@ -27,6 +27,12 @@ describe('formatRange', () => {
   it('formats money ranges in TND', () => {
     expect(formatRange(demo, 'annualSavingsTnd', 'tnd').text).toBe('260k to 110k TND (200k TND central)');
   });
+  it('accepts the scenarios record directly', () => {
+    expect(formatRange(demo.scenarios, 'paybackYears', 'years').text).toBe('5 to 21.5 years (9 central)');
+  });
+  it('formats shares as percent', () => {
+    expect(formatRange(demo, 'primaryEnergySaving', 'percent').text).toBe('20 to 11% (16 central)');
+  });
   it('formats CO2 in tonnes per year', () => {
     expect(formatRange(demo, 'co2AvoidedTonnes', 'tonnes').central).toBe('210 t/yr');
   });
