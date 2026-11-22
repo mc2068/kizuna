@@ -68,6 +68,106 @@
   },
   "results": {
     "heading": "Full results",
-    "intro": "Savings, investment, CO₂ and the hourly dashboard for this hotel, each as a favourable, central and unfavourable case."
+    "intro": "Savings, investment, CO₂ and the hourly dashboard for this hotel, each as a favourable, central and unfavourable case.",
+    "verdict": {
+      "good": {
+        "title": "A good fit.",
+        "body": "The central case pays back in 6 years or less. A feasibility study turns these ranges into a quote for your site."
+      },
+      "maybe": {
+        "title": "A possible fit. It needs a study.",
+        "body": "The central case pays back in 6 to 10 years. Your real bills and an installer quote decide which end of the range you land on."
+      },
+      "weak": {
+        "title": "A weak fit. A plant probably won't pay here.",
+        "body": "We would rather say so now than sell you an engine that sits idle. Trigeneration tends to pay where a hotel is large, open all year, has a heated pool or spa and is on the gas network."
+      }
+    },
+    "warnings": "What holds it back",
+    "faster": "A smaller plant, {plant}, pays back faster: {years} in the central case. Both options are compared below.",
+    "plant": {
+      "engine": "{kwe} engine",
+      "chiller": "{kwc} absorption chiller",
+      "noChiller": "No chiller",
+      "both": "{kwe} engine + {kwc} chiller",
+      "engineOnly": "{kwe} engine, no chiller"
+    },
+    "cardsHeading": "The numbers, as ranges.",
+    "scenarioNote": "Each rail runs from 0 and is read low to high. The bright dot is the central case; the span runs between the favourable and unfavourable cases, the choices an enthusiastic installer and a sceptical reviewer would make, not statistical bounds. Money is in TND, before VAT.",
+    "metrics": {
+      "payback": {
+        "title": "Payback",
+        "description": "Years to earn back the plant",
+        "fte": "With the FTE subsidy: {range}.",
+        "fteFlag": "FTE eligibility unconfirmed"
+      },
+      "capex": {
+        "title": "Investment",
+        "description": "Installed: engine, chiller and connections"
+      },
+      "savings": {
+        "title": "Annual savings",
+        "description": "Per year, after gas and maintenance",
+        "demandCharge": "A STEG demand-charge saving of {value} a year is counted in the favourable case only."
+      },
+      "co2": {
+        "title": "CO₂ avoided",
+        "description": "Per year, against the grid and a gas boiler"
+      },
+      "flh": {
+        "title": "Full-load hours",
+        "description": "Engine output in a year divided by its rating. Below about 4,000 a plant rarely pays."
+      },
+      "pes": {
+        "title": "Primary energy saving",
+        "description": "Fuel saved against buying power and burning gas separately (EU method). 10% or more counts as high-efficiency."
+      },
+      "peak": {
+        "title": "Peak grid relief",
+        "description": "kW taken off the STEG grid at the summer peak, if the engine is running then"
+      }
+    },
+    "rail": "{title}: favourable {favourable}, central {central}, unfavourable {unfavourable}",
+    "options": {
+      "heading": "Two ways in.",
+      "intro": "The smaller plant pays back faster. Most of the value is year-round hot water and pool heat, not summer cooling, so a chiller can be added later.",
+      "trigeneration": "Trigeneration",
+      "trigenerationNote": "Electricity, hot water and cooling",
+      "chpOnly": "CHP only",
+      "chpOnlyNote": "Electricity, hot water and pool heat, no chiller",
+      "bestAny": "Best of any size",
+      "bestAnyNote": "A smaller engine with a small chiller",
+      "headline": "Shown above",
+      "faster": "Faster payback",
+      "fte": "Payback with FTE"
+    },
+    "assumptions": {
+      "summary": "Assumptions and sources",
+      "count": "{count} parameters, each with three values",
+      "intro": "Every parameter the engine uses, with the value it takes in each case and where it comes from. Values marked ESTIMATE wait for a real quote or measurement.",
+      "caption": "Engine parameters by scenario",
+      "name": "Parameter",
+      "favourable": "Favourable",
+      "central": "Central",
+      "unfavourable": "Unfavourable",
+      "unit": "Unit",
+      "source": "Source",
+      "yes": "Yes",
+      "no": "No",
+      "newTab": "(opens in a new tab)",
+      "method": "How the model works: Sources and method",
+      "methodShort": "Sources and method",
+      "see": "See:"
+    },
+    "cta": {
+      "heading": "Next step.",
+      "body": "A feasibility study replaces our assumptions with your bills, your gas connection and an installer quote.",
+      "request": "Request a study",
+      "save": "Save this project",
+      "saveSoon": "Saving projects comes with accounts, soon."
+    },
+    "favourableValue": "Favourable {value}",
+    "unfavourableValue": "Unfavourable {value}",
+    "sameInAll": "The same in every case"
   }
 }
