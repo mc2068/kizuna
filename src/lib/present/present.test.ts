@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { sizeHotel, type PlantOption, type Verdict, type Warning, type WarningCode } from '@/lib/engine';
 import engineMessages from '../../../messages/en/engine.json';
 import {
+  assumptionUnit,
+  formatAssumptionValue,
   formatHours,
   formatKw,
   formatPercent,
@@ -9,6 +11,7 @@ import {
   formatTnd,
   formatTonnes,
   formatYears,
+  sourceParts,
   verdictKey,
   verdictTone,
   warningMessage,
@@ -157,5 +160,37 @@ describe('warnings', () => {
     const m = warningMessage(w);
     m.values.years = 0;
     expect(w.params.years).toBe(22.5);
+  });
+});
+
+describe('assumption helpers', () => {
+  const words = { yes: 'yes', no: 'no' };
+  it('formatAssumptionValue', () => {
+    expect(formatAssumptionValue(0.38, 'fraction', words)).toBe('38%');
+    expect(formatAssumptionValue(0.425, 'fraction', words)).toBe('42.5%');
+    expect(formatAssumptionValue(1, 'yes=1', words)).toBe('yes');
+    expect(formatAssumptionValue(0, 'yes=1', words)).toBe('no');
+    expect(formatAssumptionValue(7000, 'TND/kWe', words)).toBe('7,000');
+    expect(formatAssumptionValue(0.068, 'TND/kWh', words)).toBe('0.068');
+    expect(formatAssumptionValue(-0.12, '-', words)).toBe('-0.12');
+  });
+  it('assumptionUnit', () => {
+    expect(['fraction', 'yes=1', '-', 'TND/kWh'].map(assumptionUnit)).toEqual(['', '', '', 'TND/kWh']);
+  });
+  it('sourceParts splits links out, without trailing punctuation', () => {
+    expect(sourceParts('DOE 0.70 https://www.energy.gov/a.pdf. ESTIMATE')).toEqual([
+      { kind: 'text', text: 'DOE 0.70 ' },
+      { kind: 'link', href: 'https://www.energy.gov/a.pdf', label: 'energy.gov' },
+      { kind: 'text', text: '. ESTIMATE' },
+    ]);
+    expect(sourceParts('no link')).toEqual([{ kind: 'text', text: 'no link' }]);
+  });
+  it('every engine source splits into parts that join back to the source', () => {
+    for (const a of sizeHotel({}).assumptions) {
+      const joined = sourceParts(a.source)
+        .map((p) => (p.kind === 'text' ? p.text : p.href))
+        .join('');
+      expect(joined, a.name).toBe(a.source);
+    }
   });
 });
