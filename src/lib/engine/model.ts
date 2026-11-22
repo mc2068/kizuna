@@ -1,4 +1,4 @@
-// [PRODUCT NAME] sizing engine v2: TypeScript port of the reference model engine/model.mjs (ADR 0002).
+// Sizing engine v2: TypeScript port of the reference model engine/model.mjs (ADR 0002).
 // Pure: no DOM, no network, no clock, deterministic. The parity test in model.test.ts requires this file to
 // return exactly what engine/model.mjs returns, so keep the arithmetic in the same order. One deliberate
 // difference: warnings are { code, params } objects (Contract 1), not English sentences. If the model has to

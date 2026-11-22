@@ -1,4 +1,4 @@
-# Team plan: building the [PRODUCT NAME] website
+# Team plan: building the Enerwise website
 
 Scope: the complete Next.js + Supabase website (14 pages). The pitch and the video come later and reuse the site. Every decision behind this plan is in [`CONTEXT.md`](../../CONTEXT.md) and [`docs/adr/`](../adr/). **Deadline: not set yet**, so the plan gives an order, not dates.
 
@@ -87,7 +87,7 @@ If a contract has to change, the members involved agree on it and update it in a
 - One branch per issue: `<member>/<issue>-<short-name>` (e.g. `ahmed/9-tool-configurator`), PR to the default branch with `Closes #N`. Mohamed reviews and merges.
 - Only edit files you own (listed in your role file). Ask the owner for anything else.
 - CI must be green before a merge.
-- The product name stays `[PRODUCT NAME]`, read from `siteConfig.name`, until the team decides.
+- The product name is Enerwise, read from `siteConfig.name`; never hard-code it.
 
 ## Frozen numbers
 

@@ -1,3 +1,4 @@
+import { siteConfig } from '@/config/site';
 import { describe, expect, it } from 'vitest';
 import { snapshot, type PlantOption } from '@/lib/engine';
 import { formatRange } from '@/lib/present';
@@ -9,7 +10,7 @@ const m = buildReport(demo);
 
 describe('cover', () => {
   it('names the product, the hotel and the inputs', () => {
-    expect(m.productName).toBe('[PRODUCT NAME]');
+    expect(m.productName).toBe(siteConfig.name);
     expect(m.cover.hotelName).toBe('Hotel Djerba Plage');
     expect(m.cover.context).toBe('300 rooms · Djerba · pool');
     expect(m.cover.tariff).toBe('STEG medium-voltage time-of-use prices, before VAT');
@@ -112,7 +113,7 @@ describe('assumptions, method, staleness', () => {
   });
 
   it('footer and page label', () => {
-    expect(m.footer).toBe('[PRODUCT NAME] · Hotel Djerba Plage');
+    expect(m.footer).toBe(`${siteConfig.name} · Hotel Djerba Plage`);
     expect(m.pageLabel(2, 5)).toBe('Page 2 of 5');
   });
 });

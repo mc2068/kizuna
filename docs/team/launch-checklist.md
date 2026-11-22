@@ -40,7 +40,7 @@ Checked against the table in [README.md](README.md#frozen-numbers) on Home, Tool
 
 ### Vercel (Settings, Environment Variables)
 
-- [ ] Production: `RESEND_API_KEY`, `EMAIL_FROM` (`[PRODUCT NAME] <hello@your-domain>`, a Resend-verified domain), `TEAM_NOTIFY_EMAIL` (comma-separated). Redeploy after adding them. Until then study requests are saved but emails are logged as "skipped".
+- [ ] Production: `RESEND_API_KEY`, `EMAIL_FROM` (`Enerwise <hello@your-domain>`, a Resend-verified domain), `TEAM_NOTIFY_EMAIL` (comma-separated). Redeploy after adding them. Until then study requests are saved but emails are logged as "skipped".
 - [ ] Preview: `ALLOW_FAKE_DB=1`, or every PR preview fails to render (previews have no database).
 - [ ] Analytics tab: enable Web Analytics.
 - [ ] Custom domain, if any: add it, then set `NEXT_PUBLIC_SITE_URL` to it.
@@ -59,7 +59,7 @@ Checked against the table in [README.md](README.md#frozen-numbers) on Home, Tool
 
 ### Google Cloud (only if Google sign-in is wanted)
 
-- [ ] OAuth consent screen (External, app name `[PRODUCT NAME]`, scopes email, profile, openid), then a Web client with redirect URI `https://<project-ref>.supabase.co/auth/v1/callback`.
+- [ ] OAuth consent screen (External, app name `Enerwise`, scopes email, profile, openid), then a Web client with redirect URI `https://<project-ref>.supabase.co/auth/v1/callback`.
 
 ### GitHub
 
@@ -69,5 +69,5 @@ Checked against the table in [README.md](README.md#frozen-numbers) on Home, Tool
 
 - [ ] Error monitoring: Vercel's runtime logs for now (Project, Logs). No paging; decide if Sentry is needed after launch.
 - [ ] On call during the launch: Mohamed for platform, data and email; Ahmed for the tool and projects; Gaith for pages; Hamza for the engine and the PDF.
-- [ ] Product name: still `[PRODUCT NAME]`. When the team picks one, change `siteConfig.name` in `src/config/site.ts` once.
+- [x] Product name: Enerwise, set once in `siteConfig.name` (`src/config/site.ts`).
 - [ ] Team sign-off, then close #28.

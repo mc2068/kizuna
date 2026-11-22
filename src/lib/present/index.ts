@@ -1,4 +1,4 @@
-// Presentation helpers for the [PRODUCT NAME] sizing engine (Contract 1). The UI, the share page and the PDF
+// Presentation helpers for the sizing engine (Contract 1). The UI, the share page and the PDF
 // never format engine numbers themselves: they call these. Pure functions, no React, en-GB number format.
 //
 // Numbers are shown exactly as the engine rounds them (e.g. capex 2,360,000 -> "2.36 M TND"); these helpers

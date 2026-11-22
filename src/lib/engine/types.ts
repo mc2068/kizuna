@@ -1,4 +1,4 @@
-// Contract 1: the public types of the [PRODUCT NAME] sizing engine. See docs/team/README.md.
+// Contract 1: the public types of the sizing engine. See docs/team/README.md.
 // Changing anything here changes the contract: agree it with the team and update all four role files.
 
 export type City = 'djerba' | 'sousse' | 'hammamet' | 'tozeur';

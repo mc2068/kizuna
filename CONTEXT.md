@@ -1,4 +1,4 @@
-# Context: [PRODUCT NAME] website (Next.js + Supabase)
+# Context: Enerwise website (Next.js + Supabase)
 
 Living record of decisions from the website grilling (22 Nov 2026). Scope: the website only. The pitch and the video come later and reuse the site. Update as decisions change.
 
@@ -11,7 +11,7 @@ A Tunisian startup that sizes and sells trigeneration (CCHP) plants for hotels. 
 - Sizing tool outputs: engine kW, chiller kW, annual savings (TND), CO2 avoided (t/yr), payback with and without the FTE subsidy, kW removed from the grid at the summer peak, plus the hourly dashboard (summer and winter days). From engine v2, every money and CO2 output is a **range** (unfavourable / central / favourable), rounded, with full-load hours, primary energy saving, a verdict (good fit / possible fit / weak fit) and warnings. The tool shows the trigeneration option and, when it pays back faster, a CHP-only option.
 - Demo hotel: 300-room, 4-star beach hotel in Djerba with a pool.
 - Numbers are estimates with visible, cited assumptions. Prices are before VAT (STEG time-of-use electricity, STEG MP1 gas).
-- Name: placeholder `[PRODUCT NAME]` until the team decides; kept in one place so it is swapped once.
+- Name: Enerwise, written once in `siteConfig.name` (src/config/site.ts); code reads it from there.
 - Team: Mohamed (lead, integration, auth, database, deploys), Hamza (energy engine), Ahmed (tool and dashboard), Gaith (pages and design).
 
 ## Decisions

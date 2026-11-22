@@ -1,4 +1,4 @@
-// The [PRODUCT NAME] PDF report (#23), laid out with @react-pdf/renderer. Server only. Every string and number
+// The PDF report (#23), laid out with @react-pdf/renderer. Server only. Every string and number
 // comes from the ReportModel (model.ts), so nothing here formats or computes engine values.
 
 import path from 'node:path';
