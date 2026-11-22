@@ -373,5 +373,63 @@
       "primary": "Request a study",
       "email": "Email {email}"
     }
+  },
+  "sources": {
+    "meta": {
+      "title": "Sources and method",
+      "description": "How the screening tool calculates, every assumption with its three values and source, what moves the answer, and what is not modelled yet."
+    },
+    "hero": {
+      "eyebrow": "Sources and method",
+      "title": "Every number,",
+      "titleSub": "and where it comes from.",
+      "lede": "The tool gives estimates, not promises. Here is exactly how it gets them, so you can check our work."
+    },
+    "toc": {
+      "label": "On this page",
+      "calculate": "How we calculate",
+      "assumptions": "Assumptions",
+      "moves": "What moves the answer",
+      "limits": "Limits",
+      "references": "References"
+    },
+    "calculate": {
+      "title": "How we calculate.",
+      "lede": "Five steps, the same for every hotel. Engine model version {version}."
+    },
+    "assumptions": {
+      "title": "Assumptions.",
+      "lede": "Every parameter the engine uses, with the value a sceptic, we and an enthusiast would pick. Prices before VAT.",
+      "caption": "Engine assumptions with unfavourable, central and favourable values, unit, status and source.",
+      "parameter": "Parameter",
+      "unfavourable": "Unfavourable",
+      "central": "Central",
+      "favourable": "Favourable",
+      "unit": "Unit",
+      "status": "Status",
+      "source": "Source",
+      "sourced": "Sourced",
+      "estimated": "Estimated",
+      "link": "link",
+      "statusNote": "Sourced: a published figure used as it is. Estimated: derived from a source with our own rounding or reasoning."
+    },
+    "moves": {
+      "title": "What moves the answer.",
+      "lede": "One input at a time, for the Djerba demo hotel, from its central payback of {years} years.",
+      "caption": "Payback of the Djerba demo when one input changes.",
+      "input": "Input",
+      "values": "Unfavourable / favourable value",
+      "unfavourable": "Payback if unfavourable",
+      "favourable": "Payback if favourable",
+      "years": "{value} years"
+    },
+    "limits": {
+      "title": "Limits.",
+      "lede": "What the model does not do yet. A feasibility study covers these for your site."
+    },
+    "references": {
+      "title": "References.",
+      "lede": "Numbered as they appear in the footnotes across the site."
+    }
   }
 }

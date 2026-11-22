@@ -1,9 +1,6 @@
 // Role 3 (Gaith): header, footer and AdminShell on every page, at 1440 and 360 px.
 import { expect, test } from '@playwright/test';
-
-export const PUBLIC_PAGES = [
-  '/', '/how-it-works', '/tool', '/services', '/case-study/djerba', '/about', '/sources', '/request-study', '/privacy',
-];
+import { PUBLIC_PAGES } from './role3-pages';
 
 test.describe('layout', () => {
   for (const path of PUBLIC_PAGES) {
