@@ -28,8 +28,11 @@ test('the hourly chart loads when scrolled into view', async ({ page }) => {
   const errors = collectErrors(page);
   await page.goto('/tool');
   const section = page.getByRole('region', { name: 'A typical day, hour by hour.' });
-  await section.scrollIntoViewIfNeeded();
-  await expect(section.locator('.recharts-surface')).toBeVisible();
+  // Scroll again if the section re-rendered under the scroll (see e2e/tool-chart.spec.ts).
+  await expect(async () => {
+    await section.scrollIntoViewIfNeeded({ timeout: 2_000 });
+    await expect(section.locator('.recharts-surface')).toBeVisible({ timeout: 2_000 });
+  }).toPass({ timeout: 15_000 });
   await section.getByRole('tab', { name: 'Hot water' }).click();
   await expect(section.getByRole('tab', { name: 'Hot water' })).toHaveAttribute('aria-selected', 'true');
   expect(errors).toEqual([]);
