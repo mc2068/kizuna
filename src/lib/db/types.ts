@@ -88,6 +88,8 @@ export type LeadFilters = { status?: LeadStatus; city?: City; mine?: boolean };
 
 export type LeadCounts = Record<LeadStatus, number>;
 
+export const emptyLeadCounts = (): LeadCounts => ({ new: 0, contacted: 0, quoted: 0, won: 0, lost: 0 });
+
 /** The Request a study form. Pass this object or the form's FormData. */
 export type StudyRequestForm = {
   contactName: string;

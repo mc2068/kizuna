@@ -30,3 +30,14 @@ export const studyRequestSchema = sizingInputSchema.extend({
   projectId: optionalText,
   website: optionalText,
 });
+
+/** Storage-safe object name: letters, digits, dot, dash and underscore. */
+export function safeFileName(name: string): string {
+  return name.replace(/[^\w.-]+/g, '_');
+}
+
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+export function isUuid(value: string): boolean {
+  return UUID.test(value);
+}

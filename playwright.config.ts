@@ -12,6 +12,8 @@ export default defineConfig({
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
   webServer: {
     command: `pnpm start --port ${port}`,
+    // The smoke test runs the production build on the in-memory fake (no database).
+    env: { ALLOW_FAKE_DB: '1' },
     url: `http://localhost:${port}`,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
