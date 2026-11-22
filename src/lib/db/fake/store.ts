@@ -71,6 +71,23 @@ export const fakeStore: DataStore = {
     store.projects.splice(i, 1);
   },
 
+  async renameProject(id, hotelName) {
+    const p = db().projects.find((x) => x.id === id && x.ownerId === db().user?.id);
+    if (!p) throw new Error('Project not found.');
+    p.hotelName = hotelName;
+    p.updatedAt = now();
+    return structuredClone(p);
+  },
+
+  async updateProjectResults(id, results, engineVersion) {
+    const p = db().projects.find((x) => x.id === id && x.ownerId === db().user?.id);
+    if (!p) throw new Error('Project not found.');
+    p.results = results;
+    p.engineVersion = engineVersion;
+    p.updatedAt = now();
+    return structuredClone(p);
+  },
+
   async sharedProject(token) {
     const p = db().projects.find((x) => x.shareToken === token);
     if (!p) return null;

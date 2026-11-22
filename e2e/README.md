@@ -8,7 +8,8 @@ Run against a production build (`pnpm build`, then `pnpm e2e` starts `pnpm start
 | `access.spec.ts` | Signed out: `/projects` redirects to sign-in, `/admin/**` is a 404, the sign-in form. Signed in: a hotel user gets 404 on `/admin`, an admin opens it, a bad link returns to sign-in. | Signed-in part |
 | `auth.spec.ts` | Magic link end to end, read from the local inbox (Mailpit); a link works once; sign out. | Yes |
 | `save-project.spec.ts` | Saving from `/tool`: signed in in one step; signed out through the magic link, saved once on return, with server-side results. | Yes |
-| `pending.spec.ts` | `test.fixme` placeholders for the flows whose pages have not merged: tool verdict, share link and PDF, study request to admin pipeline, lead status and file upload. | Later |
+| `projects.spec.ts` | My projects: empty state, card, rename, copy share link, delete, stale engine and Re-run; another user sees nothing; the share link signed out (results, no owner email, noindex, PDF link) and 404 for unknown links. | Yes |
+| `pending.spec.ts` | `test.fixme` placeholders for the flows whose pages have not merged: tool verdict, PDF report, study request to admin pipeline, lead status and file upload. | Later |
 
 ## On local Supabase (what CI runs)
 

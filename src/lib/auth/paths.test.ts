@@ -51,3 +51,23 @@ describe('accessFor', () => {
     expect(accessFor(path)).toBe(access);
   });
 });
+
+describe('share links', () => {
+  it('finds the token of /p/<token> only', async () => {
+    const { shareTokenOf } = await import('./paths');
+    expect(shareTokenOf('/p/demo-djerba')).toBe('demo-djerba');
+    expect(shareTokenOf('/p/abc/')).toBe('abc');
+    expect(shareTokenOf('/p')).toBeNull();
+    expect(shareTokenOf('/p/a/b')).toBeNull();
+    expect(shareTokenOf('/projects')).toBeNull();
+  });
+
+  it('accepts share-token-shaped strings only', async () => {
+    const { isShareToken } = await import('./paths');
+    expect(isShareToken('0123456789abcdef0123456789abcdef')).toBe(true);
+    expect(isShareToken('demo-djerba')).toBe(true);
+    expect(isShareToken('short')).toBe(false);
+    expect(isShareToken('x'.repeat(65))).toBe(false);
+    expect(isShareToken("a'; drop table--")).toBe(false);
+  });
+});

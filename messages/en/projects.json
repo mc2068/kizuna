@@ -1,1 +1,73 @@
-{}
+{
+  "meta": {
+    "title": "My projects",
+    "description": "The hotels you have screened and saved."
+  },
+  "list": {
+    "title": "My projects.",
+    "intro": "The hotels you have screened. Open one to change it, or share a read-only link.",
+    "count": "{count, plural, one {# project} other {# projects}}",
+    "new": "Screen another hotel",
+    "empty": {
+      "title": "No projects yet.",
+      "body": "Screen a hotel in the sizing tool and save it: it will appear here.",
+      "button": "Open the sizing tool"
+    }
+  },
+  "card": {
+    "summary": "{rooms} rooms · {city} · {pool, select, true {pool} other {no pool}}",
+    "payback": "Payback, central case",
+    "range": "{favourable} to {unfavourable}",
+    "updated": "Updated {date}",
+    "stale": "Calculated with an older engine",
+    "staleNote": "Engine {version}. Re-run it to see today's numbers.",
+    "actions": "Actions for {name}",
+    "open": "Open in the tool",
+    "rename": "Rename",
+    "delete": "Delete",
+    "copyLink": "Copy share link",
+    "pdf": "Download PDF",
+    "rerun": "Re-run",
+    "rerunning": "Re-running…"
+  },
+  "rename": {
+    "title": "Rename this project.",
+    "description": "The new name also shows on its share link.",
+    "label": "Hotel name",
+    "submit": "Save name",
+    "saving": "Saving…"
+  },
+  "delete": {
+    "title": "Delete {name}?",
+    "description": "The project and its share link stop working for everyone. This cannot be undone.",
+    "cancel": "Keep it",
+    "confirm": "Delete project",
+    "deleting": "Deleting…"
+  },
+  "toast": {
+    "copied": "Share link copied.",
+    "copyFailed": "Could not copy. The link is {url}",
+    "renamed": "Project renamed.",
+    "deleted": "Project deleted.",
+    "rerun": "Re-run with the current engine.",
+    "failed": "That did not work. Please try again."
+  },
+  "shared": {
+    "metaTitle": "{name}: trigeneration screening",
+    "metaDescription": "A read-only trigeneration screening of a Tunisian hotel: plant size, payback and savings as ranges.",
+    "eyebrow": "Shared screening",
+    "summary": "{rooms} rooms · {city} · {pool, select, true {heated pool} other {no pool}} · {price}",
+    "tou": "STEG time-of-use tariff",
+    "flat": "Flat price {price} TND/kWh",
+    "resultsHeading": "Results",
+    "footnote": "Calculated on {date} with engine version {version}. Estimates before VAT; a feasibility study confirms the numbers for a site.",
+    "stale": "The engine has changed since then (now {current}): today's numbers may differ.",
+    "method": "How the model works",
+    "cta": {
+      "heading": "Screen your own hotel.",
+      "body": "Four answers, results in real time. Free, and no sign-in needed to try it.",
+      "button": "Screen your own hotel"
+    },
+    "pdf": "Download PDF report"
+  }
+}

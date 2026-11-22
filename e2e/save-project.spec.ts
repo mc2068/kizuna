@@ -64,4 +64,6 @@ test('signed out, the project saves itself once after the magic link', async ({ 
   await page.reload();
   await page.waitForLoadState('networkidle');
   expect(await savedRows(hotelName)).toHaveLength(1);
+  await page.goto('/projects');
+  await expect(page.getByRole('heading', { name: hotelName })).toHaveCount(1);
 });

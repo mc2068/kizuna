@@ -68,3 +68,12 @@ export function useTool(): ToolState {
   if (!ctx) throw new Error('useTool() must be used inside <ToolStateProvider>.');
   return ctx;
 }
+
+/**
+ * A fixed, stored result (a saved or shared project): the result components read it like the live
+ * tool, but nothing is recomputed in the browser and the inputs cannot change.
+ */
+export function StoredResultProvider({ inputs, result, children }: { inputs: SizingInput; result: SizingResult; children: React.ReactNode }) {
+  const value = useMemo<ToolState>(() => ({ inputs, resultInputs: inputs, result, pending: false, setInputs: () => {} }), [inputs, result]);
+  return <ToolContext.Provider value={value}>{children}</ToolContext.Provider>;
+}

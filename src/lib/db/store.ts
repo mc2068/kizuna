@@ -39,6 +39,10 @@ export interface DataStore {
   insertProject(row: NewProject): Promise<Project>;
   /** Throws 'Project not found.' when missing or not the signed-in user's. */
   deleteProject(id: string): Promise<void>;
+  /** Changes only the hotel name. Throws 'Project not found.' when missing or not the signed-in user's. */
+  renameProject(id: string, hotelName: string): Promise<Project>;
+  /** Replaces the stored results (computed on the server). Throws 'Project not found.' like renameProject. */
+  updateProjectResults(id: string, results: SizingResult, engineVersion: string): Promise<Project>;
   sharedProject(token: string): Promise<SharedProject | null>;
   /** True only when the project exists and belongs to the signed-in user. */
   ownsProject(id: string): Promise<boolean>;

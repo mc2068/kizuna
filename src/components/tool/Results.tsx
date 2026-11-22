@@ -89,7 +89,27 @@ function NextStep() {
   );
 }
 
-export function Results() {
+/** On a shared project: no save, just the way into the tool. */
+function ScreenYourOwn() {
+  const t = useTranslations('projects.shared.cta');
+  return (
+    <div className="mt-16 flex flex-col gap-6 rounded-[28px] bg-[var(--tile,#f5f5f7)] px-6 py-8 sm:px-10 md:flex-row md:items-center md:justify-between">
+      <div className="max-w-xl">
+        <h3 className="text-3xl font-semibold">{t('heading')}</h3>
+        <p className="mt-2 text-[17px] text-[var(--muted,#6e6e73)]">{t('body')}</p>
+      </div>
+      <a
+        href="/tool"
+        className="self-start rounded-full bg-[var(--btn,#0071e3)] px-5 py-3 text-[17px] text-white hover:bg-[#0077ed] focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-[rgba(0,125,250,.35)] md:self-center"
+      >
+        {t('button')}
+      </a>
+    </div>
+  );
+}
+
+/** readOnly: a stored project (the share page), with a "Screen your own hotel" CTA instead of Save. */
+export function Results({ readOnly = false }: { readOnly?: boolean }) {
   const { result } = useTool();
   const faster = fasterOption(result.options);
   return (
@@ -102,7 +122,7 @@ export function Results() {
         ) : null}
       </Collapse>
       <AssumptionsTable assumptions={result.assumptions} />
-      <NextStep />
+      {readOnly ? <ScreenYourOwn /> : <NextStep />}
     </>
   );
 }

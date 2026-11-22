@@ -15,6 +15,8 @@ import {
   getSharedProject,
   listAdmins,
   listLeads,
+  renameProject,
+  rerunProject,
   saveProject,
   setLeadStatus,
   submitStudyRequest,
@@ -118,6 +120,32 @@ export function describeDataLayer(driver: ContractDriver): void {
       const a = await saveProject({ hotelName: 'Hotel A', inputs: demoInputs });
       await deleteProject(a.id);
       expect(await getMyProjects()).toEqual([]);
+    });
+
+    it('renames own project, and only the owner can', async () => {
+      await as('userA');
+      const a = await saveProject({ hotelName: 'Hotel A', inputs: demoInputs });
+      await as('userB');
+      await expect(renameProject(a.id, 'Taken over')).rejects.toThrow(/not found/i);
+      await as('userA');
+      const renamed = await renameProject(a.id, '  Hotel Azur  ');
+      expect(renamed).toMatchObject({ id: a.id, hotelName: 'Hotel Azur', results: a.results, shareToken: a.shareToken });
+      expect((await getSharedProject(a.shareToken))?.hotelName).toBe('Hotel Azur');
+      await expect(renameProject(a.id, '   ')).rejects.toThrow();
+      await expect(renameProject('00000000-0000-4000-8000-000000000000', 'X')).rejects.toThrow(/not found/i);
+    });
+
+    it('re-runs own project with the current engine, and only the owner can', async () => {
+      await as('userA');
+      const a = await saveProject({ hotelName: 'Hotel A', inputs: demoInputs });
+      await as('userB');
+      await expect(rerunProject(a.id)).rejects.toThrow(/not found/i);
+      await as(null);
+      await expect(rerunProject(a.id)).rejects.toThrow(/signed in/i);
+      await as('userA');
+      const again = await rerunProject(a.id);
+      expect(again).toMatchObject({ id: a.id, engineVersion: ENGINE_VERSION, inputs: demoInputs });
+      expect(again.results).toEqual(a.results);
     });
 
     it('anyone with the share token reads the project, without owner or id', async () => {

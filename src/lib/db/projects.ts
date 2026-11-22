@@ -28,6 +28,22 @@ export async function deleteProject(id: string): Promise<void> {
   await store().deleteProject(id);
 }
 
+export async function renameProject(id: string, hotelName: string): Promise<Project> {
+  await requireUser();
+  const name = hotelName.trim();
+  if (name.length < 1 || name.length > 160) throw new Error('Hotel name must be 1 to 160 characters.');
+  return store().renameProject(id, name);
+}
+
+/** Recomputes a saved project with the current engine, from its stored inputs (validated again). */
+export async function rerunProject(id: string): Promise<Project> {
+  await requireUser();
+  const project = await store().project(id);
+  if (!project) throw new Error('Project not found.');
+  const clean = parseSizingInput(project.inputs);
+  return store().updateProjectResults(id, sizeHotel(clean), ENGINE_VERSION);
+}
+
 /** Public, read-only view of a project through its share link. */
 export async function getSharedProject(token: string): Promise<SharedProject | null> {
   return store().sharedProject(token);
