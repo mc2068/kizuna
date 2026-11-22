@@ -21,10 +21,22 @@
       "label": "Location.",
       "hint": "Where is it?",
       "options": {
-        "djerba": { "name": "Djerba", "note": "Island coast" },
-        "sousse": { "name": "Sousse", "note": "Sahel coast" },
-        "hammamet": { "name": "Hammamet", "note": "Gulf coast" },
-        "tozeur": { "name": "Tozeur", "note": "Saharan oasis" }
+        "djerba": {
+          "name": "Djerba",
+          "note": "Island coast"
+        },
+        "sousse": {
+          "name": "Sousse",
+          "note": "Sahel coast"
+        },
+        "hammamet": {
+          "name": "Hammamet",
+          "note": "Gulf coast"
+        },
+        "tozeur": {
+          "name": "Tozeur",
+          "note": "Saharan oasis"
+        }
       }
     },
     "pool": {
@@ -162,9 +174,7 @@
     "cta": {
       "heading": "Next step.",
       "body": "A feasibility study replaces our assumptions with your bills, your gas connection and an installer quote.",
-      "request": "Request a study",
-      "save": "Save this project",
-      "saveSoon": "Saving projects comes with accounts, soon."
+      "request": "Request a study"
     },
     "favourableValue": "Favourable {value}",
     "unfavourableValue": "Unfavourable {value}",
@@ -214,6 +224,22 @@
     "table": {
       "caption": "{season}, central case: power in kW for each hour",
       "hour": "Hour"
+    }
+  },
+  "save": {
+    "button": "Save this project",
+    "title": "Save this project.",
+    "description": "Give it a name to find it again in My projects. We save the four answers; the numbers are computed again on our side.",
+    "nameLabel": "Hotel name",
+    "submit": "Save",
+    "saving": "Saving…",
+    "saved": "Saved to My projects.",
+    "openProjects": "Open My projects",
+    "errors": {
+      "invalidName": "Enter a hotel name of 2 to 80 characters.",
+      "invalidInputs": "These inputs can't be saved. A flat price must be between 0.05 and 1 TND/kWh.",
+      "failed": "The project could not be saved. Please try again.",
+      "signedOut": "Sign in to save this project."
     }
   }
 }
