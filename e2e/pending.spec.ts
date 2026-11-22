@@ -9,12 +9,7 @@ test.describe('tool (#9, #10)', () => {
   test.fixme('run the tool and see a verdict', async () => {});
 });
 
-test.describe('save and share (#21, #22, #23)', () => {
-  // Signed out on /tool -> "Save this project" with a hotel name -> sign-in by magic link
-  // (magicLinkFromInbox) -> back on /tool?resume=1 the project saves itself once -> it appears
-  // exactly once in /projects.
-  test.fixme('save a project before sign-in and find it in My projects', async () => {});
-
+test.describe('share (#22, #23)', () => {
   // Copy the share link from /projects, open it in a fresh signed-out context: it shows the
   // results, no owner email, and has noindex. The PDF link answers application/pdf.
   test.fixme('open the share link signed out and download the PDF', async () => {});

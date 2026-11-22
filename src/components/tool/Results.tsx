@@ -11,6 +11,7 @@ import { ResultsCards, usePlantText } from './ResultsCards';
 import { ResultsOptions, badgeTone } from './ResultsOptions';
 import { Collapse, usePop } from './motion';
 import { fasterOption } from './results-metrics';
+import { ResumeSave, SaveProjectButton } from './SaveProject';
 import { useTool } from './ToolState';
 
 const toneAccent = {
@@ -80,18 +81,9 @@ function NextStep() {
           >
             {t('request')}
           </a>
-          <button
-            type="button"
-            disabled
-            aria-describedby="save-soon"
-            className="cursor-not-allowed rounded-full border border-[var(--line,#d2d2d7)] px-5 py-3 text-[17px] text-[var(--faint,#86868b)]"
-          >
-            {t('save')}
-          </button>
+          <SaveProjectButton inputs={resultInputs} />
         </div>
-        <p id="save-soon" className="text-xs text-[var(--muted,#6e6e73)]">
-          {t('saveSoon')}
-        </p>
+        <ResumeSave />
       </div>
     </div>
   );
