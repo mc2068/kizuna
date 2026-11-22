@@ -1,13 +1,24 @@
 // [PRODUCT NAME] sizing engine v2: TypeScript port of the reference model engine/model.mjs (ADR 0002).
 // Pure: no DOM, no network, no clock, deterministic. The parity test in model.test.ts requires this file to
-// return exactly what engine/model.mjs returns, so keep the arithmetic in the same order. If the model has to
+// return exactly what engine/model.mjs returns, so keep the arithmetic in the same order. One deliberate
+// difference: warnings are { code, params } objects (Contract 1), not English sentences. If the model has to
 // change, change engine/model.mjs and docs/engine/spec.md first, then this port, then bump ENGINE_VERSION.
 //
 // All power in kW, energy in kWh, money in TND before VAT.
 
 import { FIXED, PARAMS, STEG_TOU, type ParamKey, type ParamSet, type TouSlot } from './params';
 import { CITY, PER_ROOM, POOL, POOL_REFERENCE_ROOMS, type CityMultiplier, type Season } from './profiles';
-import type { Assumption, HourRow, PlantOption, Scenario, ScenarioResult, SizingInput, SizingResult, Verdict } from './types';
+import type {
+  Assumption,
+  HourRow,
+  PlantOption,
+  Scenario,
+  ScenarioResult,
+  SizingInput,
+  SizingResult,
+  Verdict,
+  Warning,
+} from './types';
 import { SCENARIOS } from './types';
 
 const HOURS = 24;
@@ -220,6 +231,13 @@ function evaluate({ rooms, cityMult, pool, flatPrice }: NormalisedInput, kwe: nu
   };
 }
 
+/** Thresholds of the sanity checks behind `warnings`. */
+export const WARN = {
+  minFullLoadHours: 4000,
+  minPrimaryEnergySaving: 0.1, // EU high-efficiency cogeneration test (Directive 2012/27/EU, Annex II)
+  maxCentralPaybackYears: 10,
+} as const;
+
 /** Below this the absorption chiller is not worth installing (ESTIMATE). */
 export const MIN_TRIGEN_CHILLER_KWC = 50;
 const verdictFor = (y: number): Verdict => (y <= 6 ? 'good fit' : y <= 10 ? 'possible fit, needs a study' : 'weak fit');
@@ -275,12 +293,20 @@ export function sizeHotel(input: Partial<SizingInput> = {}): SizingResult {
     if (!chosen) return null;
     const raw = {} as Record<Scenario, Evaluation>;
     for (const s of SCENARIOS) raw[s] = s === 'central' ? chosen : evaluate(norm, chosen.kwe, paramsFor(s));
-    const warnings: string[] = [];
-    if (chosen.fullLoadHours < 4000) warnings.push(`Only ${round(chosen.fullLoadHours, 100)} full-load hours a year (below 4,000).`);
-    if (chosen.primaryEnergySaving < 0.1) warnings.push('Primary energy saving below 10%: not high-efficiency cogeneration under the EU test.');
-    if (chosen.paybackYears > 10) warnings.push('Central payback above 10 years.');
     const scenarios = {} as Record<Scenario, ScenarioResult>;
     for (const s of SCENARIOS) scenarios[s] = present(raw[s]);
+    // Same checks and order as the reference model; params are the rounded central values the UI shows.
+    const c = scenarios.central;
+    const warnings: Warning[] = [];
+    if (chosen.fullLoadHours < WARN.minFullLoadHours)
+      warnings.push({ code: 'lowFullLoadHours', params: { hours: c.fullLoadHours, threshold: WARN.minFullLoadHours } });
+    if (chosen.primaryEnergySaving < WARN.minPrimaryEnergySaving)
+      warnings.push({
+        code: 'lowPrimaryEnergySaving',
+        params: { pes: c.primaryEnergySaving, threshold: WARN.minPrimaryEnergySaving },
+      });
+    if (chosen.paybackYears > WARN.maxCentralPaybackYears)
+      warnings.push({ code: 'longPayback', params: { years: c.paybackYears, threshold: WARN.maxCentralPaybackYears } });
     return {
       engineKwe: chosen.kwe,
       chillerKwc: chosen.chillerKwc,
