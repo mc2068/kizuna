@@ -11,8 +11,12 @@ test('the hourly chart loads when scrolled into view', async ({ page }) => {
   const section = page.getByRole('region', { name: 'A typical day, hour by hour.' });
   await expect(section.locator('.recharts-surface')).toHaveCount(0);
 
-  await section.scrollIntoViewIfNeeded();
-  await expect(section.locator('.recharts-surface')).toBeVisible();
+  // The section can re-render while the page hydrates, and scrollIntoViewIfNeeded does not retry on
+  // a detached element, so scroll again until the chart is in.
+  await expect(async () => {
+    await section.scrollIntoViewIfNeeded({ timeout: 2_000 });
+    await expect(section.locator('.recharts-surface')).toBeVisible({ timeout: 2_000 });
+  }).toPass({ timeout: 15_000 });
   await section.getByRole('tab', { name: 'Hot water' }).click();
   await expect(section.getByRole('tab', { name: 'Hot water' })).toHaveAttribute('aria-selected', 'true');
   expect(errors).toEqual([]);

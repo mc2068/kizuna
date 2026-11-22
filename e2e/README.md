@@ -40,7 +40,7 @@ Every spec is read-only, so it is safe to run against production at any time: no
 | --- | --- |
 | `pages.spec.ts` | Every public route over HTTPS: 200, one `h1`, a title, no console errors, no serious or critical axe violations. Desktop and Pixel 7. `/p/demo-djerba` is left out (seeded only locally). |
 | `links.spec.ts` | Every same-site link on the public pages answers below 400; an unknown page is a 404 with the not-found page. |
-| `access.spec.ts` | Signed out: `/projects` redirects to sign-in, `/admin/**` is a 404, the sign-in form, off-site `?next=`, a bad email, a bad callback token. |
+| `access.spec.ts` | Signed out: `/projects` redirects to sign-in, `/admin/**` is a 404, the sign-in form (with or without Google), off-site `?next=`, a bad email, a bad callback token. |
 | `share.spec.ts` | Unknown share links and their PDF are 404; a project PDF signed out is a 404. |
 | `tool.spec.ts` | `/tool` defaults give the Djerba verdict; Tozeur and 100 rooms update the result and URL with no submit; reload restores them; the hourly chart loads on scroll. |
 | `frozen-numbers.spec.ts` | The frozen Djerba numbers (docs/team/README.md) on `/`, `/tool`, `/case-study/djerba` and the prefilled `/request-study`; the verdict thresholds on `/sources`. |

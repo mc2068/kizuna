@@ -18,12 +18,13 @@ for (const route of ADMIN_ROUTES) {
   });
 }
 
-test('sign-in shows the magic link form, Google and the privacy link', async ({ page }) => {
+// "Continue with Google" shows only while the Supabase project has Google on (optional for launch,
+// docs/team/launch-checklist.md), so this does not check for it either way.
+test('sign-in shows the magic link form and the privacy link', async ({ page }) => {
   await page.goto('/sign-in?next=/tool');
   await expect(page.getByRole('heading', { level: 1, name: 'Sign in' })).toBeVisible();
   await expect(page.getByLabel('Email')).toBeVisible();
   await expect(page.getByRole('button', { name: 'Email me a link' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Continue with Google' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'privacy notice' })).toHaveAttribute('href', '/privacy');
 });
 
