@@ -23,8 +23,8 @@ Scenarios are combinations a sceptical juror (unfavourable) or an enthusiastic i
 ## Djerba demo, 300 rooms, pool (STEG time-of-use, before VAT)
 | Option | Plant | Capex | Savings/yr | Payback | With FTE (unconfirmed) | CO2 avoided | Full-load hours |
 |---|---|---|---|---|---|---|---|
-| **Trigeneration (headline)** | 200 kWe + 64 kWc | 1.2 / 1.75 / 2.4 M TND | 260k / 200k / 110k TND | **5 / 9 / 21.5 yrs** | 3.5 / 6 / 15 yrs | 260 / 210 / 70 t | 6,100 / 5,700 / 4,900 |
-| Best of any size (CHP, hot water and pool only) | 100 kWe, no chiller | 0.6 / 0.85 / 1.1 M TND | 135k / 110k / 70k TND | **4.5 / 7.5 / 15.5 yrs** | 3 / 5.5 / 11 yrs | 150 / 130 / 60 t | 6,600 / 6,600 / 6,500 |
+| **Trigeneration (headline)** | 200 kWe + 64 kWc | 1.24 / 1.75 / 2.36 M TND | 260k / 200k / 110k TND | **5 / 9 / 21.5 yrs** | 3.5 / 6 / 15 yrs | 260 / 210 / 70 t | 6,100 / 5,700 / 4,900 |
+| Best of any size (CHP, hot water and pool only) | 100 kWe, no chiller | 0.61 / 0.85 / 1.1 M TND | 135k / 110k / 70k TND | **4.5 / 7.5 / 15.5 yrs** | 3 / 5.5 / 11 yrs | 150 / 130 / 60 t | 6,600 / 6,600 / 6,500 |
 | v1 design re-run in v2 (central) | 450 kWe | about 3.9 M TND | about 190k TND | **about 20 yrs** | | | 2,400 |
 
 Read as favourable / central / unfavourable. Peak grid relief: about 220 kW for the trigeneration option, if the engine is running at the peak hour (no N-1 margin).
