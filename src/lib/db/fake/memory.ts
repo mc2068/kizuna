@@ -6,7 +6,8 @@ import { DEMO_USERS, seedTables, type FakeTables } from './seed';
 import type { CurrentUser } from '../types';
 
 
-type Store = FakeTables & { user: CurrentUser | null };
+/** rateLimit: study request attempts per hashed client key (ms timestamps), see takeRateLimitSlot. */
+type Store = FakeTables & { user: CurrentUser | null; rateLimit: { key: string; at: number }[] };
 
 /**
  * Who is signed in at start. FAKE_DB_USER=admin | user | none overrides it. Default: the demo
@@ -22,7 +23,7 @@ function initialUser(): CurrentUser | null {
 
 function fresh(): Store {
   const tables = seedTables();
-  return { ...tables, user: initialUser() };
+  return { ...tables, user: initialUser(), rateLimit: [] };
 }
 
 // Kept on globalThis so Next.js dev reloads of this module do not wipe the data.

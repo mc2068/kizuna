@@ -1,4 +1,6 @@
-import { ENGINE_VERSION, sizeHotel } from '@/lib/engine';
+import { createHash } from 'node:crypto';
+import { snapshot } from '@/lib/engine';
+import { sendStudyRequestEmails } from '@/lib/email';
 import { currentAdmin, requireAdmin } from './auth';
 import { store } from './store';
 import {
@@ -16,11 +18,25 @@ import {
 } from './types';
 import { studyRequestSchema } from './validation';
 
+/** At most this many study requests per client (hashed IP) per window. */
+export const STUDY_REQUEST_LIMIT = { max: 5, windowSeconds: 60 * 60 } as const;
+
+export type SubmitOptions = {
+  /**
+   * The client IP for the rate limit. Default: read from the request headers (x-forwarded-for, set by
+   * Vercel). Outside a request (scripts, tests) and with no ip given, the rate limit is not applied.
+   */
+  ip?: string | null;
+};
+
 /**
  * Public: the Request a study form. Accepts the form's FormData or a plain object.
- * The sizing is computed here on the server; results from the browser are ignored.
+ * Validates (consent required), drops honeypot spam, rate-limits per client, sizes the hotel on the
+ * server (results from the browser are ignored), saves the lead (status new, owner = the admin with the
+ * fewest open leads, a 'created' event), then emails the team and the hotel. Each email is logged as an
+ * 'email' event; a failed email never fails the request.
  */
-export async function submitStudyRequest(form: StudyRequestForm | FormData): Promise<StudyRequestResult> {
+export async function submitStudyRequest(form: StudyRequestForm | FormData, options: SubmitOptions = {}): Promise<StudyRequestResult> {
   const raw = form instanceof FormData ? Object.fromEntries(form.entries()) : form;
   const parsed = studyRequestSchema.safeParse(raw);
   if (!parsed.success) {
@@ -35,7 +51,12 @@ export async function submitStudyRequest(form: StudyRequestForm | FormData): Pro
   // Honeypot filled: pretend it worked, store nothing.
   if (f.website) return { ok: true, leadId: `L-${1000 + Math.floor(Math.random() * 9000)}` };
 
-  const inputs = { rooms: f.rooms, city: f.city, pool: f.pool, elecPrice: f.elecPrice };
+  const ip = options.ip !== undefined ? options.ip : await requestIp();
+  if (ip !== undefined && !(await allowRequest(ip))) {
+    return { ok: false, error: 'Too many requests from your network. Please try again in an hour, or email us.' };
+  }
+
+  const sized = snapshot({ rooms: f.rooms, city: f.city, pool: f.pool, elecPrice: f.elecPrice });
   // Link a saved project only if it belongs to the person sending the request.
   const projectId = f.projectId && (await store().ownsProject(f.projectId)) ? f.projectId : null;
   const leadId = await store().insertLead({
@@ -48,11 +69,58 @@ export async function submitStudyRequest(form: StudyRequestForm | FormData): Pro
     phone: f.phone ?? null,
     message: f.message ?? null,
     consent: true,
-    inputs,
-    results: sizeHotel(inputs),
-    engineVersion: ENGINE_VERSION,
+    inputs: sized.inputs,
+    results: sized.results,
+    engineVersion: sized.engineVersion,
   });
+
+  const logs = await sendStudyRequestEmails({
+    id: leadId,
+    hotelName: f.hotelName,
+    city: f.city,
+    rooms: f.rooms,
+    pool: f.pool,
+    elecPrice: f.elecPrice,
+    contactName: f.contactName,
+    email: f.email,
+    phone: f.phone ?? null,
+    message: f.message ?? null,
+    results: sized.results,
+    engineVersion: sized.engineVersion,
+  });
+  for (const log of logs) {
+    if (log.status === 'failed') console.error(`[study request ${leadId}] ${log.template} email failed: ${log.error}`);
+    try {
+      await store().addLeadEvent(leadId, 'email', log);
+    } catch (err) {
+      console.error(`[study request ${leadId}] could not log the ${log.template} email`, err);
+    }
+  }
   return { ok: true, leadId };
+}
+
+/** The client IP from the request headers; null when the request has none; undefined outside a request. */
+async function requestIp(): Promise<string | null | undefined> {
+  let h: Headers;
+  try {
+    const { headers } = await import('next/headers');
+    h = await headers();
+  } catch {
+    return undefined;
+  }
+  return h.get('x-forwarded-for')?.split(',')[0]?.trim() || h.get('x-real-ip')?.trim() || null;
+}
+
+/** True when this client may send another request. Fails open: a database error never blocks a hotel. */
+async function allowRequest(ip: string | null): Promise<boolean> {
+  // Only a hash of the IP is stored (INPDP). Requests with no IP share one bucket.
+  const key = createHash('sha256').update(`study-request:${ip ?? 'unknown'}`).digest('hex');
+  try {
+    return await store().takeRateLimitSlot(key, STUDY_REQUEST_LIMIT.max, STUDY_REQUEST_LIMIT.windowSeconds);
+  } catch (err) {
+    console.error('[study request] rate limit check failed, allowing the request', err);
+    return true;
+  }
 }
 
 /** Admins only (others get []). Newest first. */
