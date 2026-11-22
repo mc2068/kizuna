@@ -1,4 +1,4 @@
-// /sign-in (#7): email magic link and "Continue with Google". Accepts ?next= (same-origin path to
+// /sign-in (#7): email magic link and "Continue with Google" (when the Supabase project enables it). Accepts ?next= (same-origin path to
 // return to) and ?error= (set by the callback or the Google action). Plain Tailwind for now:
 // swap in Role 3's Button/Input/Card once the design system (#4) lands.
 import type { Metadata } from 'next';
@@ -8,6 +8,7 @@ import { getTranslations } from 'next-intl/server';
 import { SignOutButton } from '@/components/auth/sign-out-button';
 import { signInWithGoogle } from '@/lib/auth/actions';
 import { safeNextPath } from '@/lib/auth/paths';
+import { isGoogleEnabled } from '@/lib/auth/providers';
 import { getCurrentUser } from '@/lib/db';
 import { MagicLinkForm } from './magic-link-form';
 
@@ -30,7 +31,7 @@ export default async function SignInPage({ searchParams }: PageProps<'/sign-in'>
   const errorParam = first(params.error);
   const error = ERRORS.find((e) => e === errorParam);
   const t = await getTranslations('auth');
-  const user = await getCurrentUser();
+  const [user, google] = await Promise.all([getCurrentUser(), isGoogleEnabled()]);
 
   return (
     <main className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-6 py-24">
@@ -55,19 +56,24 @@ export default async function SignInPage({ searchParams }: PageProps<'/sign-in'>
 
           <MagicLinkForm next={next} />
 
-          <div className="my-6 flex items-center gap-4 text-sm text-neutral-500">
-            <span className="h-px flex-1 bg-neutral-200" />
-            {t('or')}
-            <span className="h-px flex-1 bg-neutral-200" />
-          </div>
+          {/* Shown only when the Supabase project has Google turned on (src/lib/auth/providers.ts). */}
+          {google && (
+            <>
+              <div className="my-6 flex items-center gap-4 text-sm text-neutral-500">
+                <span className="h-px flex-1 bg-neutral-200" />
+                {t('or')}
+                <span className="h-px flex-1 bg-neutral-200" />
+              </div>
 
-          <form action={signInWithGoogle}>
-            <input type="hidden" name="next" value={next} />
-            <button type="submit" className="inline-flex h-12 w-full items-center justify-center gap-3 rounded-full border border-neutral-300 bg-white px-6 font-medium hover:bg-neutral-50">
-              <GoogleMark />
-              {t('google')}
-            </button>
-          </form>
+              <form action={signInWithGoogle}>
+                <input type="hidden" name="next" value={next} />
+                <button type="submit" className="inline-flex h-12 w-full items-center justify-center gap-3 rounded-full border border-neutral-300 bg-white px-6 font-medium hover:bg-neutral-50">
+                  <GoogleMark />
+                  {t('google')}
+                </button>
+              </form>
+            </>
+          )}
 
           <p className="mt-8 text-sm text-neutral-500">
             {t.rich('consent', {

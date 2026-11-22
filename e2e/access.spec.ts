@@ -23,12 +23,13 @@ test.describe('signed out', () => {
     });
   }
 
-  test('sign-in shows the magic link form, Google and the privacy link', async ({ page }) => {
+  test('sign-in shows the magic link form and the privacy link, and hides Google while it is off', async ({ page }) => {
     await page.goto('/sign-in?next=/tool');
     await expect(page.getByRole('heading', { level: 1, name: 'Sign in' })).toBeVisible();
     await expect(page.getByLabel('Email')).toBeVisible();
     await expect(page.getByRole('button', { name: 'Email me a link' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Continue with Google' })).toBeVisible();
+    // Google is off on the fake and in local Supabase (supabase/config.toml), so the button is hidden.
+    await expect(page.getByRole('button', { name: 'Continue with Google' })).toHaveCount(0);
     await expect(page.getByRole('link', { name: 'privacy notice' })).toHaveAttribute('href', '/privacy');
   });
 

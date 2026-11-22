@@ -9,6 +9,7 @@ import { isSupabaseConfigured } from '@/lib/db/store';
 import { setFakeUser } from '@/lib/db/fake/memory';
 import { createUserClient } from '@/lib/supabase/server';
 import { safeNextPath } from './paths';
+import { isGoogleEnabled } from './providers';
 
 export type MagicLinkState =
   | { status: 'sent'; email: string }
@@ -53,6 +54,7 @@ export async function sendMagicLink(_previous: MagicLinkState, formData: FormDat
 export async function signInWithGoogle(formData: FormData): Promise<void> {
   const next = safeNextPath(formData.get('next')?.toString());
   if (!isSupabaseConfigured()) redirect(`/sign-in?error=unavailable&next=${encodeURIComponent(next)}`);
+  if (!(await isGoogleEnabled())) redirect(`/sign-in?error=google&next=${encodeURIComponent(next)}`);
 
   const sb = await createUserClient();
   const { data, error } = await sb.auth.signInWithOAuth({
