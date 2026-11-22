@@ -1,0 +1,73 @@
+// The storage seam behind Contract 3. The public functions in projects.ts, leads.ts and auth.ts
+// do the validation, the engine run and the role checks once; a DataStore only reads and writes.
+// Two adapters: Supabase (when NEXT_PUBLIC_SUPABASE_URL is set) and the in-memory fake (otherwise,
+// so the site runs with no database). Both enforce the same access rules: the fake by hand,
+// Supabase through row-level security.
+import type { SizingInput, SizingResult } from '@/lib/engine';
+import { fakeStore } from './fake/store';
+import { supabaseStore } from './supabase/store';
+import type {
+  CurrentUser,
+  Lead,
+  LeadDetail,
+  LeadFile,
+  LeadFilters,
+  LeadNote,
+  LeadStatus,
+  Profile,
+  Project,
+  SharedProject,
+} from './types';
+
+export type NewProject = { hotelName: string; inputs: SizingInput; results: SizingResult; engineVersion: string };
+
+export type NewLead = Omit<Lead, 'id' | 'status' | 'ownerId' | 'createdAt'>;
+
+export type LeadQuery = Omit<LeadFilters, 'mine'> & { ownerId?: string };
+
+export interface DataStore {
+  currentUser(): Promise<CurrentUser | null>;
+  /** Admins in the order they joined ([] for non-admins). */
+  listAdmins(): Promise<Profile[]>;
+
+  myProjects(): Promise<Project[]>;
+  /** null when missing or not the signed-in user's. */
+  project(id: string): Promise<Project | null>;
+  /** Saves for the signed-in user; throws when signed out. */
+  insertProject(row: NewProject): Promise<Project>;
+  /** Throws 'Project not found.' when missing or not the signed-in user's. */
+  deleteProject(id: string): Promise<void>;
+  sharedProject(token: string): Promise<SharedProject | null>;
+  /** True only when the project exists and belongs to the signed-in user. */
+  ownsProject(id: string): Promise<boolean>;
+
+  /** Server-side insert (no user policy); picks the owner and logs a 'created' event. Returns the lead id. */
+  insertLead(row: NewLead): Promise<string>;
+  /** Newest first. Admins only, [] otherwise. */
+  listLeads(query: LeadQuery): Promise<Lead[]>;
+  /** One status per lead. Admins only, [] otherwise. */
+  leadStatuses(): Promise<LeadStatus[]>;
+  lead(id: string): Promise<LeadDetail | null>;
+  /** The mutations below log their own events; actorId is the signed-in admin. */
+  setLeadStatus(id: string, status: LeadStatus, actorId: string): Promise<Lead>;
+  assignLead(id: string, ownerId: string, actorId: string): Promise<Lead>;
+  addLeadNote(id: string, body: string, actorId: string): Promise<LeadNote>;
+  uploadLeadFile(id: string, file: File, actorId: string): Promise<LeadFile>;
+  leadFileUrl(fileId: string): Promise<string | null>;
+}
+
+export function isSupabaseConfigured(): boolean {
+  return Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL);
+}
+
+let chosen: DataStore | undefined;
+
+export function store(): DataStore {
+  chosen ??= isSupabaseConfigured() ? supabaseStore : fakeStore;
+  return chosen;
+}
+
+/** Tests only: force one adapter (undefined = choose from the environment again). */
+export function setStoreForTests(s: DataStore | undefined): void {
+  chosen = s;
+}

@@ -1,6 +1,7 @@
 // Contract 3: the data layer. Call these from Server Components, Server Actions and
 // Route Handlers, never from the browser and never Supabase directly.
-// IN-MEMORY FAKE until #6 swaps the bodies for Supabase; the signatures stay the same.
+// Backed by Supabase when NEXT_PUBLIC_SUPABASE_URL is set, else by an in-memory fake with the
+// same rules and demo data (see store.ts).
 export { getCurrentUser, listAdmins } from './auth';
 export { getMyProjects, getProject, saveProject, deleteProject, getSharedProject } from './projects';
 export {

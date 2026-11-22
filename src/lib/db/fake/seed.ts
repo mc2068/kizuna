@@ -1,14 +1,15 @@
-// Demo data for the in-memory fake, ported from prototypes/ui/admin-data.js
-// (on branch claude/project-thread-quu722, PR #2).
-// Hotels, people and emails are invented. #6 moves the same data to supabase/seed.sql.
+// Demo data, ported from prototypes/ui/admin-data.js (on branch claude/project-thread-quu722, PR #2).
+// Hotels, people and emails are invented. One source for both stores: the fake loads it directly,
+// and `pnpm db:seed` renders it into supabase/seed.sql (see seed-sql.ts). Ids are fixed uuids so
+// both stores agree.
 import { ENGINE_VERSION, sizeHotel, type City } from '@/lib/engine';
-import type { CurrentUser, Lead, LeadEvent, LeadFile, LeadNote, LeadStatus, Profile, Project } from './types';
+import type { CurrentUser, Lead, LeadEvent, LeadFile, LeadNote, LeadStatus, Profile, Project } from '../types';
 
 export const ADMINS: (Profile & { email: string })[] = [
-  { id: 'admin-mohamed', role: 'admin', fullName: 'Mohamed Chakroun', email: 'mohamed@team.example' },
-  { id: 'admin-hamza', role: 'admin', fullName: 'Hamza', email: 'hamza@team.example' },
-  { id: 'admin-ahmed', role: 'admin', fullName: 'Ahmed', email: 'ahmed@team.example' },
-  { id: 'admin-gaith', role: 'admin', fullName: 'Gaith', email: 'gaith@team.example' },
+  { id: 'a0000000-0000-4000-8000-000000000001', role: 'admin', fullName: 'Mohamed Chakroun', email: 'mohamed@team.example' },
+  { id: 'a0000000-0000-4000-8000-000000000002', role: 'admin', fullName: 'Hamza', email: 'hamza@team.example' },
+  { id: 'a0000000-0000-4000-8000-000000000003', role: 'admin', fullName: 'Ahmed', email: 'ahmed@team.example' },
+  { id: 'a0000000-0000-4000-8000-000000000004', role: 'admin', fullName: 'Gaith', email: 'gaith@team.example' },
 ];
 
 /** The public profile of a team member (no email). */
@@ -16,6 +17,7 @@ export const toProfile = ({ id, role, fullName }: Profile): Profile => ({ id, ro
 
 /** Share token of the seeded demo project: /p/demo-djerba works out of the box. */
 export const DEMO_SHARE_TOKEN = 'demo-djerba';
+export const DEMO_PROJECT_ID = 'c0000000-0000-4000-8000-000000000001';
 
 const asUser = (p: (typeof ADMINS)[number] | { id: string; email: string; role: 'user' }): CurrentUser => ({
   id: p.id,
@@ -23,18 +25,18 @@ const asUser = (p: (typeof ADMINS)[number] | { id: string; email: string; role: 
   role: p.role,
 });
 
-/** Users the fake can sign in as (see setFakeUser). */
-export const FAKE_USERS = {
+/** Demo users: the four admins and two hotel users (see setFakeUser). */
+export const DEMO_USERS = {
   mohamed: asUser(ADMINS[0]),
   hamza: asUser(ADMINS[1]),
   ahmed: asUser(ADMINS[2]),
   gaith: asUser(ADMINS[3]),
-  userA: asUser({ id: 'user-a', email: 'a@hotel.example', role: 'user' }),
-  userB: asUser({ id: 'user-b', email: 'b@hotel.example', role: 'user' }),
+  userA: asUser({ id: 'b0000000-0000-4000-8000-000000000001', email: 'a@hotel.example', role: 'user' }),
+  userB: asUser({ id: 'b0000000-0000-4000-8000-000000000002', email: 'b@hotel.example', role: 'user' }),
 } as const;
 
 type Owner = 'mohamed' | 'hamza' | 'ahmed' | 'gaith';
-const ownerId = (o: Owner) => `admin-${o}`;
+const ownerId = (o: Owner) => DEMO_USERS[o].id;
 
 type Row = [id: string, hotel: string, city: City, rooms: number, pool: boolean, contact: string, status: LeadStatus, owner: Owner, received: string, fee?: number, lost?: string];
 
@@ -80,7 +82,7 @@ export function seedTables(): FakeTables {
   const t: FakeTables = {
     leads: [], notes: [], events: [], files: [],
     projects: [{
-      id: 'project-demo-djerba', ownerId: ADMINS[0].id, hotelName: 'Demo hotel, Djerba (300 rooms)',
+      id: DEMO_PROJECT_ID, ownerId: ADMINS[0].id, hotelName: 'Demo hotel, Djerba (300 rooms)',
       inputs: demoInputs, results: sizeHotel(demoInputs), engineVersion: ENGINE_VERSION,
       shareToken: DEMO_SHARE_TOKEN, createdAt: '2026-11-20T09:00:00.000Z', updatedAt: '2026-11-20T09:00:00.000Z',
     }],

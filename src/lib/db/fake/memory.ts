@@ -1,11 +1,10 @@
-// In-memory state for the FAKE data layer (module-level arrays). Lives for one server
-// process: a restart of `pnpm dev` resets it. #6 replaces it with Supabase.
+// In-memory state for the fake store (module-level arrays). Lives for one server
+// process: a restart of `pnpm dev` resets it. Used when Supabase is not configured.
 // setFakeUser and resetFakeDb are for tests and local experiments only: they are not
-// exported from '@/lib/db' and disappear with the fake.
-import { FAKE_USERS, seedTables, type FakeTables } from './seed';
-import type { CurrentUser } from './types';
+// exported from '@/lib/db'.
+import { DEMO_USERS, seedTables, type FakeTables } from './seed';
+import type { CurrentUser } from '../types';
 
-export { FAKE_USERS };
 
 type Store = FakeTables & { user: CurrentUser | null };
 
@@ -16,8 +15,8 @@ type Store = FakeTables & { user: CurrentUser | null };
  */
 function initialUser(): CurrentUser | null {
   const choice = process.env.FAKE_DB_USER ?? (process.env.NODE_ENV === 'production' ? 'none' : 'admin');
-  if (choice === 'admin') return FAKE_USERS.mohamed;
-  if (choice === 'user') return FAKE_USERS.userA;
+  if (choice === 'admin') return DEMO_USERS.mohamed;
+  if (choice === 'user') return DEMO_USERS.userA;
   return null;
 }
 
