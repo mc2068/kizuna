@@ -45,10 +45,10 @@ Status: **Sourced** = a published figure used as-is; **Estimated** = derived fro
 ## Check before the pitch (biggest effect on the headline numbers first)
 1. **Gas price**: savings depend mostly on the electricity/gas price gap. Get the STEG commercial or hotel gas tariff.
 2. **Electricity price**: confirm the STEG medium-voltage hotel tariff (and peak-hour rate) instead of an aggregator.
-3. **FTE subsidy**: confirm hotels qualify and the real share; it changes payback from 4.7 to 3.3 years.
+3. **FTE subsidy**: confirm hotels qualify and the real share; it changes payback from 3.4 to 2.4 years.
 4. **Occupancy and season**: replace with ONTT figures for Djerba.
 5. **Chiller cost and maintenance**: one quote from a supplier or installer would settle both.
 6. **Measured Tunisian hotel data**: Mechri & Amara (2021), Energy and Buildings 241, has real Tunisian hotel consumption; we could not access it.
 7. **City factors**: recompute from degreedays.net.
 
-Demo result these feed (300 rooms, Djerba, pool, 0.352 TND/kWh): 450 kWe engine, 383 kWc chiller, 263,000 TND/yr saved, 353 t CO2/yr, payback 4.7 years (3.3 with FTE), 529 kW off the summer peak.
+Demo result these feed (300 rooms, Djerba, pool, 0.352 TND/kWh): 450 kWe engine, 383 kWc chiller, 365,000 TND/yr saved, 353 t CO2/yr, payback 3.4 years (2.4 with FTE), 529 kW off the summer peak.
