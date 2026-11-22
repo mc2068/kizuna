@@ -37,7 +37,7 @@ pnpm test:engine-reference   # the v2 reference model in engine/
 - **Supabase cloud** project `kizuna` (Frankfurt), connected to Vercel Production through the Supabase integration. Schema changes: `pnpm exec supabase db push` after the migration lands.
 - **Previews** have no database and run on the demo data (`ALLOW_FAKE_DB=1`, Preview only).
 - **Environment variables**: every one is listed and explained in `.env.example`. Secrets live only in Vercel and Supabase, never in the repo.
-- **Analytics**: Vercel Web Analytics (`<Analytics/>` in `src/app/layout.tsx`), cookie-free. Turn it on in the Vercel project's Analytics tab; it does nothing until then.
+- **Analytics**: Vercel Web Analytics (`<Analytics/>` in `src/app/layout.tsx`, rendered only on Vercel builds), cookie-free. Turn it on in the Vercel project's Analytics tab; it does nothing until then.
 
 ## Local database (Supabase)
 
