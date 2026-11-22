@@ -1,5 +1,5 @@
 // Public navigation, shared by the header (desktop and mobile) and the footer.
-export type NavKey = 'howItWorks' | 'tool' | 'services' | 'caseStudy' | 'about' | 'sources';
+export type NavKey = 'howItWorks' | 'tool' | 'services' | 'caseStudy' | 'about' | 'sources' | 'twin';
 
 export const MAIN_NAV: { key: NavKey; href: string }[] = [
   { key: 'howItWorks', href: '/how-it-works' },
@@ -7,6 +7,7 @@ export const MAIN_NAV: { key: NavKey; href: string }[] = [
   { key: 'services', href: '/services' },
   { key: 'caseStudy', href: '/case-study/djerba' },
   { key: 'about', href: '/about' },
+  { key: 'twin', href: '/twin' },
 ];
 
 /** True when `href` is the current page or a parent of it. */

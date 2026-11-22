@@ -30,7 +30,7 @@ describe('navigation helpers', () => {
     expect(isAdminPath('/administration')).toBe(false);
   });
   it('links to the five public sections in the prototype order', () => {
-    expect(MAIN_NAV.map((n) => n.href)).toEqual(['/how-it-works', '/tool', '/services', '/case-study/djerba', '/about']);
+    expect(MAIN_NAV.map((n) => n.href)).toEqual(['/how-it-works', '/tool', '/services', '/case-study/djerba', '/about', '/twin']);
   });
   it('makes initials for avatars', () => {
     expect(initials('Mohamed Chakroun')).toBe('MC');
