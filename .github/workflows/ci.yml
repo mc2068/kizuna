@@ -1,6 +1,5 @@
-# Runs on every PR and on every push to the default branch. Needs no secrets: the site runs on the
-# in-memory fake when the Supabase variables are unset, and the database job reads the keys of the
-# local stack it starts (`supabase status`).
+# Runs on every PR and on every push to the default branch. Needs no secrets: the e2e and database
+# jobs start local Supabase and read the keys of that stack (`supabase status`).
 name: CI
 
 on:
@@ -35,9 +34,9 @@ jobs:
       - run: pnpm test:engine-reference
 
   e2e:
-    name: Build and Playwright
+    name: Build and Playwright (local Supabase)
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -46,6 +45,16 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      # Auth, REST, Storage and Mailpit (the magic link inbox) are needed; the rest stays off.
+      - run: pnpm exec supabase start -x studio,edge-runtime,logflare,vector,supavisor,imgproxy
+      # The build inlines NEXT_PUBLIC_*, so it and the tests read the same local keys.
+      - name: Export the local Supabase keys
+        run: |
+          pnpm exec supabase status -o json | jq -r '
+            "NEXT_PUBLIC_SUPABASE_URL=\(.API_URL)",
+            "NEXT_PUBLIC_SUPABASE_ANON_KEY=\(.ANON_KEY)",
+            "SUPABASE_SERVICE_ROLE_KEY=\(.SERVICE_ROLE_KEY)",
+            "MAILPIT_URL=\(.MAILPIT_URL)"' >> "$GITHUB_ENV"
       - run: pnpm build
       - run: pnpm exec playwright install --with-deps chromium
       - run: pnpm e2e --trace off
@@ -55,6 +64,8 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 7
+      - if: always()
+        run: pnpm exec supabase stop --no-backup
 
   db:
     name: Database tests (local Supabase)
