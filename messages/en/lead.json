@@ -1,1 +1,169 @@
-{}
+{
+  "meta": {
+    "title": "Lead {id}",
+    "loading": "Loading the lead…"
+  },
+  "denied": {
+    "title": "Admins only",
+    "body": "This page is for the team. Sign in with a team account to see study requests.",
+    "back": "Back to the home page"
+  },
+  "header": {
+    "back": "All requests",
+    "crumbs": "Study requests",
+    "id": "ID {id}",
+    "subtitle": "{city} · {rooms} rooms",
+    "rooms": "Rooms",
+    "city": "City",
+    "pool": "Pool",
+    "received": "Received",
+    "poolYes": "Yes",
+    "poolNo": "No",
+    "status": "Status",
+    "owner": "Owner",
+    "unassigned": "Unassigned",
+    "saving": "Saving…",
+    "failed": "Could not save: {error}"
+  },
+  "status": {
+    "new": "New",
+    "contacted": "Contacted",
+    "quoted": "Quoted",
+    "won": "Won",
+    "lost": "Lost"
+  },
+  "cities": {
+    "djerba": "Djerba",
+    "sousse": "Sousse",
+    "hammamet": "Hammamet",
+    "tozeur": "Tozeur"
+  },
+  "verdict": {
+    "good": "Good fit",
+    "maybe": "Possible fit",
+    "weak": "Weak fit"
+  },
+  "contact": {
+    "title": "Contact",
+    "email": "Email",
+    "phone": "Phone",
+    "noPhone": "Not given",
+    "message": "Message",
+    "consent": "Consent",
+    "consentYes": "Given on the form",
+    "project": "Saved project",
+    "projectLinked": "Linked to a saved project"
+  },
+  "tabs": {
+    "label": "Lead sections",
+    "overview": "Overview",
+    "notes": "Notes",
+    "history": "History",
+    "files": "Files"
+  },
+  "overview": {
+    "title": "Screening result",
+    "subtitle": "Stored when the request arrived · engine {version} · prices before VAT",
+    "plant": "{engine} kWe engine",
+    "plantChiller": "{engine} kWe engine + {chiller} kWc absorption chiller",
+    "rangeNote": "Ranges run from the favourable to the unfavourable case; the dot and the big number are the central case.",
+    "range": "favourable {from} to unfavourable {to}",
+    "rows": {
+      "payback": "Payback",
+      "paybackSub": "without subsidy",
+      "paybackFte": "Payback with FTE",
+      "paybackFteSub": "hotel eligibility unconfirmed",
+      "savings": "Savings a year",
+      "savingsSub": "after gas and maintenance",
+      "capex": "Investment",
+      "capexSub": "installed",
+      "co2": "CO₂ avoided",
+      "co2Sub": "per year"
+    },
+    "minis": {
+      "fullLoadHours": "Full-load hours",
+      "primaryEnergy": "Primary energy saving",
+      "peakRelief": "Peak grid relief",
+      "demandCharge": "Demand charge saving"
+    },
+    "warnings": "Engine warnings",
+    "chpTitle": "Faster first step: {engine} kWe CHP, hot water and pool only",
+    "chpBody": "Payback {payback}. Investment {capex}. Mention it on the call.",
+    "inputs": "Tool inputs",
+    "inputRooms": "Rooms",
+    "inputCity": "City",
+    "inputPool": "Pool",
+    "inputElec": "Electricity",
+    "elecDefault": "STEG MV time-of-use (default)",
+    "elecFlat": "Flat {price} TND/kWh",
+    "checklist": "Call checklist",
+    "checklistItems": [
+      "Open all year, or seasonal?",
+      "Heated pool or spa, and its hours",
+      "On the STEG gas network?",
+      "12 months of STEG bills",
+      "Age of the current chillers and boilers",
+      "Who signs: owner, GM or group?"
+    ],
+    "nextStep": "Next step",
+    "ownerLine": "Owner: {name}",
+    "next": {
+      "new": "Call the hotel within two working days and go through the call checklist.",
+      "contacted": "Collect 12 months of STEG bills, then send the study quote.",
+      "quoted": "Follow up on the quote and answer the board's questions.",
+      "won": "Schedule the site visit and start the feasibility study.",
+      "lost": "Nothing to do. Note why we lost it, so the pipeline learns."
+    },
+    "latestNote": "Latest note",
+    "allNotes": "All notes"
+  },
+  "notes": {
+    "label": "New note",
+    "placeholder": "Add a note for the team. Call summaries, what the hotel told you, what to check.",
+    "visibility": "Visible to admins only",
+    "add": "Add note",
+    "adding": "Adding…",
+    "empty": "No notes yet.",
+    "required": "Write something first.",
+    "failed": "Could not add the note: {error}"
+  },
+  "history": {
+    "title": "History",
+    "subtitle": "Status and owner changes, emails sent, notes and uploads",
+    "empty": "Nothing has happened yet.",
+    "system": "System",
+    "created": "Request received from the {source}",
+    "status": "<b>{actor}</b> moved the status from <from>before</from> to <to>after</to>",
+    "owner": "<b>{actor}</b> reassigned the lead from <b>{from}</b> to <b>{to}</b>",
+    "email": "Email to {to}: “{subject}”",
+    "emailBy": "{actor} emailed {to}: “{subject}”",
+    "note": "<b>{actor}</b> added a note",
+    "file": "<b>{actor}</b> uploaded <b>{name}</b>",
+    "fileUnnamed": "a file",
+    "unknownPerson": "a former team member"
+  },
+  "files": {
+    "title": "Files",
+    "subtitle": "Quotes, bills and site documents",
+    "private": "Private bucket · admins only",
+    "drop": "Drop files here or choose files",
+    "dropHint": "PDF, images, Word or Excel · up to 10 MB each · the hotel never sees these",
+    "choose": "Choose files",
+    "uploading": "Uploading {name}…",
+    "uploaded": "Uploaded {name}",
+    "tooBig": "{name} is larger than 10 MB.",
+    "emptyFile": "{name} is empty.",
+    "badType": "{name} is not a PDF, image, Word or Excel file.",
+    "failed": "Could not upload {name}: {error}",
+    "empty": "No files yet.",
+    "name": "Name",
+    "size": "Size",
+    "by": "Uploaded by",
+    "date": "Date",
+    "actions": "Actions",
+    "download": "Download",
+    "downloadLabel": "Download {name}",
+    "preparing": "Preparing…",
+    "downloadFailed": "Could not get a download link."
+  }
+}
