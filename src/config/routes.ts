@@ -1,4 +1,4 @@
-// The 14 pages and their owners (docs/team/README.md). Used by the stub pages and the e2e smoke test.
+// The 14 planned pages (docs/team/README.md) plus /twin, and their owners. Used by the stub pages and the e2e smoke test.
 export type Route = {
   /** Path with sample values for dynamic segments. */
   path: string;
@@ -21,6 +21,7 @@ export const ROUTES: Route[] = [
   { path: '/projects', key: 'projects', owner: 'Ahmed', access: 'signed-in' },
   { path: '/p/demo-djerba', key: 'sharedProject', owner: 'Ahmed', access: 'public' },
   { path: '/sign-in', key: 'signIn', owner: 'Mohamed', access: 'public' },
+  { path: '/twin', key: 'twin', owner: 'Mohamed', access: 'public' },
   { path: '/admin', key: 'admin', owner: 'Gaith', access: 'admin' },
   { path: '/admin/leads/L-1047', key: 'adminLead', owner: 'Ahmed', access: 'admin' },
 ];
