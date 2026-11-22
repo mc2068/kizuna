@@ -1,0 +1,23 @@
+{
+  "stub": {
+    "owner": "Owner: {owner}",
+    "note": "Placeholder page from the scaffold. The owner replaces it.",
+    "allPages": "All pages"
+  },
+  "pages": {
+    "home": "Home",
+    "howItWorks": "How it works",
+    "tool": "Sizing tool",
+    "services": "Services and pricing",
+    "caseStudyDjerba": "Djerba case study",
+    "about": "About",
+    "sources": "Sources and method",
+    "requestStudy": "Request a study",
+    "privacy": "Privacy",
+    "projects": "My projects",
+    "sharedProject": "Shared project",
+    "signIn": "Sign in",
+    "admin": "Admin: leads pipeline",
+    "adminLead": "Admin: lead detail"
+  }
+}
