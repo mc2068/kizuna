@@ -1,0 +1,660 @@
+<title>Accounts and Leads Prototype</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap">
+<style>
+/* Layout: two columns. Left: walkthroughs and free-play controls. Right: sticky live state. Stacks on phones. */
+:root {
+  --bg: #f5f7f7; --panel: #ffffff; --fg: #17201f; --muted: #5d6b69; --line: #dbe2e1;
+  --accent: #0b7a6b; --accent-soft: #dff1ed; --ok: #1f7a3a; --ok-soft: #e3f3e7;
+  --bad: #b3261e; --bad-soft: #fbe6e4; --warn: #8a5a00; --warn-soft: #fbf0d9; --changed: #fff6cc;
+  --font-display: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f1514; --panel: #172120; --fg: #e4ecea; --muted: #93a3a0; --line: #2a3735;
+  --accent: #3cc2ad; --accent-soft: #163a35; --ok: #6fd08a; --ok-soft: #173322;
+  --bad: #ff8a80; --bad-soft: #3a1c1a; --warn: #f0c060; --warn-soft: #3a2e14; --changed: #3a3516; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #0f1514; --panel: #172120; --fg: #e4ecea; --muted: #93a3a0; --line: #2a3735;
+  --accent: #3cc2ad; --accent-soft: #163a35; --ok: #6fd08a; --ok-soft: #173322;
+  --bad: #ff8a80; --bad-soft: #3a1c1a; --warn: #f0c060; --warn-soft: #3a2e14; --changed: #3a3516; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font: 14px/1.5 var(--font-body); margin: 0; }
+.wrap { max-width: 1280px; margin: 0 auto; padding-block: 24px 64px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 20px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; }
+h1 { font-size: 1.75rem; }
+h2 { font-size: 1.05rem; }
+h3 { font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-family: var(--font-body); font-weight: 600; }
+p { margin: 0; max-width: 70ch; }
+.badge { display: inline-block; font-size: .7rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--warn); background: var(--warn-soft); padding: 2px 8px; border-radius: 4px; }
+.intro { display: grid; gap: 10px; }
+.questions { margin: 0; padding-left: 1.2em; display: grid; gap: 2px; max-width: 75ch; }
+.grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 20px; align-items: start; }
+@media (max-width: 900px) { .grid { grid-template-columns: minmax(0, 1fr); } }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 12px; min-width: 0; }
+.state { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); max-height: calc(100vh - 24px); overflow: auto; }
+@media (max-width: 900px) { .state { position: static; max-height: none; } }
+.policies { display: grid; gap: 8px; }
+.policy { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.policy span { color: var(--muted); min-width: 0; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.seg button { border: 0; border-radius: 0; background: transparent; }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--panel); }
+button { font: inherit; font-size: .85rem; padding: 6px 10px; border-radius: 6px; border: 1px solid var(--line); background: var(--panel); color: var(--fg); cursor: pointer; }
+button:hover { border-color: var(--accent); }
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button.primary { background: var(--accent); color: var(--panel); border-color: var(--accent); }
+button.done { opacity: .55; }
+input, select { font: inherit; font-size: .85rem; padding: 5px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--fg); min-width: 0; }
+.tabs { display: flex; flex-wrap: wrap; gap: 6px; }
+.tabs button[aria-selected="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--fg); font-weight: 600; }
+.steps { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; counter-reset: s; }
+.steps li { display: flex; gap: 8px; align-items: baseline; counter-increment: s; }
+.steps li::before { content: counter(s); font-variant-numeric: tabular-nums; color: var(--muted); width: 1.4em; flex: none; text-align: right; }
+.steps button { text-align: left; }
+.row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.group { display: grid; gap: 6px; padding-top: 10px; border-top: 1px solid var(--line); }
+.event { padding: 10px 12px; border-radius: 6px; font-weight: 500; }
+.event.ok { background: var(--ok-soft); color: var(--ok); }
+.event.warn { background: var(--warn-soft); color: var(--warn); }
+.event.bad { background: var(--bad-soft); color: var(--bad); }
+.event.idle { background: var(--accent-soft); color: var(--fg); }
+.tbl { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: .8rem; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 5px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--muted); font-weight: 500; white-space: nowrap; }
+tr.changed td { background: var(--changed); }
+.empty { color: var(--muted); font-size: .8rem; }
+.pill { display: inline-block; padding: 1px 8px; border-radius: 99px; font-size: .72rem; font-weight: 600; background: var(--accent-soft); color: var(--fg); white-space: nowrap; }
+.pill.won { background: var(--ok-soft); color: var(--ok); }
+.pill.lost, .pill.denied, .pill.expired { background: var(--bad-soft); color: var(--bad); }
+.pill.stale, .pill.used { background: var(--warn-soft); color: var(--warn); }
+.mono { font-family: var(--font-mono); font-size: .78rem; }
+.muted { color: var(--muted); }
+.note { font-size: .8rem; color: var(--muted); }
+</style>
+
+<div class="wrap">
+  <header class="intro">
+    <span class="badge">Prototype · throwaway · not production code</span>
+    <h1>[PRODUCT NAME] accounts and leads</h1>
+    <p>Click through how a hotel saves a sizing result, signs in with a magic link, shares a project and requests a feasibility study, and how the team then moves that lead through the pipeline. Everything lives in memory. The sizing numbers are placeholders, not the real engine.</p>
+    <h3>Questions this should settle before we build</h3>
+    <ol class="questions">
+      <li>Where does the unsaved result live while the visitor goes to their inbox? Only in that browser, or carried with the sign-in link?</li>
+      <li>Can a hotel request a study without an account?</li>
+      <li>Does a lead keep a frozen copy of the numbers it was requested with, or follow the project as it changes?</li>
+      <li>Which pipeline moves are legal (skip steps, reopen a lost lead, undo a win)?</li>
+      <li>Who owns a new lead the moment it arrives?</li>
+    </ol>
+    <p class="note">Assumption: the design (Keynote) is already chosen, so this prototype tests the logic behind the pages, not their look.</p>
+  </header>
+
+  <div class="grid">
+    <div style="display:grid;gap:20px;min-width:0">
+      <section class="panel">
+        <h2>Rules to try</h2>
+        <div class="policies" id="policies"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Guided walkthroughs</h2>
+        <div class="tabs" role="tablist" id="tabs"></div>
+        <p id="scDesc"></p>
+        <ol class="steps" id="steps"></ol>
+        <div class="row"><button id="scRestart">Restart this walkthrough</button></div>
+      </section>
+
+      <section class="panel" id="free">
+        <h2>Free play</h2>
+        <div class="row"><label for="fDevice">Acting on</label><select id="fDevice"></select></div>
+
+        <div class="group"><h3>Sizing tool</h3>
+          <div class="row">
+            <input id="fRooms" type="number" value="300" min="20" max="2000" style="width:6em" aria-label="Rooms">
+            <select id="fCity" aria-label="City"><option>Djerba</option><option>Sousse</option><option>Hammamet</option><option>Tozeur</option></select>
+            <button data-a="runTool">Run the tool</button>
+          </div>
+          <div class="row">
+            <input id="fHotel" value="Hotel Yasmine Djerba" aria-label="Hotel name">
+            <button data-a="save">Save project</button>
+          </div>
+        </div>
+
+        <div class="group"><h3>Sign in</h3>
+          <div class="row">
+            <input id="fEmail" value="leila@yasmine-djerba.tn" aria-label="Email">
+            <button data-a="requestLink">Email me a sign-in link</button>
+          </div>
+          <div class="row">
+            <select id="fLink" aria-label="Sign-in link"></select>
+            <button data-a="openLink">Open this link here</button>
+            <button data-a="signOut">Sign out</button>
+          </div>
+        </div>
+
+        <div class="group"><h3>Projects</h3>
+          <div class="row">
+            <select id="fProject" aria-label="Project"></select>
+            <button data-a="openProject">Open</button>
+            <button data-a="share">Make share link</button>
+            <button data-a="revokeShare">Stop sharing</button>
+          </div>
+          <div class="row">
+            <input id="fEditRooms" type="number" value="350" style="width:6em" aria-label="New room count">
+            <button data-a="editProject">Change rooms</button>
+            <button data-a="recompute">Recalculate</button>
+          </div>
+          <div class="row">
+            <select id="fToken" aria-label="Share link"></select>
+            <button data-a="openShareLink">Open share link</button>
+          </div>
+        </div>
+
+        <div class="group"><h3>Request a study</h3>
+          <div class="row">
+            <label><input id="fConsent" type="checkbox" checked> I agree to be contacted</label>
+          </div>
+          <div class="row">
+            <button data-a="requestStudyProject">Request for selected project</button>
+            <button data-a="requestStudyDraft">Request for unsaved result</button>
+          </div>
+        </div>
+
+        <div class="group"><h3>Team pipeline (admins)</h3>
+          <div class="row">
+            <select id="fLead" aria-label="Lead"></select>
+            <select id="fStatus" aria-label="Status"><option>new</option><option>contacted</option><option>quoted</option><option>won</option><option>lost</option></select>
+            <button data-a="moveLead">Move lead</button>
+          </div>
+          <div class="row">
+            <select id="fAdmin" aria-label="Team member"></select>
+            <button data-a="reassign">Reassign</button>
+            <input id="fNote" value="Called the GM, site visit Tuesday" aria-label="Note">
+            <button data-a="addNote">Add note</button>
+          </div>
+        </div>
+
+        <div class="group"><h3>Time and releases</h3>
+          <div class="row">
+            <button data-a="hourPasses">An hour passes</button>
+            <button data-a="releaseEngine">Release a new engine version</button>
+            <button id="fReset">Reset everything</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section class="panel state" aria-live="polite">
+      <div id="event" class="event idle"></div>
+      <div id="stateView" style="display:grid;gap:14px"></div>
+    </section>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   PURE MODULE. No DOM. Liftable into the real app as the rules
+   for drafts, magic-link save, sharing, visibility and the lead
+   pipeline. reduce(state, action) -> new state.
+   ============================================================ */
+const Model = (() => {
+  const TEAM = [
+    { id: 'mohamed', name: 'Mohamed' }, { id: 'hamza', name: 'Hamza' },
+    { id: 'ahmed', name: 'Ahmed' }, { id: 'gaith', name: 'Gaith' },
+  ];
+  const DEVICES = {
+    laptop: "Leila's laptop", phone: "Leila's phone", sami: "Sami's laptop", team: "Mohamed's laptop (team)",
+  };
+  // Legal pipeline moves. Won is final. Lost can be reopened to contacted.
+  const MOVES = { new: ['contacted', 'lost'], contacted: ['quoted', 'lost'], quoted: ['won', 'lost'], lost: ['contacted'], won: [] };
+  const LINK_LIFETIME_HOURS = 1;
+
+  // Placeholder numbers, NOT the real engine.
+  function size(inputs, engineVersion) {
+    const f = { Djerba: 1, Sousse: .95, Hammamet: .97, Tozeur: 1.1 }[inputs.city] || 1;
+    const v = engineVersion === 1 ? 1 : 0.93; // a later engine release lowers savings a bit
+    return {
+      engineKw: Math.round(inputs.rooms * 1.5 * f),
+      savingsTnd: Math.round(inputs.rooms * 1520 * f * v / 1000) * 1000,
+      paybackYears: +(4.1 / v).toFixed(1),
+    };
+  }
+
+  function initial(policy) {
+    const users = {};
+    TEAM.forEach(t => users[t.id] = { id: t.id, name: t.name, role: 'admin' });
+    const devices = {};
+    Object.keys(DEVICES).forEach(k => devices[k] = { label: DEVICES[k], userId: null, draft: null, waitingToSave: null, viewing: null });
+    devices.team.userId = 'mohamed';
+    return {
+      policy: Object.assign({ draftKeptIn: 'browser', studyNeedsAccount: 'no' }, policy || {}),
+      clock: 0, engineVersion: 1, nextOwner: 0,
+      counters: { p: 0, l: 0, k: 0, t: 0 },
+      users, devices, links: [], projects: [], leads: [], emails: [],
+      event: { ok: true, text: 'Ready. Pick a walkthrough or press any button.' },
+    };
+  }
+
+  const clone = s => JSON.parse(JSON.stringify(s));
+  const isAdmin = (s, uid) => !!uid && s.users[uid] && s.users[uid].role === 'admin';
+  const nameOf = (s, uid) => uid ? (s.users[uid] ? s.users[uid].name : uid) : 'nobody';
+  const fail = (s, text) => { s.event = { ok: false, text }; return s; };
+  const okay = (s, text) => { s.event = { ok: true, text }; return s; };
+  const findProject = (s, id) => s.projects.find(p => p.id === id);
+  const findLead = (s, id) => s.leads.find(l => l.id === id);
+
+  function canReadProject(s, uid, p) { return !!p && (p.ownerId === uid || isAdmin(s, uid)); }
+
+  function createProject(s, ownerId, hotelName, draft) {
+    const id = 'P' + (++s.counters.p);
+    s.projects.push({ id, ownerId, hotelName, inputs: draft.inputs, results: draft.results, engineVersion: draft.engineVersion, shareToken: null });
+    return id;
+  }
+
+  function createLead(s, { requesterId, contactEmail, hotelName, projectId, snapshot }) {
+    const id = 'L' + (++s.counters.l);
+    const owner = TEAM[s.nextOwner % TEAM.length].id; // round robin
+    s.nextOwner++;
+    s.leads.push({ id, requesterId, contactEmail, hotelName, projectId, snapshot, status: 'new', ownerId: owner, notes: [], history: ['created (new), owner ' + nameOf(s, owner)] });
+    s.emails.push({ to: 'team (' + nameOf(s, owner) + ')', subject: 'New study request: ' + hotelName });
+    s.emails.push({ to: contactEmail, subject: 'We received your study request' });
+    return { id, owner };
+  }
+
+  function reduce(prev, a) {
+    const s = clone(prev);
+    const d = a.device ? s.devices[a.device] : null;
+    const uid = d ? d.userId : null;
+    switch (a.type) {
+      case 'setPolicy': s.policy[a.key] = a.value; return okay(s, 'Rule changed: ' + a.key + ' = ' + a.value + '.');
+
+      case 'runTool': {
+        const inputs = { rooms: a.rooms, city: a.city, pool: true };
+        d.draft = { inputs, results: size(inputs, s.engineVersion), engineVersion: s.engineVersion };
+        return okay(s, d.label + ' ran the tool: ' + a.rooms + ' rooms in ' + a.city + '. Result shown, not saved.');
+      }
+
+      case 'save': {
+        if (!d.draft) return fail(s, 'Nothing to save on ' + d.label + '. Run the tool first.');
+        if (uid) {
+          const id = createProject(s, uid, a.hotelName, d.draft);
+          d.draft = null;
+          return okay(s, 'Saved as project ' + id + ' for ' + nameOf(s, uid) + '.');
+        }
+        d.waitingToSave = a.hotelName;
+        return okay(s, d.label + ' is not signed in. The page keeps the result and asks for an email.');
+      }
+
+      case 'requestLink': {
+        const id = 'K' + (++s.counters.k);
+        const carry = s.policy.draftKeptIn === 'link' && d.draft && d.waitingToSave
+          ? { draft: d.draft, hotelName: d.waitingToSave } : null;
+        s.links.push({ id, email: a.email, fromDevice: a.device, createdAt: s.clock, status: 'unused', carries: carry });
+        s.emails.push({ to: a.email, subject: 'Your sign-in link (' + id + ')' });
+        return okay(s, 'Sign-in link ' + id + ' emailed to ' + a.email + (carry ? '. The unsaved result travels with it.' : '.'));
+      }
+
+      case 'openLink': {
+        const link = s.links.find(k => k.id === a.linkId);
+        if (!link) return fail(s, 'No such link.');
+        if (link.status === 'used') return fail(s, 'Link ' + link.id + ' was already used. Ask for a new one.');
+        if (s.clock - link.createdAt >= LINK_LIFETIME_HOURS) { link.status = 'expired'; return fail(s, 'Link ' + link.id + ' has expired. Ask for a new one.'); }
+        link.status = 'used';
+        let userId = Object.keys(s.users).find(k => s.users[k].email === link.email);
+        if (!userId) { userId = link.email; s.users[userId] = { id: userId, name: link.email.split('@')[0], email: link.email, role: 'user' }; }
+        d.userId = userId;
+        let msg = d.label + ' is now signed in as ' + link.email + '.';
+        if (link.carries) {
+          const id = createProject(s, userId, link.carries.hotelName, link.carries.draft);
+          if (s.devices[link.fromDevice].waitingToSave) { s.devices[link.fromDevice].waitingToSave = null; s.devices[link.fromDevice].draft = null; }
+          return okay(s, msg + ' The result came with the link and saved as ' + id + '.');
+        }
+        if (d.draft && d.waitingToSave) {
+          const id = createProject(s, userId, d.waitingToSave, d.draft);
+          d.draft = null; d.waitingToSave = null;
+          return okay(s, msg + ' The waiting result saved automatically as ' + id + '.');
+        }
+        if (link.fromDevice !== a.device && s.devices[link.fromDevice].waitingToSave) {
+          s.event = { ok: false, warn: true, text: msg + ' But the unsaved result is still on ' + s.devices[link.fromDevice].label + ', so nothing was saved here.' }; return s;
+        }
+        return okay(s, msg);
+      }
+
+      case 'signOut':
+        if (!uid) return fail(s, d.label + ' is not signed in.');
+        d.userId = null; d.draft = null; d.waitingToSave = null; d.viewing = null;
+        return okay(s, d.label + ' signed out. Any unsaved result on it is cleared.');
+
+      case 'openProject': {
+        const p = findProject(s, a.projectId);
+        if (!p) return fail(s, 'No such project.');
+        if (!canReadProject(s, uid, p)) { d.viewing = { id: p.id, mode: 'denied' }; return fail(s, d.label + ' (' + nameOf(s, uid) + ') cannot open ' + p.id + '. It belongs to someone else.'); }
+        d.viewing = { id: p.id, mode: p.ownerId === uid ? 'owner' : 'team' };
+        const stale = p.engineVersion < s.engineVersion ? ' It was calculated with engine v' + p.engineVersion + '; the current engine is v' + s.engineVersion + '.' : '';
+        return okay(s, d.label + ' opened ' + p.id + ' as ' + d.viewing.mode + '.' + stale);
+      }
+
+      case 'share': {
+        const p = findProject(s, a.projectId);
+        if (!p || p.ownerId !== uid) return fail(s, 'Only the project owner can make a share link.');
+        if (!p.shareToken) p.shareToken = 'T' + (++s.counters.t);
+        return okay(s, 'Share link ' + p.shareToken + ' made for ' + p.id + '. Anyone with it can view, not edit.');
+      }
+
+      case 'revokeShare': {
+        const p = findProject(s, a.projectId);
+        if (!p || p.ownerId !== uid) return fail(s, 'Only the project owner can stop sharing.');
+        p.shareToken = null;
+        return okay(s, 'Share link for ' + p.id + ' no longer works.');
+      }
+
+      case 'openShareLink': {
+        const p = s.projects.find(x => x.shareToken && x.shareToken === a.token);
+        if (!p) { d.viewing = { id: a.token, mode: 'denied' }; return fail(s, 'Share link ' + a.token + ' does not work (never made, or sharing was stopped).'); }
+        d.viewing = { id: p.id, mode: 'read-only' };
+        return okay(s, d.label + ' sees ' + p.hotelName + ' (' + p.id + ') read-only, without signing in.');
+      }
+
+      case 'editProject': {
+        const p = findProject(s, a.projectId);
+        if (!p || p.ownerId !== uid) return fail(s, 'Only the owner can change ' + (p ? p.id : 'this project') + '.');
+        p.inputs.rooms = a.rooms; p.results = size(p.inputs, s.engineVersion); p.engineVersion = s.engineVersion;
+        return okay(s, p.id + ' now has ' + a.rooms + ' rooms and new results. Any lead keeps its own copy.');
+      }
+
+      case 'recompute': {
+        const p = findProject(s, a.projectId);
+        if (!p || p.ownerId !== uid) return fail(s, 'Only the owner can recalculate.');
+        p.results = size(p.inputs, s.engineVersion); p.engineVersion = s.engineVersion;
+        return okay(s, p.id + ' recalculated with engine v' + s.engineVersion + '.');
+      }
+
+      case 'requestStudy': {
+        if (!a.consent) return fail(s, 'The consent box is not ticked.');
+        if (s.policy.studyNeedsAccount === 'yes' && !uid) return fail(s, 'sign in first to request a study.');
+        let hotelName, snapshot, projectId = null;
+        if (a.projectId) {
+          const p = findProject(s, a.projectId);
+          if (!p || p.ownerId !== uid) return fail(s, 'You can only request a study for your own project.');
+          const open = s.leads.find(l => l.projectId === p.id && l.status !== 'won' && l.status !== 'lost');
+          if (open) return fail(s, '' + open.id + ' is already open for ' + p.id + '. The team is on it.');
+          hotelName = p.hotelName; projectId = p.id;
+          snapshot = { inputs: clone(p.inputs), results: clone(p.results), engineVersion: p.engineVersion };
+        } else {
+          if (!d.draft) return fail(s, 'No unsaved result on ' + d.label + '.');
+          hotelName = d.waitingToSave || 'Unnamed hotel';
+          snapshot = clone(d.draft);
+        }
+        const email = uid ? (s.users[uid].email || uid) : a.contactEmail;
+        const r = createLead(s, { requesterId: uid, contactEmail: email, hotelName, projectId, snapshot });
+        return okay(s, 'Lead ' + r.id + ' created and assigned to ' + nameOf(s, r.owner) + '. Two emails sent.');
+      }
+
+      case 'moveLead': {
+        const l = findLead(s, a.leadId);
+        if (!l) return fail(s, 'No such lead.');
+        if (!isAdmin(s, uid)) return fail(s, 'Only the team can move leads. ' + d.label + ' is ' + nameOf(s, uid) + '.');
+        if (!MOVES[l.status].includes(a.to)) return fail(s, 'Illegal move: ' + l.status + ' to ' + a.to + '. From ' + l.status + ' you can go to: ' + (MOVES[l.status].join(', ') || 'nothing, it is final') + '.');
+        l.history.push(l.status + ' to ' + a.to + ' by ' + nameOf(s, uid));
+        l.status = a.to;
+        return okay(s, l.id + ' moved to ' + a.to + '.');
+      }
+
+      case 'reassign': {
+        const l = findLead(s, a.leadId);
+        if (!l) return fail(s, 'No such lead.');
+        if (!isAdmin(s, uid)) return fail(s, 'Only the team can reassign leads.');
+        if (!isAdmin(s, a.to)) return fail(s, 'A lead can only be owned by a team member.');
+        l.history.push('owner ' + nameOf(s, l.ownerId) + ' to ' + nameOf(s, a.to) + ' by ' + nameOf(s, uid));
+        l.ownerId = a.to;
+        return okay(s, l.id + ' now owned by ' + nameOf(s, a.to) + '.');
+      }
+
+      case 'addNote': {
+        const l = findLead(s, a.leadId);
+        if (!l || !isAdmin(s, uid)) return fail(s, 'Only the team can add notes.');
+        l.notes.push(a.text);
+        return okay(s, 'Note added to ' + l.id + '.');
+      }
+
+      case 'hourPasses': s.clock += 1; return okay(s, 'One hour later. Unused sign-in links older than ' + LINK_LIFETIME_HOURS + ' hour stop working.');
+
+      case 'releaseEngine': s.engineVersion += 1; return okay(s, 'Engine v' + s.engineVersion + ' released. Saved projects keep their old numbers until recalculated.');
+    }
+    return fail(s, 'Unknown action ' + a.type);
+  }
+
+  // What each device is allowed to see (the row-level security rule).
+  function visibleTo(s, deviceKey) {
+    const uid = s.devices[deviceKey].userId;
+    const admin = isAdmin(s, uid);
+    return {
+      projects: s.projects.filter(p => admin || p.ownerId === uid).map(p => p.id),
+      leads: s.leads.filter(l => admin || (uid && l.requesterId === uid)).map(l => l.id),
+    };
+  }
+
+  return { initial, reduce, visibleTo, TEAM, MOVES, nameOf };
+})();
+</script>
+
+<script>
+/* ============================================================
+   THROWAWAY PAGE SHELL. Renders state, wires buttons.
+   ============================================================ */
+const $ = id => document.getElementById(id);
+let state = Model.initial();
+let prevState = state;
+
+const SCENARIOS = [
+  { name: 'Happy path', policy: { draftKeptIn: 'browser', studyNeedsAccount: 'no' },
+    desc: 'Leila runs the tool for her 300-room Djerba hotel, saves it before having an account, signs in from the email on the same laptop, and requests a study. Watch the project save itself on return and the lead get an owner straight away.',
+    steps: [
+      ['Leila runs the tool on her laptop', { type: 'runTool', device: 'laptop', rooms: 300, city: 'Djerba' }],
+      ['She clicks Save', { type: 'save', device: 'laptop', hotelName: 'Hotel Yasmine Djerba' }],
+      ['She asks for a sign-in link', { type: 'requestLink', device: 'laptop', email: 'leila@yasmine-djerba.tn' }],
+      ['She opens the link on the same laptop', { type: 'openLink', device: 'laptop', linkId: 'K1' }],
+      ['She requests a feasibility study for P1', { type: 'requestStudy', device: 'laptop', projectId: 'P1', consent: true }],
+      ['Mohamed marks it contacted', { type: 'moveLead', device: 'team', leadId: 'L1', to: 'contacted' }],
+      ['Mohamed sends a quote', { type: 'moveLead', device: 'team', leadId: 'L1', to: 'quoted' }],
+      ['The hotel signs: won', { type: 'moveLead', device: 'team', leadId: 'L1', to: 'won' }],
+    ] },
+  { name: 'Link opened on phone', policy: { draftKeptIn: 'browser' },
+    desc: 'Same start, but Leila opens the email on her phone. With the rule "kept in this browser only", the result is stuck on the laptop. Is that acceptable, or a lost lead? Run the next tab to compare.',
+    steps: [
+      ['Leila runs the tool on her laptop', { type: 'runTool', device: 'laptop', rooms: 300, city: 'Djerba' }],
+      ['She clicks Save', { type: 'save', device: 'laptop', hotelName: 'Hotel Yasmine Djerba' }],
+      ['She asks for a sign-in link', { type: 'requestLink', device: 'laptop', email: 'leila@yasmine-djerba.tn' }],
+      ['She opens the link on her phone', { type: 'openLink', device: 'phone', linkId: 'K1' }],
+    ] },
+  { name: 'Result travels with link', policy: { draftKeptIn: 'link' },
+    desc: 'Identical steps with the other rule: the unsaved result is stored with the sign-in request on the server. Opening the link on any device saves it. Cost: we store anonymous results tied to an email before consent to an account.',
+    steps: [
+      ['Leila runs the tool on her laptop', { type: 'runTool', device: 'laptop', rooms: 300, city: 'Djerba' }],
+      ['She clicks Save', { type: 'save', device: 'laptop', hotelName: 'Hotel Yasmine Djerba' }],
+      ['She asks for a sign-in link', { type: 'requestLink', device: 'laptop', email: 'leila@yasmine-djerba.tn' }],
+      ['She opens the link on her phone', { type: 'openLink', device: 'phone', linkId: 'K1' }],
+    ] },
+  { name: 'Who can see what', policy: { draftKeptIn: 'browser' },
+    desc: 'Sami runs another hotel. He tries to open Leila\'s project directly, then through a share link, then after she stops sharing. Watch the "can see" lines.',
+    steps: [
+      ['Leila runs the tool', { type: 'runTool', device: 'laptop', rooms: 300, city: 'Djerba' }],
+      ['She clicks Save', { type: 'save', device: 'laptop', hotelName: 'Hotel Yasmine Djerba' }],
+      ['She asks for a sign-in link', { type: 'requestLink', device: 'laptop', email: 'leila@yasmine-djerba.tn' }],
+      ['She opens it: P1 saved', { type: 'openLink', device: 'laptop', linkId: 'K1' }],
+      ['Sami asks for a sign-in link', { type: 'requestLink', device: 'sami', email: 'sami@palm-sousse.tn' }],
+      ['Sami signs in', { type: 'openLink', device: 'sami', linkId: 'K2' }],
+      ['Sami tries to open P1 directly', { type: 'openProject', device: 'sami', projectId: 'P1' }],
+      ['Leila makes a share link', { type: 'share', device: 'laptop', projectId: 'P1' }],
+      ['Sami opens the share link', { type: 'openShareLink', device: 'sami', token: 'T1' }],
+      ['Sami tries to change P1', { type: 'editProject', device: 'sami', projectId: 'P1', rooms: 500 }],
+      ['Leila stops sharing', { type: 'revokeShare', device: 'laptop', projectId: 'P1' }],
+      ['Sami opens the old share link', { type: 'openShareLink', device: 'sami', token: 'T1' }],
+    ] },
+  { name: 'Pipeline rules', policy: { draftKeptIn: 'browser' },
+    desc: 'Pushes the pipeline through moves that should be refused: a hotel moving its own lead, skipping straight to won, a second request while one is open, and reopening a lost lead.',
+    steps: [
+      ['Leila runs the tool', { type: 'runTool', device: 'laptop', rooms: 300, city: 'Djerba' }],
+      ['She clicks Save', { type: 'save', device: 'laptop', hotelName: 'Hotel Yasmine Djerba' }],
+      ['She asks for a sign-in link', { type: 'requestLink', device: 'laptop', email: 'leila@yasmine-djerba.tn' }],
+      ['She opens it', { type: 'openLink', device: 'laptop', linkId: 'K1' }],
+      ['She requests a study', { type: 'requestStudy', device: 'laptop', projectId: 'P1', consent: true }],
+      ['Leila tries to mark her own lead won', { type: 'moveLead', device: 'laptop', leadId: 'L1', to: 'won' }],
+      ['Mohamed tries new straight to won', { type: 'moveLead', device: 'team', leadId: 'L1', to: 'won' }],
+      ['Leila requests a study again', { type: 'requestStudy', device: 'laptop', projectId: 'P1', consent: true }],
+      ['Mohamed hands the lead to Hamza', { type: 'reassign', device: 'team', leadId: 'L1', to: 'hamza' }],
+      ['Mohamed marks it lost', { type: 'moveLead', device: 'team', leadId: 'L1', to: 'lost' }],
+      ['Leila requests again (allowed now)', { type: 'requestStudy', device: 'laptop', projectId: 'P1', consent: true }],
+      ['Mohamed also reopens L1: two open leads for P1?', { type: 'moveLead', device: 'team', leadId: 'L1', to: 'contacted' }],
+    ] },
+  { name: 'Engine update', policy: { draftKeptIn: 'browser' },
+    desc: 'The team releases a new engine after a quote went out. Does the quoted lead keep the numbers the hotel saw? Does the saved project silently change?',
+    steps: [
+      ['Leila runs the tool', { type: 'runTool', device: 'laptop', rooms: 300, city: 'Djerba' }],
+      ['She clicks Save', { type: 'save', device: 'laptop', hotelName: 'Hotel Yasmine Djerba' }],
+      ['She asks for a sign-in link', { type: 'requestLink', device: 'laptop', email: 'leila@yasmine-djerba.tn' }],
+      ['She opens it', { type: 'openLink', device: 'laptop', linkId: 'K1' }],
+      ['She requests a study', { type: 'requestStudy', device: 'laptop', projectId: 'P1', consent: true }],
+      ['Team releases engine v2', { type: 'releaseEngine' }],
+      ['Leila opens P1', { type: 'openProject', device: 'laptop', projectId: 'P1' }],
+      ['She recalculates', { type: 'recompute', device: 'laptop', projectId: 'P1' }],
+      ['She changes rooms to 350', { type: 'editProject', device: 'laptop', projectId: 'P1', rooms: 350 }],
+    ] },
+  { name: 'No account, late link', policy: { draftKeptIn: 'browser', studyNeedsAccount: 'no' },
+    desc: 'A visitor wants a study without making an account, then forgets about the sign-in email for an hour. Try the same tab with "Study needs an account: yes" to compare.',
+    steps: [
+      ['Visitor runs the tool on the laptop', { type: 'runTool', device: 'laptop', rooms: 180, city: 'Tozeur' }],
+      ['Requests a study without ticking consent', { type: 'requestStudy', device: 'laptop', consent: false, contactEmail: 'gm@oasis-tozeur.tn' }],
+      ['Requests again with consent', { type: 'requestStudy', device: 'laptop', consent: true, contactEmail: 'gm@oasis-tozeur.tn' }],
+      ['Clicks Save', { type: 'save', device: 'laptop', hotelName: 'Oasis Tozeur' }],
+      ['Asks for a sign-in link', { type: 'requestLink', device: 'laptop', email: 'gm@oasis-tozeur.tn' }],
+      ['An hour passes', { type: 'hourPasses' }],
+      ['Opens the old link', { type: 'openLink', device: 'laptop', linkId: 'K1' }],
+    ] },
+];
+
+let sc = 0, stepIdx = 0;
+
+function dispatch(action) {
+  prevState = state;
+  state = Model.reduce(state, action);
+  render();
+}
+
+function startScenario(i, keepPolicy) {
+  sc = i; stepIdx = 0;
+  const pol = Object.assign({}, keepPolicy ? state.policy : {}, SCENARIOS[i].policy);
+  state = Model.initial(pol); prevState = state;
+  render();
+}
+
+const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const fmt = n => n.toLocaleString('en-US');
+const res = r => r ? fmt(r.engineKw) + ' kW · ' + fmt(r.savingsTnd) + ' TND/yr · ' + r.paybackYears + ' yr' : '';
+const changed = (a, b) => JSON.stringify(a) !== JSON.stringify(b);
+
+function table(head, rows, prevRows, key) {
+  if (!rows.length) return '<p class="empty">None yet.</p>';
+  const prevMap = {}; (prevRows || []).forEach(r => prevMap[key(r)] = r);
+  return '<div class="tbl"><table><thead><tr>' + head.map(h => '<th>' + h + '</th>').join('') + '</tr></thead><tbody>' +
+    rows.map(r => '<tr class="' + (changed(r.raw, prevMap[key(r)] && prevMap[key(r)].raw) ? 'changed' : '') + '">' + r.cells.map(c => '<td>' + c + '</td>').join('') + '</tr>').join('') +
+    '</tbody></table></div>';
+}
+
+function rowsFor(s) {
+  const n = uid => esc(Model.nameOf(s, uid));
+  return {
+    devices: Object.keys(s.devices).map(k => { const d = s.devices[k]; const v = Model.visibleTo(s, k);
+      return { k, raw: { d, v }, cells: [esc(d.label), d.userId ? n(d.userId) : '<span class="muted">signed out</span>',
+        d.draft ? res(d.draft.results) : '<span class="muted">none</span>', d.waitingToSave ? esc(d.waitingToSave) : '',
+        d.viewing ? esc(d.viewing.id) + ' <span class="pill ' + (d.viewing.mode === 'denied' ? 'denied' : '') + '">' + d.viewing.mode + '</span>' : '',
+        '<span class="mono">' + (v.projects.join(' ') || '–') + ' / ' + (v.leads.join(' ') || '–') + '</span>'] }; }),
+    links: s.links.map(l => { const exp = l.status === 'unused' && s.clock - l.createdAt >= 1;
+      const st = exp ? 'expired' : l.status;
+      return { k: l.id, raw: { l, st }, cells: ['<span class="mono">' + l.id + '</span>', esc(l.email), esc(s.devices[l.fromDevice].label),
+        l.carries ? 'yes' : 'no', '<span class="pill ' + st + '">' + st + '</span>'] }; }),
+    projects: s.projects.map(p => ({ k: p.id, raw: p, cells: ['<span class="mono">' + p.id + '</span>', esc(p.hotelName), n(p.ownerId),
+      p.inputs.rooms + ', ' + p.inputs.city, res(p.results),
+      'v' + p.engineVersion + (p.engineVersion < s.engineVersion ? ' <span class="pill stale">out of date</span>' : ''),
+      p.shareToken ? '<span class="mono">' + p.shareToken + '</span>' : '<span class="muted">off</span>'] })),
+    leads: s.leads.map(l => ({ k: l.id, raw: l, cells: ['<span class="mono">' + l.id + '</span>', esc(l.hotelName) + (l.projectId ? ' <span class="mono muted">' + l.projectId + '</span>' : ' <span class="muted">(no project)</span>'),
+      esc(l.contactEmail), '<span class="pill ' + l.status + '">' + l.status + '</span>', n(l.ownerId),
+      res(l.snapshot.results) + ' <span class="muted">v' + l.snapshot.engineVersion + '</span>',
+      esc(l.history[l.history.length - 1]) + (l.notes.length ? '<br><span class="muted">' + l.notes.length + ' note(s)</span>' : '')] })),
+  };
+}
+
+function render() {
+  // policies
+  const P = [
+    ['draftKeptIn', 'Unsaved result while signing in is kept', [['browser', 'in this browser only'], ['link', 'with the sign-in link']]],
+    ['studyNeedsAccount', 'Requesting a study needs an account', [['no', 'no'], ['yes', 'yes']]],
+  ];
+  $('policies').innerHTML = P.map(([key, label, opts]) => '<div class="policy"><span>' + label + '</span><div class="seg">' +
+    opts.map(([v, t]) => '<button data-policy="' + key + '" data-value="' + v + '" aria-pressed="' + (state.policy[key] === v) + '">' + t + '</button>').join('') + '</div></div>').join('');
+
+  // scenarios
+  $('tabs').innerHTML = SCENARIOS.map((x, i) => '<button role="tab" data-sc="' + i + '" aria-selected="' + (i === sc) + '">' + esc(x.name) + '</button>').join('');
+  $('scDesc').textContent = SCENARIOS[sc].desc;
+  $('steps').innerHTML = SCENARIOS[sc].steps.map((st, i) => '<li><button data-step="' + i + '" class="' + (i < stepIdx ? 'done' : i === stepIdx ? 'primary' : '') + '"' + (i > stepIdx ? ' disabled' : '') + '>' + esc(st[0]) + '</button></li>').join('');
+
+  // free-play selects
+  const keep = (id, opts) => { const el = $(id), v = el.value; el.innerHTML = opts.map(o => '<option value="' + esc(o[0]) + '">' + esc(o[1]) + '</option>').join('') || '<option value="">(none yet)</option>'; if ([...el.options].some(o => o.value === v)) el.value = v; };
+  keep('fDevice', Object.keys(state.devices).map(k => [k, state.devices[k].label]));
+  keep('fLink', state.links.map(l => [l.id, l.id + ' to ' + l.email]));
+  keep('fProject', state.projects.map(p => [p.id, p.id + ' ' + p.hotelName]));
+  keep('fToken', Array.from({ length: state.counters.t }, (_, i) => ['T' + (i + 1), 'T' + (i + 1)]));
+  keep('fLead', state.leads.map(l => [l.id, l.id + ' ' + l.hotelName]));
+  keep('fAdmin', Model.TEAM.map(t => [t.id, t.name]));
+
+  // event + state
+  $('event').className = 'event ' + (state.event.ok ? 'ok' : state.event.warn ? 'warn' : 'bad');
+  $('event').textContent = (state.event.ok ? '' : state.event.warn ? 'Heads up. ' : 'Refused. ') + state.event.text;
+  const r = rowsFor(state), pr = rowsFor(prevState), key = x => x.k;
+  $('stateView').innerHTML =
+    '<div><h3>Devices</h3>' + table(['Device', 'Signed in as', 'Unsaved result', 'Waiting to save as', 'Looking at', 'Can see projects / leads'], r.devices, pr.devices, key) + '</div>' +
+    '<div><h3>Sign-in links</h3>' + table(['Link', 'Sent to', 'Asked from', 'Carries result', 'Status'], r.links, pr.links, key) + '</div>' +
+    '<div><h3>Saved projects</h3>' + table(['Id', 'Hotel', 'Owner', 'Inputs', 'Results', 'Engine', 'Share link'], r.projects, pr.projects, key) + '</div>' +
+    '<div><h3>Study requests (leads)</h3>' + table(['Id', 'Hotel', 'Contact', 'Status', 'Owner', 'Numbers on the lead', 'Last change'], r.leads, pr.leads, key) + '</div>' +
+    '<div><h3>Emails sent</h3>' + (state.emails.length ? '<div class="tbl"><table><tbody>' + state.emails.slice().reverse().map((e, i) => '<tr class="' + (i < state.emails.length - prevState.emails.length ? 'changed' : '') + '"><td>' + esc(e.to) + '</td><td>' + esc(e.subject) + '</td></tr>').join('') + '</tbody></table></div>' : '<p class="empty">None yet.</p>') + '</div>' +
+    '<p class="note">Engine v' + state.engineVersion + ' · ' + state.clock + ' h elapsed · next lead goes to ' + esc(Model.TEAM[state.nextOwner % 4].name) + ' (round robin). Highlighted rows changed on the last click.</p>';
+}
+
+document.addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  if (b.dataset.policy) return dispatch({ type: 'setPolicy', key: b.dataset.policy, value: b.dataset.value });
+  if (b.dataset.sc) return startScenario(+b.dataset.sc);
+  if (b.dataset.step) { const i = +b.dataset.step; if (i !== stepIdx) return; dispatch(SCENARIOS[sc].steps[i][1]); stepIdx++; render(); return; }
+  if (b.id === 'scRestart') return startScenario(sc, true);
+  if (b.id === 'fReset') { state = Model.initial(state.policy); prevState = state; stepIdx = 0; return render(); }
+  const a = b.dataset.a; if (!a) return;
+  const device = $('fDevice').value;
+  const map = {
+    runTool: { type: 'runTool', device, rooms: +$('fRooms').value, city: $('fCity').value },
+    save: { type: 'save', device, hotelName: $('fHotel').value },
+    requestLink: { type: 'requestLink', device, email: $('fEmail').value },
+    openLink: { type: 'openLink', device, linkId: $('fLink').value },
+    signOut: { type: 'signOut', device },
+    openProject: { type: 'openProject', device, projectId: $('fProject').value },
+    share: { type: 'share', device, projectId: $('fProject').value },
+    revokeShare: { type: 'revokeShare', device, projectId: $('fProject').value },
+    openShareLink: { type: 'openShareLink', device, token: $('fToken').value },
+    editProject: { type: 'editProject', device, projectId: $('fProject').value, rooms: +$('fEditRooms').value },
+    recompute: { type: 'recompute', device, projectId: $('fProject').value },
+    requestStudyProject: { type: 'requestStudy', device, projectId: $('fProject').value, consent: $('fConsent').checked },
+    requestStudyDraft: { type: 'requestStudy', device, consent: $('fConsent').checked, contactEmail: $('fEmail').value },
+    moveLead: { type: 'moveLead', device, leadId: $('fLead').value, to: $('fStatus').value },
+    reassign: { type: 'reassign', device, leadId: $('fLead').value, to: $('fAdmin').value },
+    addNote: { type: 'addNote', device, leadId: $('fLead').value, text: $('fNote').value },
+    hourPasses: { type: 'hourPasses' },
+    releaseEngine: { type: 'releaseEngine' },
+  };
+  dispatch(map[a]);
+});
+
+startScenario(0);
+</script>
