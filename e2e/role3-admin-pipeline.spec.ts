@@ -17,9 +17,12 @@ test.describe('admin pipeline', () => {
     await page.goto('/admin');
     await expect(page.getByRole('heading', { level: 1, name: 'Study requests' })).toBeVisible();
     await expect(page.locator('[data-kpi="winRate"]')).toContainText('50%');
-    for (const [s, n] of [['contacted', 4], ['quoted', 4], ['won', 2], ['lost', 2]] as const) {
+    for (const [s, n] of [['quoted', 4], ['won', 2], ['lost', 2]] as const) {
       await expect(page.locator(`[data-tile="${s}"]`)).toContainText(String(n));
     }
+    // study-request.spec.ts moves its own new lead to contacted while this runs: at least the seeded 4.
+    const contacted = Number((await page.locator('[data-tile="contacted"] .tabular').textContent())?.trim());
+    expect(contacted).toBeGreaterThanOrEqual(4);
     const all = await total(page);
     expect(all).toBeGreaterThanOrEqual(17);
     await expect(page.locator('[data-lead]')).toHaveCount(all);
