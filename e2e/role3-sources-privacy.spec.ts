@@ -4,7 +4,7 @@ import { PUBLIC_PAGES } from './role3-pages';
 
 test.describe('sources and method', () => {
   test('every footnote on the site resolves to an anchor on /sources', async ({ page }, info) => {
-    test.skip(info.project.name !== 'chromium', 'same content on phones');
+    test.skip(info.project.name !== 'role3-desktop', 'same content on phones');
     const ids = new Set<string>();
     for (const path of PUBLIC_PAGES.filter((p) => p !== '/sources')) {
       await page.goto(path);
@@ -47,7 +47,7 @@ test.describe('sources and method', () => {
   });
 
   test('the table of contents sticks on desktop', async ({ page }, info) => {
-    test.skip(info.project.name !== 'chromium', 'desktop only');
+    test.skip(info.project.name !== 'role3-desktop', 'desktop only');
     await page.goto('/sources');
     const nav = page.getByRole('navigation', { name: 'On this page' });
     await page.locator('#references').scrollIntoViewIfNeeded();

@@ -1,8 +1,8 @@
-// Admin leads pipeline (Role 3, #24; data: Contract 3, Mohamed). Only admins reach it: the admin
-// layout redirects everyone else (and Mohamed's middleware will too, #7).
+// Admin leads pipeline (Role 3, #24; data: Contract 3, Mohamed). Only admins reach it: src/proxy.ts and
+// the admin layout answer 404 for everyone else (#7).
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import { connection } from 'next/server';
 import { getTranslations } from 'next-intl/server';
 import { getCurrentUser, getLead, getLeadCounts, listAdmins, listLeads } from '@/lib/db';
@@ -23,7 +23,7 @@ export default async function AdminPipelinePage({ searchParams }: { searchParams
   // Layouts and pages render in parallel, so the page checks too before it asks for admin data.
   await connection();
   const me = await getCurrentUser().catch(() => null);
-  if (!me || me.role !== 'admin') redirect('/sign-in?next=/admin');
+  if (!me || me.role !== 'admin') notFound();
   const t = await getTranslations('admin.pipeline');
   const tv = await getTranslations('common.verdict');
   const ts = await getTranslations('common.status');
