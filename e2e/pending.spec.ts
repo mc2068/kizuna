@@ -9,10 +9,10 @@ test.describe('tool (#9, #10)', () => {
   test.fixme('run the tool and see a verdict', async () => {});
 });
 
-test.describe('share (#22, #23)', () => {
-  // Copy the share link from /projects, open it in a fresh signed-out context: it shows the
-  // results, no owner email, and has noindex. The PDF link answers application/pdf.
-  test.fixme('open the share link signed out and download the PDF', async () => {});
+test.describe('PDF report (#23)', () => {
+  // The share page and its links are covered by projects.spec.ts (#22). Once the report routes
+  // merge: "Download PDF" on /projects and on the share page (signed out) answer application/pdf.
+  test.fixme('download the PDF from My projects and from the share link', async () => {});
 });
 
 test.describe('study request and admin pipeline (#20, #24, #25)', () => {

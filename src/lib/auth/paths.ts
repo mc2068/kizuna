@@ -40,3 +40,14 @@ export function accessFor(pathname: string): Access {
   if (pathname === '/projects' || pathname.startsWith('/projects/')) return 'signed-in';
   return 'public';
 }
+
+/** Share tokens are 32 hex characters (or the seeded demo's name). Anything else is a 404 without a lookup. */
+export function isShareToken(token: string): boolean {
+  return /^[a-z0-9-]{8,64}$/i.test(token);
+}
+
+/** The token of a /p/<token> path, or null. */
+export function shareTokenOf(pathname: string): string | null {
+  const m = /^\/p\/([^/]+)\/?$/.exec(pathname);
+  return m ? decodeURIComponent(m[1]) : null;
+}

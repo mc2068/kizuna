@@ -138,7 +138,7 @@ share_token through getSharedProject; leads, notes, events, files: admins only (
 via the server action). Projects and leads are inserted by the server with the service role (results are
 server-computed); owners may only rename or delete a project, admins may only change a lead's status and
 owner. Database triggers log the created, status, owner, note and file events; the server logs emails. Functions: getMyProjects(), getProject(id), saveProject({hotelName, inputs}),
-deleteProject(id), getSharedProject(token), submitStudyRequest(form) -> {ok, leadId} | {ok:false, error},
+deleteProject(id), renameProject(id, hotelName), rerunProject(id) (re-run with the current engine), getSharedProject(token), submitStudyRequest(form) -> {ok, leadId} | {ok:false, error},
 listLeads({status?, city?, mine?}), getLeadCounts(), getLead(id), setLeadStatus(id, status),
 assignLead(id, ownerId), addLeadNote(id, body), uploadLeadFile(id, file), getLeadFileUrl(fileId),
 listAdmins(), getCurrentUser() -> {id, email, role} | null. Results are always computed on the SERVER with

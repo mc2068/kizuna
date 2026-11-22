@@ -140,6 +140,29 @@ export const supabaseStore: DataStore = {
     if (data.length === 0) throw new Error('Project not found.');
   },
 
+  async renameProject(id, hotelName) {
+    if (!isUuid(id)) throw new Error('Project not found.');
+    // RLS: only the owner may update, and only hotel_name is granted.
+    const sb = await createUserClient();
+    const { data, error } = await sb.from('projects').update({ hotel_name: hotelName }).eq('id', id).select('*');
+    if (error) fail(error);
+    if (data.length === 0) throw new Error('Project not found.');
+    return toProject(data[0]);
+  },
+
+  async updateProjectResults(id, results, engineVersion) {
+    // Visitors cannot write results, so check ownership as the visitor, then write with the service role.
+    if (!(await this.ownsProject(id))) throw new Error('Project not found.');
+    const { data, error } = await createServiceClient()
+      .from('projects')
+      .update({ results, engine_version: engineVersion })
+      .eq('id', id)
+      .select('*')
+      .single();
+    if (error) fail(error);
+    return toProject(data);
+  },
+
   async sharedProject(token) {
     const sb = await createUserClient();
     const { data, error } = await sb.rpc('get_shared_project', { token });

@@ -3,7 +3,7 @@
 // Backed by Supabase when NEXT_PUBLIC_SUPABASE_URL is set, else by an in-memory fake with the
 // same rules and demo data (see store.ts).
 export { getCurrentUser, listAdmins } from './auth';
-export { getMyProjects, getProject, saveProject, deleteProject, getSharedProject } from './projects';
+export { getMyProjects, getProject, saveProject, deleteProject, renameProject, rerunProject, getSharedProject } from './projects';
 export {
   submitStudyRequest,
   listLeads,
