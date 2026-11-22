@@ -222,7 +222,21 @@
   }
 }
 
+/* Energy-flow diagram: gas and heat moving along the pipes. Static with reduced motion and in print. */
+.flow-dash {
+  stroke-dasharray: 10 12;
+  animation: flow-run 1.6s linear infinite;
+}
+@keyframes flow-run {
+  to {
+    stroke-dashoffset: -44;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .flow-dash {
+    animation: none;
+  }
   *,
   *::before,
   *::after {
@@ -241,5 +255,9 @@
   body {
     background: #fff;
     font-size: 11pt;
+  }
+  .flow-dash {
+    animation: none;
+    stroke-dasharray: none;
   }
 }

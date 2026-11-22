@@ -97,5 +97,165 @@
     "central": "Central case, {years} years",
     "row": "{input}: {favourable} years if favourable, {unfavourable} years if unfavourable.",
     "years": "{value} y"
+  },
+  "howItWorks": {
+    "meta": {
+      "title": "How it works",
+      "description": "How one gas engine makes a hotel's electricity, hot water and cooling, which Tunisian hotels it fits, and how our screening tool decides."
+    },
+    "hero": {
+      "eyebrow": "How it works",
+      "title": "One engine.",
+      "titleSub": "Three jobs.",
+      "lede": "A gas engine on site makes electricity. Its waste heat makes hot water. In summer, an absorption chiller turns spare heat into cold water for air conditioning."
+    },
+    "diagram": {
+      "title": "Where the gas goes",
+      "label": "Energy flow: {elec}% of the gas becomes electricity, {heat}% becomes useful heat for hot water, the pool and the absorption chiller, and {loss}% is lost.",
+      "gas": "Natural gas",
+      "gasSub": "STEG network",
+      "engine": "Gas engine",
+      "elec": "Electricity",
+      "elecSub": "{pct}% · lights, kitchen, pumps",
+      "heat": "Recovered heat",
+      "heatSub": "{pct}% · as hot water",
+      "hotWater": "Hot water and pool",
+      "hotWaterSub": "All year",
+      "chiller": "Absorption chiller",
+      "chillerSub": "Heat in, cold out",
+      "cold": "Chilled water",
+      "coldSub": "Air conditioning",
+      "loss": "Losses",
+      "lossSub": "{pct}% · exhaust and radiation",
+      "caption": "Total efficiency about {total}%, against roughly half for a power station and a separate boiler. Central values from the engine model."
+    },
+    "why": {
+      "title": "Why Tunisian hotels.",
+      "lede": "Hotels need power, hot water and cooling at the same time, all year. Tunisia makes its electricity from gas, and pays most for it at the summer peak."
+    },
+    "fit": {
+      "title": "Who it fits.",
+      "titleSub": "And who it doesn't.",
+      "yes": "Tends to pay",
+      "no": "Usually not yet",
+      "yesItems": [
+        "Large hotels, with a big and steady heat demand",
+        "Open all year, so the engine runs in winter too",
+        "A heated pool, spa or thalasso",
+        "A connection to the STEG gas network"
+      ],
+      "noItems": [
+        "Small or seasonal hotels: the engine would sit idle half the year",
+        "No heated pool and little hot water",
+        "No gas connection on site",
+        "Cooled by split units with no chilled-water loop"
+      ]
+    },
+    "decides": {
+      "title": "How the tool decides.",
+      "lede": "Four answers about your hotel. The tool tries every engine size, keeps the one that pays back fastest, and runs it three times.",
+      "scenarios": {
+        "title": "Three scenarios",
+        "body": "Sceptical, central and enthusiastic values for every assumption. You see a range, not a single promise."
+      },
+      "verdict": {
+        "title": "One verdict",
+        "body": "Good fit up to {good} years of central payback. Possible fit up to {possible} years. Weak fit beyond that, or below {hours} full-load hours a year."
+      },
+      "sources": {
+        "title": "Every assumption cited",
+        "body": "Gas and electricity tariffs, engine costs, efficiencies and occupancy, each with its source."
+      },
+      "cta": "Sources and method"
+    },
+    "study": {
+      "title": "What a feasibility study adds.",
+      "lede": "The screening uses typical hotels. A study uses yours. One installer quote moves the answer more than any other input.",
+      "items": {
+        "visit": { "title": "Site visit", "body": "Plant room, gas meter, roof and space for a chiller." },
+        "bills": { "title": "Your real bills", "body": "Twelve months of STEG electricity and gas, hour by hour where the meter allows." },
+        "quote": { "title": "Installer quotes", "body": "Real prices replace our cost curve: the biggest unknown in the screening." },
+        "report": { "title": "A bankable report", "body": "Sizing, cash flow and the FTE subsidy file, ready for your bank." }
+      },
+      "primary": "Request a study",
+      "secondary": "Services and pricing"
+    }
+  },
+  "services": {
+    "meta": {
+      "title": "Services and pricing",
+      "description": "Feasibility studies and installer referrals for Tunisian hotels considering trigeneration. Shared-savings financing is coming soon."
+    },
+    "hero": {
+      "eyebrow": "Services",
+      "title": "From a screening",
+      "titleSub": "to a plant.",
+      "lede": "The sizing tool is free. When it says “possible fit”, we take your hotel from estimate to evidence, and then to the right installer."
+    },
+    "offers": {
+      "study": {
+        "tag": "Most hotels start here",
+        "title": "Feasibility study",
+        "body": "We replace our assumptions with your numbers and tell you plainly whether a plant pays.",
+        "items": [
+          "Twelve months of your STEG bills, analysed",
+          "Site visit and gas connection check",
+          "Two installer quotes",
+          "A bankable report with the FTE subsidy file prepared"
+        ],
+        "cta": "Request a study"
+      },
+      "referral": {
+        "tag": "After the study",
+        "title": "Installer referral",
+        "body": "We introduce you to Tunisian installers who have built CHP plants, and compare their quotes line by line.",
+        "items": [
+          "A shortlist of installers with references",
+          "Quotes compared on the same basis",
+          "Help with the contract's performance terms"
+        ],
+        "cta": "Ask us"
+      },
+      "esco": {
+        "tag": "Later",
+        "title": "Shared savings",
+        "body": "A partner finances, owns and runs the plant. The hotel pays from the savings, with no upfront cost.",
+        "items": [
+          "No investment for the hotel",
+          "Maintenance included",
+          "Savings shared over the contract"
+        ],
+        "cta": "Get notified"
+      },
+      "price": "Price on request",
+      "soon": "Coming soon"
+    },
+    "process": {
+      "title": "Four steps.",
+      "titleSub": "Stop at any of them.",
+      "steps": {
+        "screen": { "title": "Screening", "body": "Two minutes with the free tool. Most hotels stop here, and that is fine." },
+        "study": { "title": "Feasibility study", "body": "Your bills, a site visit and real quotes. A few weeks, depending on the bills." },
+        "quote": { "title": "Quotes", "body": "Installers bid on the same specification. We compare them line by line." },
+        "install": { "title": "Installation", "body": "The installer builds and commissions the plant. We check it against the study." }
+      }
+    },
+    "faq": {
+      "title": "Questions.",
+      "items": {
+        "cost": { "q": "What does a feasibility study cost?", "a": "It depends on the hotel's size and the data available. We send a price after a first call. The screening is always free." },
+        "accuracy": { "q": "How accurate is the free screening?", "a": "It is a screening, not a study. It uses a typical hotel for your size and city, and shows a range from favourable to unfavourable. The study replaces those assumptions with your data." },
+        "fte": { "q": "Does the FTE subsidy apply to hotels?", "a": "We don't know yet. The Energy Transition Fund supports cogeneration in industry, and hotel eligibility is unconfirmed. That is why the subsidy never enters our headline payback." },
+        "blackout": { "q": "Will the plant keep the hotel running during a grid cut?", "a": "Not as modelled. The screening assumes a grid-connected plant. Running in island mode needs extra equipment, which a study can price." },
+        "noGas": { "q": "What if the hotel has no gas connection?", "a": "Then the plant needs one first, or another fuel. The study checks this on site." },
+        "install": { "q": "Do you install plants?", "a": "No. We screen, study and refer you to installers. That keeps our advice independent of the equipment sold." }
+      }
+    },
+    "cta": {
+      "title": "Start with a free screening.",
+      "lede": "Two minutes, no sign-in. If it says possible fit, request a study.",
+      "primary": "Screen my hotel",
+      "secondary": "Request a study"
+    }
   }
 }

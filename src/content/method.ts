@@ -93,3 +93,10 @@ export const tunisiaFacts = [
   { id: 'mees-gas', figure: '>96%', label: 'of Tunisia’s electricity is made from gas, much of it imported.' },
   { id: 'lapresse-hotels', figure: '137', label: 'Tunisian hotels audited for energy: cooling and hot water dominate the bill.' },
 ];
+
+/** Verdict rules the engine applies to the central payback (spec.md, role guides). */
+export const verdictRules = {
+  goodMaxYears: 6,
+  possibleMaxYears: 10,
+  minFullLoadHours: 4000,
+};
