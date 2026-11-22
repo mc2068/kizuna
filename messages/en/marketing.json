@@ -1,1 +1,101 @@
-{}
+{
+  "home": {
+    "meta": {
+      "title": "Trigeneration screening for Tunisian hotels",
+      "description": "One gas engine on site makes electricity, hot water and cooling. Find out in two minutes whether it would pay for your hotel, with honest ranges and cited sources."
+    },
+    "hero": {
+      "eyebrow": "Trigeneration screening for Tunisian hotels",
+      "title": "Make your own energy.",
+      "titleSub": "Only if it pays.",
+      "lede": "One gas engine on site makes electricity, hot water and the heat that runs an absorption chiller. Our free screening tool tells you in two minutes whether your hotel is a fit, and says so plainly when it isn't.",
+      "ctaPrimary": "Screen my hotel",
+      "ctaSecondary": "See how it works",
+      "ringsCaption": "What a {kwe} kWe plant covers for a {rooms}-room Djerba hotel, over a full year."
+    },
+    "demo": {
+      "title": "A {rooms}-room hotel in Djerba.",
+      "titleSub": "Every result is a range, because the inputs are.",
+      "chips": {
+        "hotel": "{stars}-star beach hotel",
+        "pool": "Pool",
+        "tariff": "STEG time-of-use, before VAT"
+      },
+      "plantLabel": "Plant",
+      "plant": "{kwe} kWe engine + {kwc} kWc chiller",
+      "rows": {
+        "payback": { "title": "Payback", "body": "Years to earn back the plant", "central": "Central {value}" },
+        "savings": { "title": "Savings", "body": "Per year, after gas and maintenance", "central": "Central {value} a year" },
+        "capex": { "title": "Investment", "body": "Installed, engine and chiller", "central": "Central {value}" },
+        "co2": { "title": "CO₂ avoided", "body": "Per year, against the grid and a gas boiler", "central": "Central {value} a year" }
+      },
+      "legend": "Each rail runs from the favourable to the unfavourable case, with the central case marked. They are the choices an enthusiastic installer and a sceptical juror would make, not statistical bounds.",
+      "fte": "With the FTE subsidy, payback could fall to {range}. Hotel eligibility is not confirmed, so it never enters the headline.",
+      "cta": "Read the full Djerba case"
+    },
+    "flow": {
+      "title": "One engine. Three jobs.",
+      "lede": "A normal hotel buys power from STEG and burns gas for hot water. More than half of a power station's fuel leaves as waste heat. Trigeneration catches that heat on your site and uses it.",
+      "steps": {
+        "gas": { "label": "Step 1", "title": "Gas in.", "body": "From the STEG gas network that most coastal hotel zones already have." },
+        "power": { "label": "Step 2", "title": "Power on site.", "body": "About {pct}% of the gas becomes electricity the hotel uses directly." },
+        "heat": { "label": "Step 3", "title": "Heat, recovered.", "body": "Another {pct}% comes back as hot water for rooms, kitchen, laundry and the pool, all year." },
+        "cold": { "label": "Step 4", "title": "Heat becomes cold.", "body": "In summer, an absorption chiller turns spare heat into chilled water for air conditioning." }
+      },
+      "cta": "How it works"
+    },
+    "honesty": {
+      "title": "Most hotels will hear “not yet”.",
+      "lede": "The tool is a screening tool. It is built to find the few hotels where a plant pays, and to say so plainly everywhere else.",
+      "signs": "It tends to pay where a hotel is <b>large</b>, <b>open all year</b>, has a <b>heated pool or spa</b> and is <b>on the gas network</b>.",
+      "examples": {
+        "big": { "title": "{rooms} rooms, Djerba, pool", "note": "Open all year, big hot-water load. Worth a study." },
+        "desert": { "title": "{rooms} rooms, Tozeur, pool", "note": "Hot summers, and cold desert nights for the pool. Worth a study." },
+        "small": { "title": "{rooms} rooms, Djerba, no pool", "note": "Too little heat demand in winter. The engine would sit idle." }
+      },
+      "payback": "years payback",
+      "detail": "Central {central} years · {kwe} kWe engine · {hours} full-load hours"
+    },
+    "screen": {
+      "title": "Screen your hotel.",
+      "lede": "Three answers: rooms, city and pool. The full tool adds your electricity price, an hourly dashboard and a PDF report.",
+      "card": "Start with the Djerba demo hotel, then change it to yours.",
+      "cta": "Open the sizing tool",
+      "free": "Free. No sign-in needed."
+    },
+    "tornado": {
+      "title": "What moves the answer.",
+      "lede": "The Djerba case pays back in about {years} years in the central case. Here is how far each input moves it, one at a time.",
+      "quote": "One installer quote matters more than every other input combined. That is what a feasibility study gets you."
+    },
+    "services": {
+      "title": "From a screening to a plant.",
+      "lede": "The tool is free. When it says “possible fit”, we take it from estimate to evidence.",
+      "study": { "tag": "Most hotels start here", "title": "Feasibility study.", "body": "We replace our assumptions with your numbers: your STEG bills, a site visit and installer quotes." },
+      "referral": { "tag": "After the study", "title": "Installer referral.", "body": "We introduce you to Tunisian installers who have built CHP plants, and compare their quotes line by line." },
+      "esco": { "tag": "Later", "title": "Shared savings.", "body": "A partner finances, owns and runs the plant. The hotel pays from the savings, with no upfront cost." },
+      "price": "Price on request",
+      "soon": "Coming soon",
+      "cta": "Services and pricing"
+    },
+    "proof": {
+      "title": "Already running in Tunisia.",
+      "lede": "Not in hotels yet. In factories, for years."
+    },
+    "final": {
+      "title": "Possible fit?",
+      "titleSub": "Let's find out.",
+      "lede": "Send us your screening result. A member of the team replies within two working days with what a study would cost for your hotel.",
+      "primary": "Request a feasibility study",
+      "secondary": "Screen another hotel"
+    }
+  },
+  "tornado": {
+    "label": "How far each input moves the central payback of {baseline} years, one at a time.",
+    "favourable": "Favourable value",
+    "unfavourable": "Unfavourable value",
+    "central": "Central case, {years} years",
+    "row": "{input}: {favourable} years if favourable, {unfavourable} years if unfavourable.",
+    "years": "{value} y"
+  }
+}
