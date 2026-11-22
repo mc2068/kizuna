@@ -1,5 +1,7 @@
 # How the sizing tool calculates results for a hotel
 
+> Describes engine **v1**. v2 (`engine/model.mjs`, `docs/engine/spec.md`) changes the energy balance, capex, prices, sizing rule and shows ranges; the worked numbers below are v1 only.
+
 Source: `site/js/engine.js` and `site/js/profiles.js` in mc2068/kizuna-trigeneration. Worked example: 300 rooms, Djerba, pool, electricity 0.352 TND/kWh.
 
 ## 1. Build the hotel's hourly demand (two typical days: summer and winter)

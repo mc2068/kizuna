@@ -1,6 +1,8 @@
 # Where the sizing tool's numbers come from
 
 Audit of every constant in the old engine (`site/js/engine.js`, `site/js/profiles.js`, `docs/method.md` in mc2068/kizuna-trigeneration), 22 Nov 2026.
+> **Superseded for the engine by v2** (`engine/model.mjs`, `docs/engine/spec.md`), which applies the findings below and the idea critique. The table below audits v1's constants and is kept as the record.
+
 Status: **Sourced** = a published figure used as-is; **Estimated** = derived from a source with our own rounding or reasoning; **Unverified** = team assumption with no source yet.
 
 ## Prices and money
@@ -105,8 +107,11 @@ How we ran it: the engine code unchanged, with only the gas price and occupancy 
 
 **Takeaway:** the two weak prices pulled in opposite directions and roughly cancelled out. Gas was too expensive (helps us) and electricity included VAT (hurts us). On a consistent before-VAT basis with real STEG tariffs and ONTT-based occupancy, the demo gives **about 390,000 TND/yr and a 3.1-year payback**, slightly better than today's headline, and the numbers are now defensible.
 
-### Suggested engine changes (not made; needs the team's go-ahead)
+### Suggested engine changes (applied in engine v2, see `docs/engine/spec.md`)
 1. Gas price 0.10 to **0.068** TND/kWh, source FIPA/STEG MP1.
 2. Default electricity price 0.352 to **0.296** HT, and label the input "before VAT"; optionally a time-of-use mode at 0.327.
 3. Occupancy 90/50 to **85/48**, source ONTT. The per-room curves in `profiles.js` were tuned to 90/50, so their comment should be updated too.
 4. Optional: add the demand-charge saving as a separate "upside" line.
+
+## Engine v2 result for the Djerba demo (22 Nov 2026)
+With these tariffs **and** the critique's corrections (81% total efficiency instead of 96%, capex on the DOE curve, maintenance with overhauls, baseline chiller COP 3.5, 50% minimum load, size chosen by payback), the 300-room Djerba demo becomes **200 kWe + 64 kWc, payback 5 / 9 / 21.5 years** (favourable / central / unfavourable). The v1 450 kWe design would take about 20 years at central. The "about 390,000 TND/yr, 3.1 years" estimate above used v1's physics and capex and no longer stands. Details in `docs/engine/spec.md`.
