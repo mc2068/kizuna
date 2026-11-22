@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ENGINE_VERSION, sizeHotel } from '@/lib/engine';
+import { ENGINE_VERSION, sizeHotel } from './fake';
 import { SCENARIOS } from '@/lib/engine/types';
 
 const demo = { rooms: 300, city: 'djerba', pool: true, elecPrice: null } as const;

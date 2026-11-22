@@ -1,1 +1,55 @@
-{}
+{
+  "demo": {
+    "title": "The Djerba demo hotel",
+    "trigeneration": "Trigeneration (headline)",
+    "chpOnly": "Electricity and hot water only (no chiller)",
+    "readAs": "Read as favourable / central / unfavourable.",
+    "fteNote": "With the FTE subsidy: eligibility for hotels is unconfirmed."
+  },
+  "assumptions": {
+    "title": "Every number the tool uses",
+    "intro": "Each value has a favourable, central and unfavourable case, and a source.",
+    "columns": {
+      "assumption": "Assumption",
+      "favourable": "Favourable",
+      "central": "Central",
+      "unfavourable": "Unfavourable",
+      "unit": "Unit",
+      "source": "Source",
+      "status": "Status"
+    },
+    "status": {
+      "sourced": "Sourced",
+      "estimated": "Estimated",
+      "unconfirmed": "Unconfirmed"
+    },
+    "statusHelp": {
+      "sourced": "A published figure, used as is.",
+      "estimated": "Derived from a source, with our own reasoning or rounding.",
+      "unconfirmed": "A team assumption, or not yet confirmed."
+    },
+    "fixed": "Same in every case"
+  },
+  "sensitivity": {
+    "title": "What moves the central {years, number}-year payback",
+    "intro": "One input at a time, the rest at the central case, for the {engineKwe, number} kWe demo plant.",
+    "columns": {
+      "input": "Input",
+      "unfavourable": "Payback if unfavourable",
+      "favourable": "Payback if favourable"
+    },
+    "takeaway": "One installer quote matters more than every other input combined."
+  },
+  "steps": {
+    "title": "How the tool calculates"
+  },
+  "limits": {
+    "title": "What the tool does not model yet"
+  },
+  "references": {
+    "title": "References",
+    "accessed": "Accessed {date}"
+  },
+  "engineVersion": "Engine version {version}",
+  "disclaimer": "A screening estimate, not a quote. A feasibility study uses your own bills and an installer quote."
+}

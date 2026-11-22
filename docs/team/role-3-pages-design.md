@@ -51,7 +51,7 @@ unconfirmed" and is never the headline. Verdicts: "good fit" (central payback <=
 study" (<= 10), "weak fit". The tool shows the trigeneration option and, when it pays back faster, a CHP-only
 option (hot water and pool heat, no chiller).
 FROZEN DEMO NUMBERS (engine v2, docs/engine/spec.md, read as favourable / central / unfavourable):
-trigeneration 200 kWe + 64 kWc, capex 1.2 / 1.75 / 2.4 M TND, savings 260k / 200k / 110k TND/yr,
+trigeneration 200 kWe + 64 kWc, capex 1.24 / 1.75 / 2.36 M TND, savings 260k / 200k / 110k TND/yr,
 payback 5 / 9 / 21.5 yrs (with FTE 3.5 / 6 / 15), CO2 avoided 260 / 210 / 70 t/yr, full-load hours
 6,100 / 5,700 / 4,900, peak grid relief ~220 kW. CHP-only: 100 kWe, payback 4.5 / 7.5 / 15.5 yrs.
 Cooling coverage is only ~3%: the value is year-round hot water and pool heat, not summer cooling.
@@ -95,8 +95,12 @@ type Scenario = 'unfavourable' | 'central' | 'favourable';
 type SizingInput = { rooms: number; city: City; pool: boolean; elecPrice: number | null };
 type ScenarioResult = { capexTnd; annualSavingsTnd; demandChargeSavingTnd; co2AvoidedTonnes; paybackYears;
   paybackYearsWithFte; fullLoadHours; primaryEnergySaving; peakGridReliefKw }   // all numbers, rounded
-type PlantOption = { engineKwe: number; chillerKwc: number; verdict: Verdict; warnings: string[];
+type PlantOption = { engineKwe: number; chillerKwc: number; verdict: Verdict; warnings: Warning[];
   scenarios: Record<Scenario, ScenarioResult> };
+type Warning =                                 // never shown raw: warningText(w, t) -> messages/en/engine.json
+  | { code: 'lowFullLoadHours'; params: { hours; threshold } }
+  | { code: 'lowPrimaryEnergySaving'; params: { pes; threshold } }
+  | { code: 'longPayback'; params: { years; threshold } };
 type Verdict = 'good fit' | 'possible fit, needs a study' | 'weak fit';
 type HourRow = { hour; elecDemand; heatDemand; coolDemand; engineElec; recoveredHeat; chillerCool; gridImport };
 type SizingResult = PlantOption & {            // headline = trigeneration option if any, else best
@@ -106,8 +110,11 @@ type SizingResult = PlantOption & {            // headline = trigeneration optio
 export function sizeHotel(input: SizingInput): SizingResult;   // pure: no I/O, deterministic, < 20 ms
 export const ENGINE_VERSION: string;                           // e.g. '2.0.0', stored with every saved run
 It must match the reference model engine/model.mjs and pass the ported engine/model.test.mjs.
-Presentation helpers (src/lib/present/index.ts, Role 1): formatTnd, formatRange(scenarios, key, unit),
-verdictTone(verdict) -> 'good' | 'maybe' | 'weak', warningText(w). UI never formats engine numbers itself.
+Presentation helpers (src/lib/present/index.ts, Role 1): formatTnd, formatYears, formatKw, formatTonnes,
+formatPercent, formatHours, formatRange(option, key) -> { favourable, central, unfavourable, values, text,
+favourableEnd }, verdictTone(verdict) -> 'good' | 'maybe' | 'weak', verdictKey(verdict),
+warningText(w, useTranslations('engine')). Numbers shown exactly as the engine rounds them. UI never formats
+engine numbers itself.
 
 CONTRACT 2, design tokens (Role 3, src/app/globals.css as CSS variables + Tailwind theme; shadcn variables
 mapped to them): --bg #fbfbfd, --ink #1d1d1f, --muted #6e6e73, --faint #86868b, --line #d2d2d7,
