@@ -1,0 +1,22 @@
+<!doctype html>
+<!-- PROTOTYPE index: links to every screen. -->
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>[PRODUCT NAME] · UI prototypes</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600&family=Inter:wght@400;500&display=swap">
+<style>
+:root{--bg:#fbfbfd;--ink:#1d1d1f;--muted:#6e6e73;--line:#d2d2d7}
+*{box-sizing:border-box;margin:0}body{background:var(--bg);color:var(--ink);font:16px/1.5 Inter,-apple-system,sans-serif;padding:64px 22px}
+.w{max-width:920px;margin:auto}h1{font:600 48px/1.05 "Inter Tight",sans-serif;letter-spacing:-.04em}p.l{color:var(--muted);font-size:19px;margin-top:12px;max-width:640px}
+.g{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:40px}a.c{display:block;background:#fff;border:1px solid var(--line);border-radius:22px;padding:28px;color:inherit;text-decoration:none}
+a.c:hover{border-color:#0071e3}a.c h2{font:600 26px "Inter Tight",sans-serif;letter-spacing:-.03em}a.c p{color:var(--muted);margin-top:6px;font-size:15px}
+a.c ul{margin:16px 0 0;padding-left:18px;color:var(--muted);font-size:14px}a.c span{display:inline-block;margin-top:18px;color:#0071e3}
+.n{margin-top:32px;color:var(--muted);font-size:14px}@media(max-width:700px){.g{grid-template-columns:1fr}}
+</style></head><body><div class="w">
+<h1>UI prototypes</h1>
+<p class="l">Throwaway HTML for the [PRODUCT NAME] website: the public landing page and the admin lead pipeline. Sizing numbers come from the real v2 engine; leads are invented.</p>
+<div class="g">
+<a class="c" href="landing.html"><h2>Landing page</h2><p>“Keynote” direction (ADR 0003).</p><ul><li>Three rings: electricity, hot water, cooling</li><li>Djerba demo as ranges</li><li>Live screening with the v2 engine</li><li>What moves the payback, services, proof</li></ul><span>Open ›</span></a>
+<a class="c" href="admin.html"><h2>Admin dashboard</h2><p>Lead pipeline (ADR 0004).</p><ul><li>KPI strip and status tiles</li><li>Filterable lead cards, “assigned to me”</li><li>Lead page: Overview, Notes, History, Files</li><li>Change status and owner, add notes (in memory)</li></ul><span>Open ›</span></a>
+</div>
+<p class="n">Shortcuts: <a href="admin.html#/leads?mine=1">My leads</a> · <a href="admin.html#/lead/L-1047">Lead page, Club Ulysse Lagoon</a> · <a href="admin.html#/lead/L-1037">A lost, weak-fit lead</a></p>
+</div></body></html>

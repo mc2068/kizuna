@@ -1,0 +1,464 @@
+<!doctype html>
+<!-- PROTOTYPE · Landing page, "Keynote" direction (ADR 0003). Throwaway: static HTML, real v2 engine, no backend. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>[PRODUCT NAME] · Home</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700&family=Inter:wght@400;500;600&display=swap">
+<style>
+:root{--bg:#fbfbfd;--ink:#1d1d1f;--muted:#6e6e73;--faint:#86868b;--line:#d2d2d7;--tile:#f5f5f7;--blue:#0066cc;--btn:#0071e3;
+  --elec:#f28c28;--heat:#e5484d;--cool:#0b8fc7;--good:#1f8a4c;--maybe:#b26b00;--weak:#8e8e93;
+  --display:"Inter Tight",-apple-system,BlinkMacSystemFont,"SF Pro Display",sans-serif;
+  --text:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter",sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font:17px/1.47 var(--text);letter-spacing:-.022em;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}
+h1,h2,h3,h4{font-family:var(--display);font-weight:600;letter-spacing:-.035em}
+sup{font-size:.55em;line-height:0;margin-left:1px;opacity:.6}
+sup a{color:inherit}
+.wrap{max-width:1068px;margin:auto;padding:0 22px}
+.center{text-align:center}
+.btn{display:inline-block;background:var(--btn);color:#fff;padding:12px 22px;border-radius:999px;font-size:17px;border:0;cursor:pointer;font-family:inherit;letter-spacing:-.02em}
+.btn:hover{text-decoration:none;background:#0077ed}
+.btn.ghost{background:transparent;color:var(--btn);box-shadow:inset 0 0 0 1px var(--btn)}
+.chev::after{content:" ›";font-size:1.15em}
+
+/* nav */
+.nav{position:sticky;top:0;z-index:20;height:52px;background:rgba(251,251,253,.82);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid rgba(0,0,0,.08)}
+.nav .in{max-width:1068px;margin:auto;height:100%;display:flex;align-items:center;gap:28px;padding:0 22px;font-size:12.5px}
+.brand{display:flex;align-items:center;gap:8px;font:600 14px var(--text);color:var(--ink);margin-right:auto;letter-spacing:-.01em}
+.brand:hover{text-decoration:none}
+.nav a.l{color:var(--ink);opacity:.82}
+.nav .cta{background:var(--btn);color:#fff;padding:5px 12px;border-radius:999px}
+.nav .cta:hover{text-decoration:none}
+@media(max-width:860px){.nav a.l{display:none}}
+
+/* hero */
+.hero{padding-top:72px;padding-bottom:24px}
+.eyebrow{font:600 17px/1 var(--text);color:var(--elec);letter-spacing:-.01em;margin-bottom:16px}
+.hero h1{font-size:clamp(48px,9vw,104px);line-height:.98;letter-spacing:-.05em}
+.hero h1 span{color:var(--faint)}
+.lede{font-size:clamp(19px,2.2vw,24px);line-height:1.36;color:var(--muted);max-width:680px;margin:24px auto 0;letter-spacing:-.02em}
+.ctas{display:flex;gap:28px;justify-content:center;align-items:center;margin-top:32px;font-size:19px;flex-wrap:wrap}
+.hero-stage{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:40px;margin-top:64px}
+.hero-stage .side{font-size:14px;color:var(--muted);line-height:1.45}
+.hero-stage .side.l{text-align:right}
+.ringkey{display:grid;gap:18px}
+.ringkey div b{display:block;font:600 34px/1 var(--display);letter-spacing:-.04em;color:var(--ink);font-variant-numeric:tabular-nums}
+.ringkey i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;vertical-align:1px}
+.ring{transition:stroke-dashoffset 1.6s cubic-bezier(.2,.8,.2,1)}
+@media(max-width:760px){.hero-stage{grid-template-columns:1fr}.hero-stage .side.l{text-align:center;order:2}.hero-stage .side.r{order:3}.ringkey{grid-template-columns:repeat(3,1fr);text-align:center}}
+
+/* dark demo */
+.dark{background:#000;color:#f5f5f7;padding:128px 0 120px}
+.dark h2{font-size:clamp(36px,5.6vw,64px);line-height:1.05;max-width:900px}
+.dark h2 span{color:#86868b}
+.dark .meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
+.chip{font-size:13px;border:1px solid #424245;color:#d2d2d7;border-radius:999px;padding:5px 12px}
+.ranges{margin-top:64px;border-top:1px solid #333}
+.rrow{display:grid;grid-template-columns:220px 1fr 250px;gap:32px;align-items:center;padding:30px 0;border-bottom:1px solid #222}
+.rrow .k{font-size:15px;color:#a1a1a6}
+.rrow .k b{display:block;font:600 19px/1.2 var(--display);color:#f5f5f7;letter-spacing:-.02em;margin-bottom:4px}
+.rrow .v{font:600 44px/1 var(--display);letter-spacing:-.045em;text-align:right;font-variant-numeric:tabular-nums}
+.rrow .v small{font-size:18px;color:#a1a1a6;font-weight:500;margin-left:4px;letter-spacing:-.01em}
+.rrow .v em{display:block;font:500 13px/1.3 var(--text);font-style:normal;color:#86868b;letter-spacing:-.01em;margin-top:8px}
+.rail{position:relative;height:56px}
+.rail .track{position:absolute;left:0;right:0;top:27px;height:2px;background:#2c2c2e}
+.rail .span{position:absolute;top:24px;height:8px;border-radius:8px;background:linear-gradient(90deg,#3a3a3c,#f5f5f7 50%,#3a3a3c)}
+.rail .dot{position:absolute;top:20px;width:16px;height:16px;margin-left:-8px;border-radius:50%;background:#f5f5f7;box-shadow:0 0 0 4px #000}
+.rail .lbl{position:absolute;top:0;font-size:12px;color:#86868b;transform:translateX(-50%);white-space:nowrap}
+.rail .lbl.c{color:#f5f5f7;font-weight:600}
+.rail .tick{position:absolute;top:44px;font-size:11px;color:#48484a;transform:translateX(-50%)}
+.dark .fine{color:#86868b;font-size:13px;margin-top:28px;max-width:760px}
+@media(max-width:820px){.rrow{grid-template-columns:1fr;gap:12px}.rrow .v{text-align:left}}
+
+/* how */
+.sec{padding-top:128px;padding-bottom:128px}
+.sec-h{font-size:clamp(38px,5.4vw,60px);line-height:1.06;text-align:center}
+.sec-p{text-align:center;color:var(--muted);font-size:21px;max-width:660px;margin:18px auto 0;letter-spacing:-.02em}
+.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:64px}
+.tile{background:var(--tile);border-radius:28px;padding:30px 28px;min-height:310px;display:flex;flex-direction:column}
+.tile .n{font:600 12px/1 var(--text);color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+.tile h3{font-size:28px;line-height:1.1;margin-top:auto}
+.tile p{color:var(--muted);font-size:15px;margin-top:10px}
+.tile.ink{background:#1d1d1f;color:#f5f5f7}.tile.ink p,.tile.ink .n{color:#a1a1a6}
+.glyph{width:60px;height:60px;margin:28px 0 24px}
+@media(max-width:900px){.flow{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.flow{grid-template-columns:1fr}.tile{min-height:0}.tile h3{margin-top:0}}
+
+/* honest */
+.honest{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.verdicts{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:64px}
+.vc{border-radius:28px;padding:32px 30px;background:var(--tile);display:flex;flex-direction:column;gap:6px}
+.vc .tag{align-self:flex-start;font:600 12px/1 var(--text);letter-spacing:.02em;border-radius:999px;padding:6px 10px;margin-bottom:18px}
+.vc .tag.good{background:#e3f3ea;color:var(--good)}.vc .tag.maybe{background:#fbefd9;color:var(--maybe)}.vc .tag.weak{background:#ececef;color:#515154}
+.vc h3{font-size:26px;line-height:1.15}
+.vc p{color:var(--muted);font-size:15px}
+.vc .num{margin-top:auto;padding-top:26px;font:600 40px/1 var(--display);letter-spacing:-.045em;font-variant-numeric:tabular-nums}
+.vc .num small{font-size:16px;color:var(--muted);font-weight:500;margin-left:4px;letter-spacing:-.01em}
+.vc .num em{display:block;font:400 13px/1.4 var(--text);font-style:normal;color:var(--muted);margin-top:8px;letter-spacing:-.01em}
+.signs{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:40px}
+.signs span{background:var(--tile);border-radius:999px;padding:9px 16px;font-size:15px}
+.signs span::before{content:"✓";color:var(--good);font-weight:700;margin-right:8px}
+@media(max-width:860px){.verdicts{grid-template-columns:1fr}}
+
+/* try */
+.try{display:grid;grid-template-columns:1fr 1.15fr;gap:56px;margin-top:64px;align-items:start}
+.panel h3{font-size:24px}.panel h3 span{color:var(--muted)}
+.field{padding:0 0 30px;margin-bottom:30px;border-bottom:1px solid var(--line)}
+.field:last-child{border:0;margin:0}
+.big-n{font:600 56px/1 var(--display);letter-spacing:-.045em;margin-top:14px;font-variant-numeric:tabular-nums}
+.big-n small{font-size:19px;color:var(--muted);font-weight:500;margin-left:8px;letter-spacing:-.02em}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:4px;background:linear-gradient(var(--ink),var(--ink)) 0/var(--p,50%) 100% no-repeat #e8e8ed;border-radius:4px;margin-top:20px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;border-radius:50%;background:#fff;box-shadow:0 0 0 .5px rgba(0,0,0,.04),0 3px 8px rgba(0,0,0,.15),0 3px 1px rgba(0,0,0,.06);cursor:grab}
+input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;background:#fff;border:0;box-shadow:0 3px 8px rgba(0,0,0,.2)}
+.ends{display:flex;justify-content:space-between;color:var(--muted);font-size:13px;margin-top:10px}
+.opts{display:grid;gap:10px;margin-top:18px;grid-template-columns:1fr 1fr}
+.opt{all:unset;cursor:pointer;border:1px solid var(--line);border-radius:14px;padding:14px 16px;font-size:16px;font-weight:600;letter-spacing:-.02em;display:flex;justify-content:space-between;align-items:center}
+.opt small{display:block;font-weight:400;color:var(--muted);font-size:12.5px;margin-top:1px}
+.opt em{font-style:normal;font-weight:400;color:var(--muted);font-size:13px}
+.opt[aria-pressed=true]{border:2px solid var(--btn);padding:13px 15px}
+.opt:focus-visible{outline:4px solid rgba(0,125,250,.35)}
+.result{position:sticky;top:76px;background:var(--tile);border-radius:28px;padding:34px 34px 30px}
+.result .top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.result .plant{font:600 34px/1.05 var(--display);letter-spacing:-.04em}
+.result .plant small{display:block;font:400 14px/1.4 var(--text);color:var(--muted);letter-spacing:-.01em;margin-top:6px}
+.vtag{font:600 12px/1 var(--text);border-radius:999px;padding:7px 11px;white-space:nowrap}
+.vtag.good{background:#e3f3ea;color:var(--good)}.vtag.maybe{background:#fbefd9;color:var(--maybe)}.vtag.weak{background:#e5e5ea;color:#515154}
+.lrow{padding:20px 0;border-top:1px solid #e3e3e8}
+.lrow:first-of-type{margin-top:24px}
+.lrow .h{display:flex;justify-content:space-between;font-size:13px;color:var(--muted)}
+.lrow .h b{color:var(--ink);font:600 21px/1 var(--display);letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.lrow .h b small{font:500 13px var(--text);color:var(--muted);margin-left:3px}
+.mini{position:relative;height:22px;margin-top:12px}
+.mini .t{position:absolute;left:0;right:0;top:10px;height:2px;background:#dcdce1;border-radius:2px}
+.mini .s{position:absolute;top:7px;height:8px;border-radius:8px;background:#c7c7cc}
+.mini .d{position:absolute;top:4px;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:var(--ink);box-shadow:0 0 0 3px var(--tile)}
+.mini .e{position:absolute;top:-1px;font-size:11px;color:var(--faint);transform:translateX(-50%)}
+.warn{margin-top:18px;font-size:13.5px;line-height:1.45;color:#7a4a00;background:#fbefd9;border-radius:14px;padding:12px 14px}
+.alt{margin-top:18px;font-size:13.5px;line-height:1.45;color:var(--muted);border:1px dashed #c7c7cc;border-radius:14px;padding:12px 14px}
+.alt b{color:var(--ink)}
+.result .go{display:flex;gap:18px;align-items:center;margin-top:22px;flex-wrap:wrap;font-size:15px}
+.result .fine{font-size:12px;color:var(--muted);margin-top:18px;line-height:1.45}
+@media(max-width:900px){.try{grid-template-columns:1fr}.result{position:static}}
+
+/* moves */
+.moves{background:#fff;border-top:1px solid var(--line)}
+.tornado{max-width:860px;margin:64px auto 0}
+.trow{display:grid;grid-template-columns:230px 1fr;gap:20px;align-items:center;padding:12px 0}
+.trow .k{font-size:15px;text-align:right;color:var(--ink)}
+.trow .k small{display:block;color:var(--muted);font-size:12.5px}
+.tbar{position:relative;height:30px}
+.tbar .axis{position:absolute;top:-12px;bottom:-12px;width:1px;background:var(--ink)}
+.tbar .b{position:absolute;top:3px;height:24px;border-radius:6px}
+.tbar .b.lo{background:#d1e9d9}.tbar .b.hi{background:#f6d4d5}
+.tbar .n{position:absolute;top:6px;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.tlegend{display:flex;justify-content:center;gap:28px;margin-top:26px;font-size:13px;color:var(--muted)}
+.tlegend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:7px;vertical-align:-1px}
+.quote{font:600 clamp(28px,3.6vw,40px)/1.15 var(--display);letter-spacing:-.035em;text-align:center;max-width:760px;margin:72px auto 0}
+.quote span{color:var(--muted)}
+@media(max-width:640px){.trow{grid-template-columns:1fr}.trow .k{text-align:left}}
+
+/* services */
+.svc{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:16px;margin-top:64px}
+.svc .s{background:var(--tile);border-radius:28px;padding:34px 30px;display:flex;flex-direction:column;min-height:340px}
+.svc .s.main{background:#1d1d1f;color:#f5f5f7}
+.svc .s .n{font:600 12px/1 var(--text);letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.svc .s.main .n{color:#a1a1a6}
+.svc h3{font-size:30px;line-height:1.1;margin-top:18px}
+.svc p{font-size:15px;color:var(--muted);margin-top:12px}
+.svc .s.main p{color:#a1a1a6}
+.svc ul{list-style:none;margin-top:18px;font-size:14.5px;display:grid;gap:7px}
+.svc ul li::before{content:"—";color:var(--faint);margin-right:8px}
+.svc .foot{margin-top:auto;padding-top:28px;display:flex;justify-content:space-between;align-items:center;font-size:15px}
+.svc .soon{font:600 12px/1 var(--text);background:#e8e8ed;color:#515154;border-radius:999px;padding:6px 10px}
+@media(max-width:900px){.svc{grid-template-columns:1fr}.svc .s{min-height:0}}
+
+/* proof */
+.proof .row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:56px}
+.proof .p{border-top:2px solid var(--ink);padding:26px 4px 0}
+.proof b{font:600 52px/1 var(--display);letter-spacing:-.045em;display:block}
+.proof h4{font-size:17px;margin-top:20px;letter-spacing:-.02em}
+.proof p{color:var(--muted);font-size:15px;margin-top:4px}
+@media(max-width:760px){.proof .row{grid-template-columns:1fr}}
+
+/* final */
+.final{background:#000;color:#f5f5f7;padding:140px 0;text-align:center}
+.final h2{font-size:clamp(44px,7vw,84px);line-height:1;letter-spacing:-.05em}
+.final p{color:#a1a1a6;font-size:21px;max-width:620px;margin:22px auto 0}
+.final .ctas a.chev{color:#2997ff}
+
+.notes{background:var(--tile);color:var(--muted);font-size:12px;line-height:1.5;padding:40px 0 64px;border-top:1px solid var(--line)}
+.notes ol{padding-left:16px;max-width:880px;display:grid;gap:8px}
+.notes .foot{margin-top:28px;padding-top:18px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.notes .foot nav{display:flex;gap:18px;flex-wrap:wrap}
+.notes .foot a{color:var(--muted)}
+.proto{position:fixed;right:14px;bottom:14px;z-index:30;background:rgba(29,29,31,.9);color:#f5f5f7;font-size:12px;border-radius:999px;padding:8px 14px;backdrop-filter:blur(10px)}
+.proto a{color:#2997ff;margin-left:8px}
+</style>
+</head>
+<body>
+
+<nav class="nav"><div class="in">
+  <a class="brand" href="#"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="7.5" fill="none" stroke="#f28c28" stroke-width="2"/><circle cx="9" cy="9" r="4.6" fill="none" stroke="#e5484d" stroke-width="2"/><circle cx="9" cy="9" r="1.8" fill="#0b8fc7"/></svg>[PRODUCT NAME]</a>
+  <a class="l" href="#how">How it works</a>
+  <a class="l" href="#try">Sizing tool</a>
+  <a class="l" href="#services">Services</a>
+  <a class="l" href="#demo">Djerba case</a>
+  <a class="l" href="#notes">Sources</a>
+  <a class="l" href="admin.html">Sign in</a>
+  <a class="cta" href="#study">Request a study</a>
+</div></nav>
+
+<header class="hero wrap center">
+  <p class="eyebrow">Trigeneration screening for Tunisian hotels</p>
+  <h1>Make your own energy.<br><span>Only if it pays.</span></h1>
+  <p class="lede">One gas engine on site makes electricity, hot water and the heat that runs an absorption chiller. Our free screening tool tells you in two minutes whether your hotel is a fit, and says so plainly when it isn’t.</p>
+  <div class="ctas"><a class="btn" href="#try">Screen my hotel</a><a class="chev" href="#how">See how it works</a></div>
+
+  <div class="hero-stage">
+    <p class="side l">What a 200&nbsp;kWe plant covers<br>for a 300-room Djerba hotel,<br>over a full year.<sup><a href="#n1">1</a></sup></p>
+    <div id="hero-rings"></div>
+    <div class="side r ringkey" id="hero-key"></div>
+  </div>
+</header>
+
+<section class="dark" id="demo"><div class="wrap">
+  <h2>A 300-room hotel in Djerba. <span>Every result is a range, because the inputs are.</span></h2>
+  <div class="meta"><span class="chip">4-star beach hotel</span><span class="chip">Pool</span><span class="chip">STEG time-of-use, before VAT</span><span class="chip" id="demo-plant">Plant</span></div>
+  <div class="ranges" id="demo-ranges"></div>
+  <p class="fine">Left to right: favourable, central and unfavourable cases. They are the choices an enthusiastic installer and a sceptical juror would make, not statistical bounds.<sup><a href="#n2">2</a></sup> The FTE subsidy is not confirmed for hotels, so it never enters the headline.</p>
+</div></section>
+
+<section class="sec wrap" id="how">
+  <h2 class="sec-h">One engine. Three jobs.</h2>
+  <p class="sec-p">A normal hotel buys power from STEG and burns gas for hot water. More than half of a power station’s fuel leaves as waste heat. Trigeneration catches that heat on your site and uses it.</p>
+  <div class="flow">
+    <div class="tile"><span class="n">Step 1</span><svg class="glyph" viewBox="0 0 64 64"><path d="M32 6c8 12 16 19 16 31a16 16 0 0 1-32 0c0-8 5-13 8-18 1 6 4 9 7 10-2-8-1-15 1-23z" fill="#1d1d1f"/></svg><h3>Gas in.</h3><p>From the STEG gas network most coastal hotel zones already have.</p></div>
+    <div class="tile ink"><span class="n">Step 2</span><svg class="glyph" viewBox="0 0 64 64"><rect x="6" y="18" width="52" height="34" rx="8" fill="none" stroke="#f5f5f7" stroke-width="3"/><circle cx="24" cy="35" r="7" fill="#f28c28"/><circle cx="42" cy="35" r="7" fill="none" stroke="#f5f5f7" stroke-width="3"/><path d="M20 18v-6h24v6" fill="none" stroke="#f5f5f7" stroke-width="3"/></svg><h3>Power on site.</h3><p>About 38% of the gas becomes electricity the hotel uses directly.<sup><a href="#n3">3</a></sup></p></div>
+    <div class="tile"><span class="n">Step 3</span><svg class="glyph" viewBox="0 0 64 64"><path d="M14 46c6-6 6-12 0-18s-6-12 0-18M32 50c6-6 6-12 0-18s-6-12 0-18M50 46c6-6 6-12 0-18s-6-12 0-18" fill="none" stroke="#e5484d" stroke-width="4" stroke-linecap="round"/></svg><h3>Heat, recovered.</h3><p>Another 43% comes back as hot water for rooms, kitchen, laundry and the pool, all year.</p></div>
+    <div class="tile"><span class="n">Step 4</span><svg class="glyph" viewBox="0 0 64 64" fill="none" stroke="#0b8fc7" stroke-width="3.5" stroke-linecap="round"><path d="M32 6v52M9.5 19l45 26M9.5 45l45-26"/><path d="M26 10l6 6 6-6M26 54l6-6 6 6"/></svg><h3>Heat becomes cold.</h3><p>In summer, an absorption chiller turns spare heat into chilled water for air conditioning.</p></div>
+  </div>
+</section>
+
+<section class="sec honest"><div class="wrap">
+  <h2 class="sec-h">Most hotels will hear “not yet”.</h2>
+  <p class="sec-p">The tool is a screening tool. It is built to find the few hotels where a plant pays, and to say so plainly everywhere else.</p>
+  <div class="verdicts" id="verdicts"></div>
+  <div class="signs"><span>Large</span><span>Open all year</span><span>Heated pool or spa</span><span>On the gas network</span></div>
+</div></section>
+
+<section class="sec wrap" id="try">
+  <h2 class="sec-h">Screen your hotel.</h2>
+  <p class="sec-p">Three answers, results in real time. The full tool adds your electricity price, an hourly dashboard and a PDF report.</p>
+  <div class="try">
+    <div class="panel">
+      <div class="field">
+        <h3>Rooms. <span>How big is the hotel?</span></h3>
+        <div class="big-n"><span id="rooms-v">300</span><small>rooms</small></div>
+        <input id="rooms" type="range" min="50" max="800" step="10" value="300" aria-label="Rooms">
+        <div class="ends"><span>50</span><span>800</span></div>
+      </div>
+      <div class="field">
+        <h3>Location. <span>Where is it?</span></h3>
+        <div class="opts" id="cities"></div>
+      </div>
+      <div class="field">
+        <h3>Pool. <span>Is it heated?</span></h3>
+        <div class="opts" id="pool">
+          <button class="opt" data-pool="1"><span>Yes<small>Adds heat demand all year</small></span></button>
+          <button class="opt" data-pool="0"><span>No pool<small>Rooms, kitchen, laundry</small></span></button>
+        </div>
+      </div>
+    </div>
+    <aside class="result" aria-live="polite" id="result"></aside>
+  </div>
+</section>
+
+<section class="sec moves"><div class="wrap">
+  <h2 class="sec-h">What moves the answer.</h2>
+  <p class="sec-p">The Djerba case pays back in about 9 years in the central case. Here is how far each input moves it, one at a time.<sup><a href="#n2">2</a></sup></p>
+  <div class="tornado" id="tornado"></div>
+  <div class="tlegend"><span><i style="background:#d1e9d9"></i>Favourable value</span><span><i style="background:#f6d4d5"></i>Unfavourable value</span><span><i style="background:#1d1d1f;width:2px"></i>Central case, 9 years</span></div>
+  <p class="quote">One installer quote matters more than every other input combined. <span>That is what a feasibility study gets you.</span></p>
+</div></section>
+
+<section class="sec wrap" id="services">
+  <h2 class="sec-h">From a screening to a plant.</h2>
+  <p class="sec-p">The tool is free. When it says “possible fit”, we take it from estimate to evidence.</p>
+  <div class="svc">
+    <div class="s main"><span class="n">Most hotels start here</span><h3>Feasibility study.</h3><p>We replace our assumptions with your numbers.</p>
+      <ul><li>Twelve months of your STEG bills</li><li>Site visit and gas connection check</li><li>Two installer quotes</li><li>A bankable report with the FTE file prepared</li></ul>
+      <div class="foot"><span>Price on request</span><a class="btn" href="#study">Request a study</a></div></div>
+    <div class="s"><span class="n">After the study</span><h3>Installer referral.</h3><p>We introduce you to Tunisian installers who have built CHP plants, and compare their quotes line by line.</p>
+      <div class="foot"><span>Price on request</span><a class="chev" href="#study">Ask us</a></div></div>
+    <div class="s"><span class="n">Later</span><h3>Shared savings.</h3><p>A partner finances, owns and runs the plant. The hotel pays from the savings, with no upfront cost.</p>
+      <div class="foot"><span class="soon">Coming soon</span><a class="chev" href="#study">Get notified</a></div></div>
+  </div>
+</section>
+
+<section class="sec proof wrap" style="padding-top:40px">
+  <h2 class="sec-h">Already running in Tunisia.</h2>
+  <p class="sec-p">Not in hotels yet. In factories, for years.</p>
+  <div class="row">
+    <div class="p"><b>−32%</b><h4>Pâtes Warda, Sousse</h4><p>Energy bill after a 4.4 MWe plant, with over 8,000 t of CO₂ avoided a year.<sup><a href="#n4">4</a></sup></p></div>
+    <div class="p"><b>800 kWe</b><h4>Medicef Pharma</h4><p>With 724 kW of absorption cooling: trigeneration at a large hotel’s scale.<sup><a href="#n4">4</a></sup></p></div>
+    <div class="p"><b>163 MW</b><h4>52 Tunisian companies</h4><p>Installed cogeneration across industry.<sup><a href="#n5">5</a></sup></p></div>
+  </div>
+</section>
+
+<section class="final" id="study"><div class="wrap">
+  <h2>Possible fit?<br>Let’s find out.</h2>
+  <p>Send us your screening result. A member of the team replies within two working days with what a study would cost for your hotel.</p>
+  <div class="ctas"><a class="btn" href="admin.html">Request a feasibility study</a><a class="chev" href="#try">Screen another hotel</a></div>
+</div></section>
+
+<footer class="notes" id="notes"><div class="wrap">
+  <ol>
+    <li id="n1">Share of the hotel’s electricity (including electric chillers), hot water and cooling the plant supplies over a typical summer and winter day, weighted 150 and 215 days, central case. Engine model v2, <code>engine/model.mjs</code>.</li>
+    <li id="n2">Engine model v2, Djerba demo hotel: 300 rooms, pool, STEG medium-voltage time-of-use tariff and STEG MP1 gas, before VAT. Capex from the DOE installed-cost curve, with lower Tunisian installation cost in the central and favourable cases until an installer quotes. See Sources and method.</li>
+    <li id="n3">Electrical 35–40% and heat recovery 42–45% (LHV), within the DOE reciprocating-engine range; total capped at 85%.</li>
+    <li id="n4">ANME and company reports, via the project’s research file.</li>
+    <li id="n5">Ministry of Energy via L’Economiste Maghrébin, May 2024.</li>
+  </ol>
+  <div class="foot"><span>[PRODUCT NAME] · Estimates for screening only. A feasibility study confirms the numbers for your site.</span>
+    <nav><a href="#">Sources and method</a><a href="#">About</a><a href="#">Privacy</a><a href="admin.html">Admin</a></nav></div>
+</div></footer>
+
+<div class="proto">Prototype · landing page<a href="admin.html">Open admin ›</a><a href="index.html">All screens</a></div>
+
+<script type="module">
+import { sizeHotel } from './engine.mjs';
+
+const $ = (s) => document.querySelector(s);
+const fmt = (n, d = 0) => Number(n).toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+const k = (n) => (n >= 1e6 ? fmt(n / 1e6, n >= 1e7 ? 0 : 2).replace(/\.?0+$/, '') + 'M' : fmt(Math.round(n / 1000)) + 'k');
+const CITIES = [
+  { id: 'djerba', name: 'Djerba', note: 'Island coast' },
+  { id: 'sousse', name: 'Sousse', note: 'Sahel coast' },
+  { id: 'hammamet', name: 'Hammamet', note: 'Gulf coast' },
+  { id: 'tozeur', name: 'Tozeur', note: 'Saharan oasis' },
+];
+const RINGS = [
+  { k: 'elec', color: 'var(--elec)', label: 'Electricity' },
+  { k: 'heat', color: 'var(--heat)', label: 'Hot water' },
+  { k: 'cool', color: 'var(--cool)', label: 'Cooling' },
+];
+const vclass = (v) => (v.startsWith('good') ? 'good' : v.startsWith('possible') ? 'maybe' : 'weak');
+const vlabel = (v) => (v.startsWith('good') ? 'Good fit' : v.startsWith('possible') ? 'Possible fit' : 'Weak fit');
+
+/** Year-round share of each need the plant covers, central case (150 summer + 215 winter days). */
+function coverage(r) {
+  const W = { summer: 150, winter: 215 };
+  let e = 0, eD = 0, h = 0, hD = 0, c = 0, cD = 0;
+  for (const s of ['summer', 'winter']) for (const x of r.hourly[s]) {
+    const w = W[s];
+    e += w * x.engineElec; eD += w * (x.engineElec + x.gridImport);
+    h += w * Math.min(x.heatDemand, Math.max(0, x.recoveredHeat - x.chillerCool / 0.7)); hD += w * x.heatDemand;
+    c += w * x.chillerCool; cD += w * x.coolDemand;
+  }
+  return { elec: e / eD, heat: h / hD, cool: cD ? c / cD : 0 };
+}
+
+function rings(size, stroke) {
+  const gap = stroke * 0.3, c = size / 2;
+  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" role="img" aria-label="Share of electricity, hot water and cooling the plant covers" style="max-width:100%;height:auto">
+    ${RINGS.map((r, i) => {
+      const rad = c - stroke / 2 - i * (stroke + gap), len = 2 * Math.PI * rad;
+      return `<circle cx="${c}" cy="${c}" r="${rad}" fill="none" stroke="${r.color}" stroke-opacity=".15" stroke-width="${stroke}"/>
+        <circle class="ring" data-k="${r.k}" data-len="${len}" cx="${c}" cy="${c}" r="${rad}" fill="none" stroke="${r.color}" stroke-width="${stroke}" stroke-linecap="round" stroke-dasharray="${len}" stroke-dashoffset="${len}" transform="rotate(-90 ${c} ${c})"/>`;
+    }).join('')}</svg>`;
+}
+
+// ---------- hero + demo (Djerba, 300 rooms, pool) ----------
+const demo = sizeHotel({ rooms: 300, city: 'djerba', pool: true });
+const cov = coverage(demo);
+$('#hero-rings').innerHTML = rings(320, 32);
+$('#hero-key').innerHTML = RINGS.map((r) => `<div><b>${Math.round(cov[r.k] * 100)}%</b><i style="background:${r.color}"></i>${r.label}</div>`).join('');
+requestAnimationFrame(() => setTimeout(() => {
+  document.querySelectorAll('#hero-rings .ring').forEach((el) => {
+    el.style.strokeDashoffset = String(el.dataset.len * (1 - Math.max(0.02, cov[el.dataset.k])));
+  });
+}, 150));
+
+const S = demo.scenarios;
+$('#demo-plant').textContent = `${demo.engineKwe} kWe engine + ${demo.chillerKwc} kWc chiller`;
+function bigRail(vals, max, unit, ticks) {
+  const [f, c, u] = vals, pct = (v) => (Math.min(v, max) / max) * 100;
+  const lo = Math.min(f, u), hi = Math.max(f, u);
+  return `<div class="rail"><div class="track"></div>
+    <div class="span" style="left:${pct(lo)}%;width:${pct(hi) - pct(lo)}%"></div>
+    <span class="lbl" style="left:${pct(f)}%">${f}</span><span class="lbl c" style="left:${pct(c)}%">${c}</span><span class="lbl" style="left:${pct(u)}%">${u}</span>
+    <div class="dot" style="left:${pct(c)}%"></div>
+    ${ticks.map((t) => `<span class="tick" style="left:${pct(t)}%">${t}${unit}</span>`).join('')}</div>`;
+}
+const rows = [
+  { t: 'Payback', d: 'Years to earn back the plant', vals: [S.favourable.paybackYears, S.central.paybackYears, S.unfavourable.paybackYears], max: 25, unit: '', ticks: [0, 5, 10, 15, 20, 25], v: `${S.favourable.paybackYears}–${S.unfavourable.paybackYears}<small>yrs</small><em>Central ${S.central.paybackYears} years</em>` },
+  { t: 'Savings', d: 'Per year, after gas and maintenance', vals: [S.unfavourable.annualSavingsTnd, S.central.annualSavingsTnd, S.favourable.annualSavingsTnd].map((x) => x / 1000), max: 300, unit: 'k', ticks: [0, 100, 200, 300], v: `${S.unfavourable.annualSavingsTnd/1000}–${k(S.favourable.annualSavingsTnd)}<small>TND</small><em>Central ${k(S.central.annualSavingsTnd)} TND a year</em>` },
+  { t: 'Investment', d: 'Installed, engine and chiller', vals: [S.favourable.capexTnd, S.central.capexTnd, S.unfavourable.capexTnd].map((x) => +(x / 1e6).toFixed(2)), max: 3, unit: 'M', ticks: [0, 1, 2, 3], v: `${(S.favourable.capexTnd/1e6).toFixed(1)}–${(S.unfavourable.capexTnd/1e6).toFixed(1)}M<small>TND</small><em>Central ${k(S.central.capexTnd)} TND</em>` },
+  { t: 'CO₂ avoided', d: 'Per year, against the grid and a gas boiler', vals: [S.unfavourable.co2AvoidedTonnes, S.central.co2AvoidedTonnes, S.favourable.co2AvoidedTonnes], max: 300, unit: 't', ticks: [0, 100, 200, 300], v: `${S.unfavourable.co2AvoidedTonnes}–${S.favourable.co2AvoidedTonnes}<small>t</small><em>Central ${S.central.co2AvoidedTonnes} t a year</em>` },
+];
+$('#demo-ranges').innerHTML = rows.map((r) => `<div class="rrow"><div class="k"><b>${r.t}</b>${r.d}</div>${bigRail(r.vals, r.max, r.unit, r.ticks)}<div class="v">${r.v}</div></div>`).join('');
+
+// ---------- verdict examples (live engine) ----------
+const examples = [
+  { rooms: 500, city: 'djerba', pool: true, title: '500 rooms, Djerba, pool', note: 'Open all year, big hot-water load. Worth a study.' },
+  { rooms: 300, city: 'tozeur', pool: true, title: '300 rooms, Tozeur, pool', note: 'Hot summers, cold desert nights for the pool. Worth a study.' },
+  { rooms: 100, city: 'djerba', pool: false, title: '100 rooms, Djerba, no pool', note: 'Too little heat demand in winter. The engine would sit idle.' },
+];
+$('#verdicts').innerHTML = examples.map((ex) => {
+  const r = sizeHotel(ex), s = r.scenarios;
+  return `<div class="vc"><span class="tag ${vclass(r.verdict)}">${vlabel(r.verdict)}</span><h3>${ex.title}</h3><p>${ex.note}</p>
+    <div class="num">${s.favourable.paybackYears}–${s.unfavourable.paybackYears}<small>yrs payback</small><em>Central ${s.central.paybackYears} years · ${r.engineKwe} kWe engine · ${fmt(s.central.fullLoadHours)} full-load hours</em></div></div>`;
+}).join('');
+
+// ---------- try it ----------
+const state = { rooms: 300, city: 'djerba', pool: true };
+$('#cities').innerHTML = CITIES.map((c) => `<button class="opt" data-city="${c.id}"><span>${c.name}<small>${c.note}</small></span></button>`).join('');
+function mini(vals, max, fmtv) {
+  const [a, c, b] = vals, pct = (v) => (Math.min(v, max) / max) * 100, lo = Math.min(a, b), hi = Math.max(a, b);
+  return `<div class="mini"><div class="t"></div><div class="s" style="left:${pct(lo)}%;width:${Math.max(1, pct(hi) - pct(lo))}%"></div><div class="d" style="left:${pct(c)}%"></div></div>
+    <div class="ends" style="margin-top:6px"><span>${fmtv(0)}</span><span>${fmtv(max)}</span></div>`;
+}
+function update() {
+  const r = sizeHotel(state), s = r.scenarios, best = r.options.best;
+  $('#rooms-v').textContent = state.rooms;
+  const el = $('#rooms'); el.style.setProperty('--p', ((state.rooms - 50) / 750) * 100 + '%');
+  document.querySelectorAll('[data-city]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.city === state.city)));
+  document.querySelectorAll('[data-pool]').forEach((b) => b.setAttribute('aria-pressed', String((b.dataset.pool === '1') === state.pool)));
+  const chp = best.chillerKwc === 0 && best.scenarios.central.paybackYears < s.central.paybackYears;
+  $('#result').innerHTML = `
+    <div class="top"><div class="plant">${r.engineKwe} kWe engine${r.chillerKwc ? ` + ${r.chillerKwc} kWc chiller` : ''}<small>${fmt(s.central.fullLoadHours)} full-load hours a year, central case</small></div>
+      <span class="vtag ${vclass(r.verdict)}">${vlabel(r.verdict)}</span></div>
+    <div class="lrow"><div class="h"><span>Payback</span><b>${s.favourable.paybackYears}–${s.unfavourable.paybackYears}<small>yrs</small></b></div>${mini([s.favourable.paybackYears, s.central.paybackYears, s.unfavourable.paybackYears], 30, (v) => v + ' yrs')}</div>
+    <div class="lrow"><div class="h"><span>Savings a year</span><b>${k(s.unfavourable.annualSavingsTnd)}–${k(s.favourable.annualSavingsTnd)}<small>TND</small></b></div>${mini([s.unfavourable.annualSavingsTnd, s.central.annualSavingsTnd, s.favourable.annualSavingsTnd], 500000, (v) => k(v))}</div>
+    <div class="lrow"><div class="h"><span>CO₂ avoided a year</span><b>${s.unfavourable.co2AvoidedTonnes}–${s.favourable.co2AvoidedTonnes}<small>t</small></b></div>${mini([s.unfavourable.co2AvoidedTonnes, s.central.co2AvoidedTonnes, s.favourable.co2AvoidedTonnes], 500, (v) => v + ' t')}</div>
+    ${r.warnings.length ? `<div class="warn">${r.warnings.join(' ')}</div>` : ''}
+    ${chp ? `<div class="alt"><b>Faster option: ${best.engineKwe} kWe, hot water and pool only.</b> No chiller, ${best.scenarios.favourable.paybackYears}–${best.scenarios.unfavourable.paybackYears} years (central ${best.scenarios.central.paybackYears}). The chiller can be added later.</div>` : ''}
+    <div class="go"><a class="btn" href="#study">Request a study</a><a class="chev" href="#">Open the full tool</a></div>
+    <p class="fine">Central case marked by the dot. Ranges, not promises: a feasibility study confirms the numbers for your site.</p>`;
+}
+$('#rooms').addEventListener('input', (e) => { state.rooms = +e.target.value; update(); });
+$('#cities').addEventListener('click', (e) => { const b = e.target.closest('[data-city]'); if (b) { state.city = b.dataset.city; update(); } });
+$('#pool').addEventListener('click', (e) => { const b = e.target.closest('[data-pool]'); if (b) { state.pool = b.dataset.pool === '1'; update(); } });
+update();
+
+// ---------- tornado (docs/engine/spec.md, one input at a time) ----------
+const T = [
+  ['Engine capex', '9,100 / 5,000 TND per kWe', 11.3, 6.6],
+  ['Gas price', '0.09 / 0.068 TND per kWh', 10.9, 8.9],
+  ['Winter occupancy', '40% / 55%', 9.9, 8.5],
+  ['Maintenance', '0.058 / 0.03 TND per kWh', 9.9, 8.4],
+  ['Engine efficiency', '35% / 40% electrical', 9.6, 8.5],
+  ['Demand-charge saving', 'not counted / counted', 8.9, 7.8],
+];
+const lo = 5, hi = 13, X = (v) => ((v - lo) / (hi - lo)) * 100, C = 9;
+$('#tornado').innerHTML = T.map(([n, d, u, f]) => `<div class="trow"><div class="k">${n}<small>${d}</small></div>
+  <div class="tbar"><div class="b lo" style="left:${X(f)}%;width:${X(C) - X(f)}%"></div><div class="b hi" style="left:${X(C)}%;width:${X(u) - X(C)}%"></div>
+  <span class="n" style="left:calc(${Math.min(X(f), X(C))}% - 40px)">${f} y</span><span class="n" style="left:calc(${Math.max(X(u), X(C))}% + 8px)">${u} y</span><div class="axis" style="left:${X(C)}%"></div></div></div>`).join('');
+</script>
+</body>
+</html>
