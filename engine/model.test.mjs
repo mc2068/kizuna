@@ -1,4 +1,4 @@
-// Run: node --test engine/
+// Run: node --test engine/*.test.mjs
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { sizeHotel, evaluateSize, paramsFor, SCENARIOS, PARAMS, touSlot } from './model.mjs';

@@ -1,6 +1,6 @@
 # Sizing engine v2: spec and results
 
-Reference model: `engine/model.mjs` (plain ES module, no dependencies). Tests: `node --test engine/`. The TypeScript port for the website (ADR 0002) must pass the same tests.
+Reference model: `engine/model.mjs` (plain ES module, no dependencies). Tests: `node --test engine/*.test.mjs`. The TypeScript port for the website (ADR 0002) must pass the same tests.
 
 v2 applies the critique (`critique/idea-critique.md` in the project files) and the real STEG and ONTT figures (`docs/research/assumptions-audit.md`, findings section). Every parameter, with all three values and its source, is in `PARAMS` in the code and is returned in `assumptions`.
 
