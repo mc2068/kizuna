@@ -11,6 +11,7 @@ import { formatDateTime } from './format';
 
 export async function OverviewTab({ lead, names }: { lead: LeadDetail; names: Record<string, string> }) {
   const t = await getTranslations('lead');
+  const tEngine = await getTranslations('engine');
   const r = lead.results;
   const tone = verdictTone(r.verdict);
   const best = r.options.best;
@@ -61,7 +62,7 @@ export async function OverviewTab({ lead, names }: { lead: LeadDetail; names: Re
             <p className="font-semibold">{t('overview.warnings')}</p>
             <ul className="mt-1 list-disc pl-5">
               {r.warnings.map((w) => (
-                <li key={w}>{warningText(w)}</li>
+                <li key={w.code}>{warningText(w, tEngine)}</li>
               ))}
             </ul>
           </div>
