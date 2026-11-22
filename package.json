@@ -13,6 +13,7 @@
     "test:watch": "vitest",
     "test:engine-reference": "node --test engine/*.test.mjs",
     "e2e": "playwright test",
+    "e2e:deployed": "playwright test --config playwright.deployed.config.ts",
     "db:start": "supabase start",
     "db:reset": "supabase db reset && tsx scripts/seed-storage.mts",
     "db:seed": "tsx scripts/seed-sql.mts",

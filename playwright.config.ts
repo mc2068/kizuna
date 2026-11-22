@@ -11,6 +11,8 @@ const onSupabase = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 const adminPort = port + 1;
 const role3URL = `http://localhost:${onSupabase ? port : adminPort}`;
 const ROLE3 = /role3-.*\.spec\.ts$/;
+// e2e/deployed runs against the live site with its own config (playwright.deployed.config.ts).
+const DEPLOYED = /[\\/]deployed[\\/]/;
 
 // Two ways to run (e2e/README.md):
 // - On local Supabase (CI): `pnpm build` and `pnpm e2e` with the Supabase variables set. Every test runs.
@@ -24,9 +26,9 @@ export default defineConfig({
   reporter: process.env.CI ? [['html', { open: 'never' }], ['list']] : 'list',
   use: { baseURL: `http://localhost:${port}`, trace: 'off' },
   projects: [
-    { name: 'chromium', use: { ...devices['Desktop Chrome'] }, testIgnore: ROLE3 },
+    { name: 'chromium', use: { ...devices['Desktop Chrome'] }, testIgnore: [ROLE3, DEPLOYED] },
     // Public pages at phone size (layout and axe checks); the flows run on desktop only.
-    { name: 'mobile', use: { ...devices['Pixel 7'] }, testMatch: 'pages.spec.ts' },
+    { name: 'mobile', use: { ...devices['Pixel 7'] }, testMatch: 'pages.spec.ts', testIgnore: DEPLOYED },
     // Role 3 (Gaith): the design and page specs, at 1440 and 360 px. On the fake they run against a
     // second server signed in as the demo admin, so the admin pipeline can be tested; on Supabase
     // they sign in with signInAs where they need the admin (e2e/role3-pages.ts).
