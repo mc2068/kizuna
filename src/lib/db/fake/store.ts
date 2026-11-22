@@ -168,6 +168,20 @@ export const fakeStore: DataStore = {
   },
 
   /** A data: URL in the fake (Supabase returns a signed Storage URL). */
+  async addLeadEvent(leadId, kind, data) {
+    findLead(leadId);
+    addEvent(leadId, kind, null, data);
+  },
+
+  async takeRateLimitSlot(key, limit, windowSeconds) {
+    const attempts = db().rateLimit;
+    const since = Date.now() - windowSeconds * 1000;
+    const recent = attempts.filter((a) => a.key === key && a.at > since).length;
+    if (recent >= limit) return false;
+    attempts.push({ key, at: Date.now() });
+    return true;
+  },
+
   async leadFileUrl(fileId) {
     if (!isAdmin()) return null;
     const f = db().files.find((x) => x.id === fileId);

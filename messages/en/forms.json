@@ -1,1 +1,89 @@
-{}
+{
+  "requestStudy": {
+    "meta": {
+      "title": "Request a feasibility study",
+      "description": "Ask for a feasibility study for your hotel: your STEG bills, a site visit, installer quotes and a bankable report. Price on request."
+    },
+    "hero": {
+      "eyebrow": "Request a study",
+      "title": "From estimate",
+      "titleSub": "to evidence.",
+      "lede": "Tell us about your hotel. A member of the team replies within two working days with what a study would cost."
+    },
+    "about": {
+      "title": "What the study covers",
+      "items": {
+        "visit": "A site visit: plant room, gas meter and space for a chiller",
+        "bills": "Twelve months of your STEG electricity and gas bills, analysed",
+        "quotes": "Two installer quotes on the same specification",
+        "report": "A bankable report, with the FTE subsidy file prepared"
+      },
+      "price": "Price on request",
+      "priceNote": "It depends on the hotel's size and the data available.",
+      "timeline": "Timeline",
+      "timelineBody": "A few weeks from the site visit, depending on how fast the bills arrive."
+    },
+    "summary": {
+      "title": "Your screening",
+      "plant": "{kwe} kWe engine{chiller, select, none {} other { + {chiller} kWc chiller}}",
+      "payback": "Payback {range}, central {central} years",
+      "hotel": "{rooms} rooms · {city} · {pool, select, yes {pool} other {no pool}}",
+      "edit": "Change it in the tool"
+    }
+  },
+  "studyForm": {
+    "title": "Your details",
+    "fields": {
+      "contactName": "Your name",
+      "email": "Email",
+      "phone": "Phone",
+      "hotelName": "Hotel name",
+      "city": "City",
+      "rooms": "Rooms",
+      "pool": "Heated pool",
+      "elecPrice": "Electricity price",
+      "message": "Anything we should know?",
+      "website": "Leave this field empty",
+      "consent": "I agree that {name} stores my details to answer this request. <link>Privacy</link>"
+    },
+    "hints": {
+      "phone": "Optional",
+      "elecPrice": "Optional, in TND per kWh before VAT. Leave empty for the STEG time-of-use tariff.",
+      "rooms": "Between {min} and {max}",
+      "message": "Opening months, spa, gas connection, recent bills…"
+    },
+    "placeholders": {
+      "contactName": "Leila Ben Ali",
+      "email": "name@hotel.tn",
+      "phone": "+216",
+      "hotelName": "Hotel name",
+      "elecPrice": "STEG tariff"
+    },
+    "errors": {
+      "required": "Please fill this in.",
+      "tooShort": "That looks too short.",
+      "tooLong": "That is too long.",
+      "email": "Please enter a valid email address.",
+      "city": "Please choose a city.",
+      "rooms": "Enter a number of rooms between {min} and {max}.",
+      "elecPrice": "Enter a price between {min} and {max} TND per kWh, or leave it empty.",
+      "consent": "We need your consent to answer the request.",
+      "server": "Something went wrong on our side. Please try again, or email {email}.",
+      "summary": "Please check the fields marked in red."
+    },
+    "submit": "Send request",
+    "sending": "Sending…",
+    "success": {
+      "title": "Thank you, {name}.",
+      "body": "We have your request for {hotel}. Your reference is {id}.",
+      "next": "What happens next",
+      "steps": {
+        "reply": "We reply within two working days, by email.",
+        "call": "A short call to understand the hotel and the bills you have.",
+        "quote": "A price for the study, with no obligation."
+      },
+      "again": "Send another request",
+      "home": "Back to the home page"
+    }
+  }
+}

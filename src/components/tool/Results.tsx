@@ -89,7 +89,7 @@ function NextStep() {
             {t('save')}
           </button>
         </div>
-        <p id="save-soon" className="text-xs text-[var(--faint,#86868b)]">
+        <p id="save-soon" className="text-xs text-[var(--muted,#6e6e73)]">
           {t('saveSoon')}
         </p>
       </div>

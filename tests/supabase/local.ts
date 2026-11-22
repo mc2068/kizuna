@@ -65,7 +65,7 @@ export async function resetData(): Promise<void> {
   try {
     const { rows } = await db.query<{ name: string }>("select name from storage.objects where bucket_id = 'lead-files'");
     if (rows.length) await serviceClient().storage.from('lead-files').remove(rows.map((r) => r.name));
-    await db.query('truncate public.projects, public.leads cascade');
+    await db.query('truncate public.projects, public.leads, public.study_request_attempts cascade');
     await db.query(readFileSync(new URL('../../supabase/seed.sql', import.meta.url), 'utf8'));
   } finally {
     await db.end();

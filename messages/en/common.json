@@ -20,5 +20,85 @@
     "twin": "Digital twin",
     "admin": "Admin: leads pipeline",
     "adminLead": "Admin: lead detail"
-  }
+  },
+  "meta": {
+    "title": "{name}: trigeneration screening for Tunisian hotels",
+    "description": "Find out in two minutes whether a gas engine that makes your hotel's electricity, hot water and cooling would pay. Honest ranges, cited sources, and feasibility studies."
+  },
+  "skipToContent": "Skip to content",
+  "home": "{name} home",
+  "nav": {
+    "label": "Main",
+    "howItWorks": "How it works",
+    "tool": "Sizing tool",
+    "services": "Services",
+    "caseStudy": "Djerba case",
+    "about": "About",
+    "sources": "Sources",
+    "signIn": "Sign in",
+    "myProjects": "My projects",
+    "admin": "Admin",
+    "cta": "Screen your hotel",
+    "requestStudy": "Request a study",
+    "openMenu": "Open menu",
+    "menuTitle": "Menu"
+  },
+  "footer": {
+    "label": "Footer",
+    "tagline": "Trigeneration screening for Tunisian hotels.",
+    "disclaimer": "Estimates for screening only. A feasibility study confirms the numbers for your site. Prices before VAT.",
+    "product": "Product",
+    "company": "Company",
+    "legal": "Method and legal",
+    "privacy": "Privacy",
+    "sourcesNote": "Every claim is footnoted. See Sources and method.",
+    "copyright": "© {name}"
+  },
+  "admin": {
+    "railLabel": "Admin",
+    "pipeline": "Pipeline",
+    "mine": "Assigned to me",
+    "backToSite": "Back to site",
+    "signedInAs": "Signed in as {name}"
+  },
+  "footnote": {
+    "label": "Source {n}: {title}"
+  },
+  "rings": {
+    "label": "Share of the hotel's electricity, hot water and cooling the plant supplies: electricity {elec}%, hot water {heat}%, cooling {cool}%.",
+    "elec": "Electricity",
+    "heat": "Hot water",
+    "cool": "Cooling"
+  },
+  "rangeRail": {
+    "label": "{title}: favourable {favourable}, central {central}, unfavourable {unfavourable}.",
+    "favourable": "Favourable",
+    "central": "Central",
+    "unfavourable": "Unfavourable"
+  },
+  "verdict": {
+    "good": "Good fit",
+    "maybe": "Possible fit",
+    "weak": "Weak fit"
+  },
+  "status": {
+    "new": "New",
+    "contacted": "Contacted",
+    "quoted": "Quoted",
+    "won": "Won",
+    "lost": "Lost"
+  },
+  "cities": {
+    "djerba": "Djerba",
+    "sousse": "Sousse",
+    "hammamet": "Hammamet",
+    "tozeur": "Tozeur"
+  },
+  "notFound": {
+    "title": "This page doesn't exist.",
+    "body": "The link may be old, or the page may have moved.",
+    "home": "Go to the home page",
+    "code": "404"
+  },
+  "close": "Close"
 }
