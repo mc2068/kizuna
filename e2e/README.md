@@ -30,6 +30,24 @@ pnpm build && pnpm e2e
 
 Leave the Supabase variables out, `pnpm build && pnpm e2e`. Tests that need a real sign-in skip themselves.
 
+## Against the deployed site (`e2e/deployed`)
+
+`pnpm e2e:deployed` runs the integration specs against production (https://kizuna-ruddy.vercel.app), with its own config (`playwright.deployed.config.ts`) and no local server. Point it at a Vercel preview with `DEPLOYED_URL=https://<preview>.vercel.app pnpm e2e:deployed`. The main `pnpm e2e` ignores this folder.
+
+Every spec is read-only, so it is safe to run against production at any time: nothing signs in, sends an email, saves a project or submits a lead.
+
+| File | What it checks |
+| --- | --- |
+| `pages.spec.ts` | Every public route over HTTPS: 200, one `h1`, a title, no console errors, no serious or critical axe violations. Desktop and Pixel 7. `/p/demo-djerba` is left out (seeded only locally). |
+| `links.spec.ts` | Every same-site link on the public pages answers below 400; an unknown page is a 404 with the not-found page. |
+| `access.spec.ts` | Signed out: `/projects` redirects to sign-in, `/admin/**` is a 404, the sign-in form, off-site `?next=`, a bad email, a bad callback token. |
+| `share.spec.ts` | Unknown share links and their PDF are 404; a project PDF signed out is a 404. |
+| `tool.spec.ts` | `/tool` defaults give the Djerba verdict; Tozeur and 100 rooms update the result and URL with no submit; reload restores them; the hourly chart loads on scroll. |
+| `frozen-numbers.spec.ts` | The frozen Djerba numbers (docs/team/README.md) on `/`, `/tool`, `/case-study/djerba` and the prefilled `/request-study`; the verdict thresholds on `/sources`. |
+| `platform.spec.ts` | HTTP redirects to HTTPS with HSTS; a signed-out visit sets no cookies; the study form needs consent and links the privacy notice (submitted empty only). |
+
+What it does not cover, because it would write to production: the real email round trip, saving and sharing a project, the PDF of a real project, a study request reaching the admin pipeline. Run those by hand on production for #28, or with `pnpm e2e` on local Supabase.
+
 ## Helpers (`e2e/support`)
 
 - `signInAs(page, email, next)`: signs in without the inbox (a one-time token from the service role key, opened on `/auth/callback`). Use it to reach a role quickly. `SEEDED.admin` and `SEEDED.user` are seeded users.
