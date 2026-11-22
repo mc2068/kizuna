@@ -1,1 +1,65 @@
-{}
+{
+  "pipeline": {
+    "meta": {
+      "title": "Study requests"
+    },
+    "breadcrumb": "Admin",
+    "title": "Study requests",
+    "lede": "Hotels that asked for a feasibility study. Every lead has one owner.",
+    "kpis": {
+      "label": "Key figures",
+      "open": "Open leads",
+      "openNote": "New, contacted or quoted",
+      "new7": "New this week",
+      "new7Note": "Received in the last 7 days",
+      "won": "Won this quarter",
+      "wonNote": "Studies signed since {date}",
+      "winRate": "Win rate",
+      "winRateNote": "{closed, plural, =0 {No closed leads yet} one {# closed lead} other {# closed leads}}",
+      "noRate": "–"
+    },
+    "tiles": {
+      "label": "Filter by status",
+      "notes": {
+        "new": "needs a first call",
+        "contacted": "collecting bills",
+        "quoted": "study price sent",
+        "won": "study signed",
+        "lost": "closed"
+      },
+      "leads": "{count, plural, one {lead} other {leads}}"
+    },
+    "filters": {
+      "label": "Filters",
+      "status": "Status",
+      "city": "City",
+      "verdict": "Screening verdict",
+      "any": "Any",
+      "anyStatus": "Any status",
+      "anyCity": "Any city",
+      "anyVerdict": "Any verdict",
+      "mine": "Assigned to me",
+      "clear": "Clear all"
+    },
+    "results": "{shown, plural, one {# lead} other {# leads}} of {total}",
+    "card": {
+      "hotel": "Hotel",
+      "city": "City",
+      "rooms": "{rooms} rooms",
+      "pool": "pool",
+      "received": "{id} · received {ago}",
+      "payback": "Payback",
+      "central": "central {value}",
+      "owner": "Owner",
+      "open": "Open lead",
+      "openLabel": "Open lead {hotel}",
+      "unassigned": "Unassigned"
+    },
+    "empty": {
+      "title": "No leads match these filters.",
+      "body": "Try another status or city, or clear the filters.",
+      "mine": "Nothing is assigned to you with these filters.",
+      "clear": "Clear all filters"
+    }
+  }
+}

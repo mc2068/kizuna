@@ -1,10 +1,263 @@
-/* Role 3 (Gaith) owns this file: design tokens (Contract 2) and the shadcn variables go here. */
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
+/*
+ * [PRODUCT NAME] design system (Role 3, Contract 2).
+ * The Contract 2 tokens below keep their exact names and values: do not change them without
+ * updating Contract 2 in all four role files.
+ */
+:root {
+  /* Contract 2: surfaces and text */
+  --bg: #fbfbfd;
+  --ink: #1d1d1f;
+  --muted: #6e6e73;
+  --faint: #86868b;
+  --line: #d2d2d7;
+  --tile: #f5f5f7;
+  --link: #0066cc;
+  --btn: #0071e3;
 
-body {
-  background: #fbfbfd;
-  color: #1d1d1f;
+  /* Contract 2: energy colours */
+  --elec: #f28c28;
+  --heat: #e5484d;
+  --cool: #0b8fc7;
+
+  /* Contract 2: verdicts */
+  --good: #1f8a4c;
+  --maybe: #b26b00;
+  --weak: #8e8e93;
+
+  /* Contract 2: lead status, each with a soft background */
+  --status-new: #2563eb;
+  --status-new-soft: #eef3fe;
+  --status-contacted: #a35f00;
+  --status-contacted-soft: #fdf5ea;
+  --status-quoted: #0f766e;
+  --status-quoted-soft: #e3f3f1;
+  --status-won: #1d7f45;
+  --status-won-soft: #eef8f2;
+  --status-lost: #6b6f72;
+  --status-lost-soft: #f3f4f4;
+
+  /* Extras, not part of Contract 2. Text variants that pass WCAG AA (4.5:1) on --bg, white and
+     their soft backgrounds, for small text in the energy and verdict colours. The Contract 2
+     colours stay for fills, rings and bars. */
+  --elec-text: #a35200;
+  --heat-text: #c0262c;
+  --cool-text: #00709f;
+  --good-text: #1a7a42;
+  --good-soft: #eef8f2;
+  --maybe-text: #8f5600;
+  --maybe-soft: #fbf1e2;
+  --weak-soft: #eeeff0;
+  --weak-text: #5f5f63;
+  --dark: #000000;
+  --dark-tile: #1d1d1f;
+  --dark-muted: #a1a1a6;
+  --rail: #16232b;
+
+  /* shadcn/ui variables, mapped to Contract 2 */
+  --radius: 18px;
+  --background: var(--bg);
+  --foreground: var(--ink);
+  --card: #ffffff;
+  --card-foreground: var(--ink);
+  --popover: #ffffff;
+  --popover-foreground: var(--ink);
+  --primary: var(--btn);
+  --primary-foreground: #ffffff;
+  --secondary: var(--tile);
+  --secondary-foreground: var(--ink);
+  --accent: var(--tile);
+  --accent-foreground: var(--ink);
+  --destructive: #c0262c;
+  --border: var(--line);
+  --input: var(--line);
+  --ring: var(--btn);
+  --muted-foreground: var(--muted);
+}
+
+@theme inline {
+  /* Contract 2 colours as Tailwind utilities: bg-tile, text-ink, text-muted, border-line ... */
+  --color-bg: var(--bg);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-line: var(--line);
+  --color-tile: var(--tile);
+  --color-link: var(--link);
+  --color-btn: var(--btn);
+  --color-elec: var(--elec);
+  --color-heat: var(--heat);
+  --color-cool: var(--cool);
+  --color-good: var(--good);
+  --color-maybe: var(--maybe);
+  --color-weak: var(--weak);
+  --color-status-new: var(--status-new);
+  --color-status-new-soft: var(--status-new-soft);
+  --color-status-contacted: var(--status-contacted);
+  --color-status-contacted-soft: var(--status-contacted-soft);
+  --color-status-quoted: var(--status-quoted);
+  --color-status-quoted-soft: var(--status-quoted-soft);
+  --color-status-won: var(--status-won);
+  --color-status-won-soft: var(--status-won-soft);
+  --color-status-lost: var(--status-lost);
+  --color-status-lost-soft: var(--status-lost-soft);
+  --color-elec-text: var(--elec-text);
+  --color-heat-text: var(--heat-text);
+  --color-cool-text: var(--cool-text);
+  --color-good-text: var(--good-text);
+  --color-good-soft: var(--good-soft);
+  --color-maybe-text: var(--maybe-text);
+  --color-maybe-soft: var(--maybe-soft);
+  --color-weak-soft: var(--weak-soft);
+  --color-weak-text: var(--weak-text);
+  --color-dark: var(--dark);
+  --color-dark-tile: var(--dark-tile);
+  --color-dark-muted: var(--dark-muted);
+  --color-rail: var(--rail);
+
+  /* shadcn names */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --radius-sm: calc(var(--radius) - 10px);
+  --radius-md: calc(var(--radius) - 8px);
+  --radius-lg: calc(var(--radius) - 4px);
+  --radius-xl: var(--radius);
+  --radius-2xl: calc(var(--radius) + 6px);
+
+  /* Fonts come from next/font (src/app/fonts.ts) as CSS variables. */
+  --font-sans: var(--font-text), "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: var(--font-display-face), "Inter Tight", var(--font-text), system-ui, sans-serif;
+
+  /* Keynote type scale: huge display headings that shrink on phones */
+  --text-hero: clamp(3rem, 1.4rem + 6.6vw, 6.75rem);
+  --text-hero--line-height: 1;
+  --text-hero--letter-spacing: -0.04em;
+  --text-display: clamp(2.375rem, 1.5rem + 3.6vw, 4.5rem);
+  --text-display--line-height: 1.05;
+  --text-display--letter-spacing: -0.032em;
+  --text-headline: clamp(1.625rem, 1.25rem + 1.5vw, 2.5rem);
+  --text-headline--line-height: 1.1;
+  --text-headline--letter-spacing: -0.022em;
+  --text-lede: clamp(1.1875rem, 1.05rem + 0.55vw, 1.5rem);
+  --text-lede--line-height: 1.42;
+  --text-lede--letter-spacing: -0.012em;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 17px;
+    line-height: 1.47;
+    letter-spacing: -0.022em;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  /* Keyboard focus is visible everywhere; mouse focus stays quiet. */
+  :focus-visible {
+    outline: 3px solid var(--btn);
+    outline-offset: 3px;
+  }
+  ::selection {
+    background: #cfe3fb;
+  }
+  :target {
+    scroll-margin-top: 88px;
+  }
+}
+
+@layer utilities {
+  /* Tabular numerals for every number (Contract 2). */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+  .text-link-chevron::after {
+    content: "\203A";
+    display: inline-block;
+    margin-left: 0.2em;
+    transition: transform 0.2s ease;
+  }
+  .text-link-chevron:hover::after {
+    transform: translateX(3px);
+  }
+  .frosted {
+    background: rgb(251 251 253 / 0.8);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+  }
+}
+
+/* Energy-flow diagram: gas and heat moving along the pipes. Static with reduced motion and in print. */
+.flow-dash {
+  stroke-dasharray: 10 12;
+  animation: flow-run 1.6s linear infinite;
+}
+@keyframes flow-run {
+  to {
+    stroke-dashoffset: -44;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flow-dash {
+    animation: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media print {
+  [data-site-header],
+  [data-print-hide] {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+    font-size: 11pt;
+  }
+  .flow-dash {
+    animation: none;
+    stroke-dasharray: none;
+  }
 }

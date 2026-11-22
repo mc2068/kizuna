@@ -1,1 +1,658 @@
-{}
+{
+  "home": {
+    "meta": {
+      "title": "Trigeneration screening for Tunisian hotels",
+      "description": "One gas engine on site makes electricity, hot water and cooling. Find out in two minutes whether it would pay for your hotel, with honest ranges and cited sources."
+    },
+    "hero": {
+      "eyebrow": "Trigeneration screening for Tunisian hotels",
+      "title": "Make your own energy.",
+      "titleSub": "Only if it pays.",
+      "lede": "One gas engine on site makes electricity, hot water and the heat that runs an absorption chiller. Our free screening tool tells you in two minutes whether your hotel is a fit, and says so plainly when it isn't.",
+      "ctaPrimary": "Screen my hotel",
+      "ctaSecondary": "See how it works",
+      "ringsCaption": "What a {kwe} kWe plant covers for a {rooms}-room Djerba hotel, over a full year."
+    },
+    "demo": {
+      "title": "A {rooms}-room hotel in Djerba.",
+      "titleSub": "Every result is a range, because the inputs are.",
+      "chips": {
+        "hotel": "{stars}-star beach hotel",
+        "pool": "Pool",
+        "tariff": "STEG time-of-use, before VAT"
+      },
+      "plantLabel": "Plant",
+      "plant": "{kwe} kWe engine + {kwc} kWc chiller",
+      "rows": {
+        "payback": {
+          "title": "Payback",
+          "body": "Years to earn back the plant",
+          "central": "Central {value}"
+        },
+        "savings": {
+          "title": "Savings",
+          "body": "Per year, after gas and maintenance",
+          "central": "Central {value} a year"
+        },
+        "capex": {
+          "title": "Investment",
+          "body": "Installed, engine and chiller",
+          "central": "Central {value}"
+        },
+        "co2": {
+          "title": "CO₂ avoided",
+          "body": "Per year, against the grid and a gas boiler",
+          "central": "Central {value} a year"
+        }
+      },
+      "legend": "Each rail runs from the favourable to the unfavourable case, with the central case marked. They are the choices an enthusiastic installer and a sceptical juror would make, not statistical bounds.",
+      "fte": "With the FTE subsidy, payback could fall to {range}. Hotel eligibility is not confirmed, so it never enters the headline.",
+      "cta": "Read the full Djerba case"
+    },
+    "flow": {
+      "title": "One engine. Three jobs.",
+      "lede": "A normal hotel buys power from STEG and burns gas for hot water. More than half of a power station's fuel leaves as waste heat. Trigeneration catches that heat on your site and uses it.",
+      "steps": {
+        "gas": {
+          "label": "Step 1",
+          "title": "Gas in.",
+          "body": "From the STEG gas network that most coastal hotel zones already have."
+        },
+        "power": {
+          "label": "Step 2",
+          "title": "Power on site.",
+          "body": "About {pct}% of the gas becomes electricity the hotel uses directly."
+        },
+        "heat": {
+          "label": "Step 3",
+          "title": "Heat, recovered.",
+          "body": "Another {pct}% comes back as hot water for rooms, kitchen, laundry and the pool, all year."
+        },
+        "cold": {
+          "label": "Step 4",
+          "title": "Heat becomes cold.",
+          "body": "In summer, an absorption chiller turns spare heat into chilled water for air conditioning."
+        }
+      },
+      "cta": "How it works"
+    },
+    "honesty": {
+      "title": "Most hotels will hear “not yet”.",
+      "lede": "The tool is a screening tool. It is built to find the few hotels where a plant pays, and to say so plainly everywhere else.",
+      "signs": "It tends to pay where a hotel is <b>large</b>, <b>open all year</b>, has a <b>heated pool or spa</b> and is <b>on the gas network</b>.",
+      "examples": {
+        "big": {
+          "title": "{rooms} rooms, Djerba, pool",
+          "note": "Open all year, big hot-water load. Worth a study."
+        },
+        "desert": {
+          "title": "{rooms} rooms, Tozeur, pool",
+          "note": "Hot summers, and cold desert nights for the pool. Worth a study."
+        },
+        "small": {
+          "title": "{rooms} rooms, Djerba, no pool",
+          "note": "Too little heat demand in winter. The engine would sit idle."
+        }
+      },
+      "payback": "years payback",
+      "detail": "Central {central} years · {kwe} kWe engine · {hours} full-load hours"
+    },
+    "screen": {
+      "title": "Screen your hotel.",
+      "lede": "Three answers: rooms, city and pool. The full tool adds your electricity price, an hourly dashboard and a PDF report.",
+      "card": "Start with the Djerba demo hotel, then change it to yours.",
+      "cta": "Open the sizing tool",
+      "free": "Free. No sign-in needed."
+    },
+    "tornado": {
+      "title": "What moves the answer.",
+      "lede": "The Djerba case pays back in about {years} years in the central case. Here is how far each input moves it, one at a time.",
+      "quote": "One installer quote matters more than every other input combined. That is what a feasibility study gets you."
+    },
+    "services": {
+      "title": "From a screening to a plant.",
+      "lede": "The tool is free. When it says “possible fit”, we take it from estimate to evidence.",
+      "study": {
+        "tag": "Most hotels start here",
+        "title": "Feasibility study.",
+        "body": "We replace our assumptions with your numbers: your STEG bills, a site visit and installer quotes."
+      },
+      "referral": {
+        "tag": "After the study",
+        "title": "Installer referral.",
+        "body": "We introduce you to Tunisian installers who have built CHP plants, and compare their quotes line by line."
+      },
+      "esco": {
+        "tag": "Later",
+        "title": "Shared savings.",
+        "body": "A partner finances, owns and runs the plant. The hotel pays from the savings, with no upfront cost."
+      },
+      "price": "Price on request",
+      "soon": "Coming soon",
+      "cta": "Services and pricing"
+    },
+    "proof": {
+      "title": "Already running in Tunisia.",
+      "lede": "Not in hotels yet. In factories, for years."
+    },
+    "final": {
+      "title": "Possible fit?",
+      "titleSub": "Let's find out.",
+      "lede": "Send us your screening result. A member of the team replies within two working days with what a study would cost for your hotel.",
+      "primary": "Request a feasibility study",
+      "secondary": "Screen another hotel"
+    }
+  },
+  "tornado": {
+    "label": "How far each input moves the central payback of {baseline} years, one at a time.",
+    "favourable": "Favourable value",
+    "unfavourable": "Unfavourable value",
+    "central": "Central case, {years} years",
+    "row": "{input}: {favourable} years if favourable, {unfavourable} years if unfavourable.",
+    "years": "{value} y"
+  },
+  "howItWorks": {
+    "meta": {
+      "title": "How it works",
+      "description": "How one gas engine makes a hotel's electricity, hot water and cooling, which Tunisian hotels it fits, and how our screening tool decides."
+    },
+    "hero": {
+      "eyebrow": "How it works",
+      "title": "One engine.",
+      "titleSub": "Three jobs.",
+      "lede": "A gas engine on site makes electricity. Its waste heat makes hot water. In summer, an absorption chiller turns spare heat into cold water for air conditioning."
+    },
+    "diagram": {
+      "title": "Where the gas goes",
+      "label": "Energy flow: {elec}% of the gas becomes electricity, {heat}% becomes useful heat for hot water, the pool and the absorption chiller, and {loss}% is lost.",
+      "gas": "Natural gas",
+      "gasSub": "STEG network",
+      "engine": "Gas engine",
+      "elec": "Electricity",
+      "elecSub": "{pct}% · lights, kitchen, pumps",
+      "heat": "Recovered heat",
+      "heatSub": "{pct}% · as hot water",
+      "hotWater": "Hot water and pool",
+      "hotWaterSub": "All year",
+      "chiller": "Absorption chiller",
+      "chillerSub": "Heat in, cold out",
+      "cold": "Chilled water",
+      "coldSub": "Air conditioning",
+      "loss": "Losses",
+      "lossSub": "{pct}% · exhaust and radiation",
+      "caption": "Total efficiency about {total}%, against roughly half for a power station and a separate boiler. Central values from the engine model."
+    },
+    "why": {
+      "title": "Why Tunisian hotels.",
+      "lede": "Hotels need power, hot water and cooling at the same time, all year. Tunisia makes its electricity from gas, and pays most for it at the summer peak."
+    },
+    "fit": {
+      "title": "Who it fits.",
+      "titleSub": "And who it doesn't.",
+      "yes": "Tends to pay",
+      "no": "Usually not yet",
+      "yesItems": [
+        "Large hotels, with a big and steady heat demand",
+        "Open all year, so the engine runs in winter too",
+        "A heated pool, spa or thalasso",
+        "A connection to the STEG gas network"
+      ],
+      "noItems": [
+        "Small or seasonal hotels: the engine would sit idle half the year",
+        "No heated pool and little hot water",
+        "No gas connection on site",
+        "Cooled by split units with no chilled-water loop"
+      ]
+    },
+    "decides": {
+      "title": "How the tool decides.",
+      "lede": "Four answers about your hotel. The tool tries every engine size, keeps the one that pays back fastest, and runs it three times.",
+      "scenarios": {
+        "title": "Three scenarios",
+        "body": "Sceptical, central and enthusiastic values for every assumption. You see a range, not a single promise."
+      },
+      "verdict": {
+        "title": "One verdict",
+        "body": "Good fit up to {good} years of central payback. Possible fit up to {possible} years. Weak fit beyond that, or below {hours} full-load hours a year."
+      },
+      "sources": {
+        "title": "Every assumption cited",
+        "body": "Gas and electricity tariffs, engine costs, efficiencies and occupancy, each with its source."
+      },
+      "cta": "Sources and method"
+    },
+    "study": {
+      "title": "What a feasibility study adds.",
+      "lede": "The screening uses typical hotels. A study uses yours. One installer quote moves the answer more than any other input.",
+      "items": {
+        "visit": {
+          "title": "Site visit",
+          "body": "Plant room, gas meter, roof and space for a chiller."
+        },
+        "bills": {
+          "title": "Your real bills",
+          "body": "Twelve months of STEG electricity and gas, hour by hour where the meter allows."
+        },
+        "quote": {
+          "title": "Installer quotes",
+          "body": "Real prices replace our cost curve: the biggest unknown in the screening."
+        },
+        "report": {
+          "title": "A bankable report",
+          "body": "Sizing, cash flow and the FTE subsidy file, ready for your bank."
+        }
+      },
+      "primary": "Request a study",
+      "secondary": "Services and pricing"
+    }
+  },
+  "services": {
+    "meta": {
+      "title": "Services and pricing",
+      "description": "Feasibility studies and installer referrals for Tunisian hotels considering trigeneration. Shared-savings financing is coming soon."
+    },
+    "hero": {
+      "eyebrow": "Services",
+      "title": "From a screening",
+      "titleSub": "to a plant.",
+      "lede": "The sizing tool is free. When it says “possible fit”, we take your hotel from estimate to evidence, and then to the right installer."
+    },
+    "offers": {
+      "study": {
+        "tag": "Most hotels start here",
+        "title": "Feasibility study",
+        "body": "We replace our assumptions with your numbers and tell you plainly whether a plant pays.",
+        "items": [
+          "Twelve months of your STEG bills, analysed",
+          "Site visit and gas connection check",
+          "Two installer quotes",
+          "A bankable report with the FTE subsidy file prepared"
+        ],
+        "cta": "Request a study"
+      },
+      "referral": {
+        "tag": "After the study",
+        "title": "Installer referral",
+        "body": "We introduce you to Tunisian installers who have built CHP plants, and compare their quotes line by line.",
+        "items": [
+          "A shortlist of installers with references",
+          "Quotes compared on the same basis",
+          "Help with the contract's performance terms"
+        ],
+        "cta": "Ask us"
+      },
+      "esco": {
+        "tag": "Later",
+        "title": "Shared savings",
+        "body": "A partner finances, owns and runs the plant. The hotel pays from the savings, with no upfront cost.",
+        "items": [
+          "No investment for the hotel",
+          "Maintenance included",
+          "Savings shared over the contract"
+        ],
+        "cta": "Get notified"
+      },
+      "price": "Price on request",
+      "soon": "Coming soon"
+    },
+    "process": {
+      "title": "Four steps.",
+      "titleSub": "Stop at any of them.",
+      "steps": {
+        "screen": {
+          "title": "Screening",
+          "body": "Two minutes with the free tool. Most hotels stop here, and that is fine."
+        },
+        "study": {
+          "title": "Feasibility study",
+          "body": "Your bills, a site visit and real quotes. A few weeks, depending on the bills."
+        },
+        "quote": {
+          "title": "Quotes",
+          "body": "Installers bid on the same specification. We compare them line by line."
+        },
+        "install": {
+          "title": "Installation",
+          "body": "The installer builds and commissions the plant. We check it against the study."
+        }
+      }
+    },
+    "faq": {
+      "title": "Questions.",
+      "items": {
+        "cost": {
+          "q": "What does a feasibility study cost?",
+          "a": "It depends on the hotel's size and the data available. We send a price after a first call. The screening is always free."
+        },
+        "accuracy": {
+          "q": "How accurate is the free screening?",
+          "a": "It is a screening, not a study. It uses a typical hotel for your size and city, and shows a range from favourable to unfavourable. The study replaces those assumptions with your data."
+        },
+        "fte": {
+          "q": "Does the FTE subsidy apply to hotels?",
+          "a": "We don't know yet. The Energy Transition Fund supports cogeneration in industry, and hotel eligibility is unconfirmed. That is why the subsidy never enters our headline payback."
+        },
+        "blackout": {
+          "q": "Will the plant keep the hotel running during a grid cut?",
+          "a": "Not as modelled. The screening assumes a grid-connected plant. Running in island mode needs extra equipment, which a study can price."
+        },
+        "noGas": {
+          "q": "What if the hotel has no gas connection?",
+          "a": "Then the plant needs one first, or another fuel. The study checks this on site."
+        },
+        "install": {
+          "q": "Do you install plants?",
+          "a": "No. We screen, study and refer you to installers. That keeps our advice independent of the equipment sold."
+        }
+      }
+    },
+    "cta": {
+      "title": "Start with a free screening.",
+      "lede": "Two minutes, no sign-in. If it says possible fit, request a study.",
+      "primary": "Screen my hotel",
+      "secondary": "Request a study"
+    }
+  },
+  "caseStudy": {
+    "meta": {
+      "title": "Djerba case study",
+      "description": "A {rooms}-room beach hotel in Djerba with a pool, screened with our engine: plant size, payback range, CO₂ and what would change the answer."
+    },
+    "hero": {
+      "eyebrow": "Case study",
+      "title": "Djerba.",
+      "titleSub": "One hotel, screened honestly.",
+      "facts": "{rooms} rooms · Djerba · heated pool · {stars}-star beach hotel",
+      "photoAlt": "Illustration of a beach hotel by the sea in Djerba.",
+      "note": "A typical hotel, not a client. Its demand comes from our per-room profiles for Djerba."
+    },
+    "verdict": {
+      "label": "Verdict",
+      "plant": "{kwe} kWe engine + {kwc} kWc absorption chiller",
+      "payback": "Payback {range}, central {central} years"
+    },
+    "demand": {
+      "title": "Two days in the hotel's life.",
+      "lede": "The engine follows the hotel's electricity demand and switches off below half load. The grey area is demand; the colour is what the engine supplies.",
+      "summer": "Summer day",
+      "winter": "Winter day",
+      "summerNote": "Peak demand {peak} kW. The engine runs flat out from morning to midnight.",
+      "winterNote": "Demand only {low} to {high} kW. A big engine would sit below its minimum load.",
+      "chartLabel": "{season}: hourly electricity demand peaks at {peak} kW; the engine supplies up to {engine} kW.",
+      "legendDemand": "Hotel electricity demand",
+      "legendEngine": "Engine output",
+      "hours": "Hour of the day",
+      "kw": "kW",
+      "hourTick": "{h}h"
+    },
+    "smaller": {
+      "title": "Why the plant got smaller.",
+      "lede": "Our first model sized the engine for summer. That engine idled most of the winter.",
+      "winter": {
+        "title": "Winter is the test",
+        "body": "In winter the hotel runs at {occupancy}% occupancy and needs only {low} to {high} kW of electricity, for {days} days a year."
+      },
+      "minLoad": {
+        "title": "Engines hate half load",
+        "body": "Below {pct}% of its rating, the engine switches off. A {oldKwe} kWe engine would be off most winter days."
+      },
+      "hours": {
+        "title": "Hours pay the bills",
+        "body": "The {oldKwe} kWe engine runs about {oldHours} full-load hours a year. The {kwe} kWe engine runs about {hours}."
+      },
+      "result": "The smaller plant pays back in about {central} years in the central case. The summer-sized one would take about {oldYears}."
+    },
+    "results": {
+      "title": "The results, as ranges.",
+      "lede": "Each rail runs from the favourable to the unfavourable case. The dot is the central case."
+    },
+    "options": {
+      "title": "Two ways to build it.",
+      "lede": "Most of the value is year-round hot water and pool heat, not summer cooling. So a smaller engine without a chiller can pay back faster.",
+      "trigeneration": "Trigeneration",
+      "chp": "CHP only",
+      "chpNote": "Hot water and pool heat, no chiller. The chiller can be added later.",
+      "trigenerationNote": "Electricity, hot water and some summer cooling.",
+      "plant": "Plant",
+      "payback": "Payback",
+      "capex": "Investment",
+      "savings": "Savings a year",
+      "co2": "CO₂ avoided a year",
+      "hours": "Full-load hours",
+      "noChiller": "no chiller",
+      "fte": "With FTE (eligibility unconfirmed)"
+    },
+    "moves": {
+      "title": "What moves the payback.",
+      "lede": "One input at a time, from the central {years} years."
+    },
+    "cta": {
+      "title": "Is your hotel like this one?",
+      "lede": "Screen it in two minutes, or ask for a study with your own bills.",
+      "primary": "Screen my hotel",
+      "secondary": "Request a study"
+    }
+  },
+  "about": {
+    "meta": {
+      "title": "About",
+      "description": "A small Tunisian team building an honest screening tool for hotel trigeneration."
+    },
+    "hero": {
+      "eyebrow": "About",
+      "title": "Screening,",
+      "titleSub": "honestly.",
+      "lede": "Trigeneration can cut a hotel's energy bill, but only in the right hotel. We built a tool that says so, with every assumption on the table."
+    },
+    "mission": {
+      "title": "What we believe.",
+      "items": {
+        "honest": {
+          "title": "Say no early",
+          "body": "Most hotels are not a fit yet. Telling them in two minutes saves everyone a costly study."
+        },
+        "ranges": {
+          "title": "Ranges, not promises",
+          "body": "Every money and CO₂ figure is a range, with the central case marked and the sources cited."
+        },
+        "independent": {
+          "title": "Independent advice",
+          "body": "We don't sell engines. We screen, study and compare installers' quotes for you."
+        }
+      }
+    },
+    "team": {
+      "title": "The team.",
+      "lede": "Four people, four roles.",
+      "photo": "Photo of {name}",
+      "members": {
+        "mohamed": {
+          "name": "Mohamed",
+          "role": "Lead, platform and integration"
+        },
+        "hamza": {
+          "name": "Hamza",
+          "role": "Energy engine and reports"
+        },
+        "ahmed": {
+          "name": "Ahmed",
+          "role": "Sizing tool and dashboard"
+        },
+        "gaith": {
+          "name": "Gaith",
+          "role": "Design and pages"
+        }
+      }
+    },
+    "contact": {
+      "title": "Talk to us.",
+      "lede": "A question about your hotel, or about how we calculate? Write to us.",
+      "primary": "Request a study",
+      "email": "Email {email}"
+    }
+  },
+  "sources": {
+    "meta": {
+      "title": "Sources and method",
+      "description": "How the screening tool calculates, every assumption with its three values and source, what moves the answer, and what is not modelled yet."
+    },
+    "hero": {
+      "eyebrow": "Sources and method",
+      "title": "Every number,",
+      "titleSub": "and where it comes from.",
+      "lede": "The tool gives estimates, not promises. Here is exactly how it gets them, so you can check our work."
+    },
+    "toc": {
+      "label": "On this page",
+      "calculate": "How we calculate",
+      "assumptions": "Assumptions",
+      "moves": "What moves the answer",
+      "limits": "Limits",
+      "references": "References"
+    },
+    "calculate": {
+      "title": "How we calculate.",
+      "lede": "{count} steps, the same for every hotel. Engine model version {version}."
+    },
+    "assumptions": {
+      "title": "Assumptions.",
+      "lede": "Every parameter the engine uses, with the value a sceptic, we and an enthusiast would pick. Prices before VAT.",
+      "caption": "Engine assumptions with unfavourable, central and favourable values, unit, status and source.",
+      "parameter": "Parameter",
+      "unfavourable": "Unfavourable",
+      "central": "Central",
+      "favourable": "Favourable",
+      "unit": "Unit",
+      "status": "Status",
+      "source": "Source",
+      "sourced": "Sourced",
+      "estimated": "Estimated",
+      "link": "link",
+      "statusNote": "Sourced: a published figure used as it is. Estimated: derived from a source with our own rounding or reasoning. Unconfirmed: a team assumption, not yet confirmed.",
+      "unconfirmed": "Unconfirmed"
+    },
+    "moves": {
+      "title": "What moves the answer.",
+      "lede": "One input at a time, for the Djerba demo hotel, from its central payback of {years} years. Sorted by how much each one moves it.",
+      "caption": "Payback of the Djerba demo when one input changes.",
+      "input": "Input",
+      "unfavourable": "Payback if unfavourable",
+      "favourable": "Payback if favourable",
+      "years": "{value} years",
+      "impact": "Spread"
+    },
+    "limits": {
+      "title": "Limits.",
+      "lede": "What the model does not do yet. A feasibility study covers these for your site.",
+      "item": "<b>{title}.</b> {detail}"
+    },
+    "references": {
+      "title": "References.",
+      "lede": "Numbered as they appear in the footnotes across the site.",
+      "accessed": "accessed {date}",
+      "cite": "[{n}]"
+    }
+  },
+  "privacy": {
+    "meta": {
+      "title": "Privacy",
+      "description": "What personal data {name} collects, why, how long we keep it, who processes it, and your rights under Tunisian law."
+    },
+    "hero": {
+      "eyebrow": "Privacy",
+      "title": "Your data,",
+      "titleSub": "plainly.",
+      "lede": "We collect as little as we can, only to answer you and to save your projects."
+    },
+    "draft": {
+      "title": "Draft, pending legal review",
+      "body": "This notice has not yet been reviewed by a lawyer. Periods marked “to be confirmed” will be set before launch."
+    },
+    "updated": "Last updated: {date}",
+    "toBeConfirmed": "to be confirmed",
+    "sections": {
+      "controller": {
+        "title": "Who is responsible",
+        "body": "{name} is the data controller for this website. Contact us at <email></email> about anything on this page."
+      },
+      "collected": {
+        "title": "What we collect",
+        "lede": "Only what each part of the site needs.",
+        "items": {
+          "signIn": {
+            "title": "Signing in",
+            "body": "Your email address, to send the sign-in link. If you use Google, the name and email Google shares with us."
+          },
+          "projects": {
+            "title": "Saved projects",
+            "body": "The hotel name you give, the tool inputs (rooms, city, pool, electricity price) and the results."
+          },
+          "requests": {
+            "title": "Study requests",
+            "body": "Your name, email, phone (optional), hotel name, city, rooms, pool, electricity price (optional), your message, and your consent."
+          },
+          "analytics": {
+            "title": "Analytics",
+            "body": "Cookie-free, aggregated page statistics. We don't track you across sites and don't build a profile of you."
+          }
+        },
+        "noTool": "Using the sizing tool without signing in stores nothing about you."
+      },
+      "purposes": {
+        "title": "Why we use it",
+        "items": [
+          "To sign you in and keep your projects.",
+          "To answer your study request and prepare a quote.",
+          "To understand which pages are useful, in aggregate."
+        ],
+        "never": "We never sell your data or use it for advertising."
+      },
+      "basis": {
+        "title": "Legal basis",
+        "body": "Your consent, which you give when you sign up or tick the box on a form. You can withdraw it at any time; we then delete the data unless the law requires us to keep it."
+      },
+      "retention": {
+        "title": "How long we keep it",
+        "items": {
+          "account": "Account and saved projects: until you delete them or your account, then {period}.",
+          "requests": "Study requests: {period} after our last exchange.",
+          "analytics": "Aggregated analytics: {period}."
+        }
+      },
+      "processors": {
+        "title": "Who processes it for us",
+        "lede": "These providers store or send data on our behalf, under contract.",
+        "items": {
+          "supabase": {
+            "name": "Supabase",
+            "role": "Database, sign-in and file storage"
+          },
+          "resend": {
+            "name": "Resend",
+            "role": "Emails: sign-in links and replies to study requests"
+          },
+          "vercel": {
+            "name": "Vercel",
+            "role": "Website hosting and cookie-free analytics"
+          }
+        },
+        "transfer": "Some of these providers store data outside Tunisia. Where the law requires it, we will ask the INPDP for authorisation before any transfer."
+      },
+      "rights": {
+        "title": "Your rights",
+        "body": "Under Tunisian law (Organic Law 2004-63 on the protection of personal data), you can ask to access, correct or delete your data, and object to its use. Write to <email></email>. If you are not satisfied, you can complain to the INPDP, Tunisia's data protection authority.",
+        "items": [
+          "Access",
+          "Correction",
+          "Deletion",
+          "Objection",
+          "Withdrawing consent"
+        ]
+      },
+      "changes": {
+        "title": "Changes",
+        "body": "If we change this notice, we update the date at the top. Material changes are announced on the site."
+      }
+    }
+  }
+}
