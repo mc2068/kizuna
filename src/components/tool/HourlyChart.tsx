@@ -4,15 +4,15 @@
 // central case (Contract 1 result.hourly). Tabs pick the need (electricity, hot water, cooling);
 // a segmented control picks the season. The chart stays mounted, so a new season or new inputs
 // morph the curves in place. A visually hidden table carries the same numbers for screen readers.
-import { useId, useMemo, useRef, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
+import dynamic from 'next/dynamic';
 import { useTranslations } from 'next-intl';
-import { Area, CartesianGrid, ComposedChart, Line, XAxis, YAxis, type TooltipContentProps } from 'recharts';
-import { ChartContainer, ChartTooltip, type ChartConfig } from '@/components/ui/chart';
+import type { ChartConfig } from '@/components/ui/chart';
 import { formatKw, formatPercent } from '@/lib/present';
-import { TWEEN_S, useNoMotion } from './motion';
+import { Swatch } from './HourlySwatch';
+import { useNoMotion } from './motion';
 import { useTool } from './ToolState';
 import {
-  HOUR_TICKS,
   HOURLY_TABS,
   SEASONS,
   TABLE_COLUMNS,
@@ -22,14 +22,37 @@ import {
   tabScale,
   type HourlyTab,
   type Season,
-  type Series,
 } from './hourly-data';
 
-/** Curves morph in place over the same time as the numbers tween. */
-const ANIMATION_MS = TWEEN_S * 1000;
+// #27: recharts is the biggest script on /tool and the chart sits well below the fold, so the plot
+// loads only when it comes near the viewport. Its box keeps the same fixed height meanwhile, so
+// nothing jumps; the tabs, captions and the screen-reader table render with the page.
+const HourlyPlot = dynamic(() => import('./HourlyPlot').then((m) => m.HourlyPlot), {
+  ssr: false,
+  loading: () => <PlotBox />,
+});
 
-/** Axis ticks are chart gridlines, not engine numbers: plain en-GB grouping, the unit sits above the axis. */
-const axisNumber = new Intl.NumberFormat('en-GB', { maximumFractionDigits: 1 });
+function PlotBox() {
+  return <div aria-hidden="true" className="h-64 w-full sm:h-80" />;
+}
+
+function LazyPlot(props: React.ComponentProps<typeof HourlyPlot>) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [near, setNear] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || near) return;
+    if (typeof IntersectionObserver === 'undefined') {
+      // Old browsers and jsdom: load it straight away.
+      const id = window.setTimeout(() => setNear(true), 0);
+      return () => window.clearTimeout(id);
+    }
+    const io = new IntersectionObserver((entries) => entries.some((e) => e.isIntersecting) && setNear(true), { rootMargin: '600px 0px' });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [near]);
+  return <div ref={ref}>{near ? <HourlyPlot {...props} /> : <PlotBox />}</div>;
+}
 
 // Written out in full so Tailwind's scanner sees every class.
 const tabClass =
@@ -41,37 +64,6 @@ const segmentClass =
   'text-[#515154] transition-[background-color,color,box-shadow] has-checked:bg-white ' +
   'has-checked:text-[var(--ink,#1d1d1f)] has-checked:shadow-[0_1px_3px_rgba(0,0,0,.12)] ' +
   'has-focus-visible:outline-4 has-focus-visible:outline-[rgba(0,125,250,.35)]';
-
-function Swatch({ series }: { series: Series }) {
-  if (series.kind === 'line') {
-    return (
-      <svg width="18" height="10" aria-hidden="true" className="shrink-0">
-        <line x1="1" y1="5" x2="17" y2="5" stroke={series.color} strokeWidth="2" strokeDasharray="4 3" />
-      </svg>
-    );
-  }
-  return <span aria-hidden="true" className="size-2.5 shrink-0 rounded-[3px]" style={{ background: series.color }} />;
-}
-
-function HourlyTooltip({ active, payload, label, series }: TooltipContentProps & { series: Series[] }) {
-  const t = useTranslations('tool.hourly');
-  if (!active || !payload?.length) return null;
-  const row = payload[0].payload as Record<string, number>;
-  return (
-    <div className="min-w-44 rounded-xl border border-[var(--line,#d2d2d7)] bg-white/95 px-3 py-2 text-[13px] shadow-lg backdrop-blur">
-      <p className="mb-1 font-semibold tabular-nums">{t('hour', { hour: padHour(Number(label)) })}</p>
-      <ul className="space-y-0.5">
-        {[...series].reverse().map((s) => (
-          <li key={s.key} className="flex items-center gap-2">
-            <Swatch series={s} />
-            <span className="text-[var(--muted,#6e6e73)]">{t(`series.${s.key}`)}</span>
-            <span className="ml-auto pl-3 font-medium tabular-nums">{formatKw(row[s.key])}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
 
 export function HourlyChart() {
   const t = useTranslations('tool.hourly');
@@ -212,72 +204,7 @@ export function HourlyChart() {
             aria-describedby={ids.caption}
             className="mt-1 -ml-2"
           >
-            <ChartContainer
-              config={config}
-              initialDimension={{ width: 320, height: 256 }}
-              className="aspect-auto h-64 w-full sm:h-80 [&_.recharts-surface:focus-visible]:outline-4 [&_.recharts-surface:focus-visible]:outline-[rgba(0,125,250,.35)]"
-            >
-              <ComposedChart data={rows} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
-                <CartesianGrid vertical={false} stroke="var(--line,#d2d2d7)" strokeDasharray="2 4" />
-                <XAxis
-                  dataKey="hour"
-                  type="number"
-                  domain={[0, 23]}
-                  ticks={HOUR_TICKS}
-                  tickFormatter={hour}
-                  tickLine={false}
-                  axisLine={{ stroke: 'var(--line,#d2d2d7)' }}
-                  tick={{ fill: 'var(--muted,#6e6e73)', fontSize: 12 }}
-                  tickMargin={8}
-                />
-                <YAxis
-                  domain={[0, yScale.max]}
-                  ticks={yScale.ticks}
-                  tickFormatter={(v: number) => axisNumber.format(v)}
-                  tickLine={false}
-                  axisLine={false}
-                  tick={{ fill: 'var(--muted,#6e6e73)', fontSize: 12 }}
-                  width={44}
-                />
-                <ChartTooltip
-                  content={(props) => <HourlyTooltip {...props} series={series} />}
-                  cursor={{ stroke: 'var(--faint,#86868b)', strokeWidth: 1 }}
-                  isAnimationActive={false}
-                />
-                {series.map((s) =>
-                  s.kind === 'area' ? (
-                    <Area
-                      key={s.key}
-                      dataKey={s.key}
-                      type="monotone"
-                      stackId={tab === 'elec' ? 'supply' : undefined}
-                      stroke={`var(--color-${s.key})`}
-                      strokeWidth={1.5}
-                      fill={`var(--color-${s.key})`}
-                      fillOpacity={s.key === 'gridImport' ? 0.35 : 0.55}
-                      isAnimationActive={!reducedMotion}
-                      animationDuration={ANIMATION_MS}
-                      animationEasing="ease-out"
-                      activeDot={{ r: 3, strokeWidth: 0, fill: `var(--color-${s.key})` }}
-                    />
-                  ) : (
-                    <Line
-                      key={s.key}
-                      dataKey={s.key}
-                      type="monotone"
-                      stroke={`var(--color-${s.key})`}
-                      strokeWidth={2}
-                      strokeDasharray="5 4"
-                      dot={false}
-                      isAnimationActive={!reducedMotion}
-                      animationDuration={ANIMATION_MS}
-                      animationEasing="ease-out"
-                      activeDot={{ r: 3, strokeWidth: 0, fill: `var(--color-${s.key})` }}
-                    />
-                  ),
-                )}
-              </ComposedChart>
-            </ChartContainer>
+            <LazyPlot rows={rows} series={series} tab={tab} yMax={yScale.max} yTicks={yScale.ticks} config={config} animate={!reducedMotion} />
           </div>
 
           <p id={ids.caption} className="mt-4 max-w-3xl text-[13px] leading-relaxed text-[var(--muted,#6e6e73)]">
