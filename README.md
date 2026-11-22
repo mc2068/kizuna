@@ -2,6 +2,8 @@
 
 Trigeneration (CCHP) sizing and feasibility studies for Tunisian hotels. Next.js + Supabase web app.
 
+**Live:** https://kizuna-ruddy.vercel.app (Vercel, production deploys from the default branch; every PR gets a preview link).
+
 - Decisions and glossary: [CONTEXT.md](CONTEXT.md)
 - Architecture decisions: [docs/adr/](docs/adr/)
 - Team plan, roles and tickets: [docs/team/](docs/team/)
@@ -28,6 +30,14 @@ pnpm test:engine-reference   # the v2 reference model in engine/
 - **Typecheck, lint, unit tests**: `pnpm typecheck`, `pnpm lint`, `pnpm test`, `pnpm test:engine-reference`.
 - **Build and Playwright**: starts local Supabase, `pnpm build` with its keys, then the e2e suite (e2e/README.md) against `pnpm start`, including the magic link read from Mailpit. On failure the HTML report is uploaded as the `playwright-report` artifact.
 - **Database tests**: starts local Supabase in the runner, uploads the demo files, then `pnpm test:db`.
+
+## Hosting (Vercel + Supabase cloud)
+
+- **Vercel** project `kizuna`: production builds from the default branch to https://kizuna-ruddy.vercel.app, and each PR gets a preview URL in its checks.
+- **Supabase cloud** project `kizuna` (Frankfurt), connected to Vercel Production through the Supabase integration. Schema changes: `pnpm exec supabase db push` after the migration lands.
+- **Previews** have no database and run on the demo data (`ALLOW_FAKE_DB=1`, Preview only).
+- **Environment variables**: every one is listed and explained in `.env.example`. Secrets live only in Vercel and Supabase, never in the repo.
+- **Analytics**: Vercel Web Analytics (`<Analytics/>` in `src/app/layout.tsx`), cookie-free. Turn it on in the Vercel project's Analytics tab; it does nothing until then.
 
 ## Local database (Supabase)
 

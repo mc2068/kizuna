@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Analytics } from '@vercel/analytics/next';
 import { NextIntlClientProvider } from 'next-intl';
 import { siteConfig } from '@/config/site';
 import './globals.css';
@@ -15,6 +16,8 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
     <html lang={siteConfig.locale} className="h-full antialiased">
       <body className="flex min-h-full flex-col">
         <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        {/* Vercel Web Analytics: cookie-free, no consent banner needed. A no-op outside Vercel. */}
+        <Analytics />
       </body>
     </html>
   );
