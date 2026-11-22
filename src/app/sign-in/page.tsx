@@ -3,6 +3,7 @@
 // swap in Role 3's Button/Input/Card once the design system (#4) lands.
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { connection } from 'next/server';
 import { getTranslations } from 'next-intl/server';
 import { SignOutButton } from '@/components/auth/sign-out-button';
 import { signInWithGoogle } from '@/lib/auth/actions';
@@ -21,6 +22,8 @@ export const instant = false;
 const ERRORS = ['link', 'google', 'unavailable'] as const;
 
 export default async function SignInPage({ searchParams }: PageProps<'/sign-in'>) {
+  // The Supabase session read uses Date.now(): mark the render as per request before it runs.
+  await connection();
   const params = await searchParams;
   const first = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
   const next = safeNextPath(first(params.next));
