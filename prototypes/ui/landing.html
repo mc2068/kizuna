@@ -40,7 +40,7 @@ sup a{color:inherit}
 .hero{padding-top:72px;padding-bottom:24px}
 .eyebrow{font:600 17px/1 var(--text);color:var(--elec);letter-spacing:-.01em;margin-bottom:16px}
 .hero h1{font-size:clamp(48px,9vw,104px);line-height:.98;letter-spacing:-.05em}
-.hero h1 span{color:var(--faint)}
+.hero h1 .ln+br+.ln{color:var(--faint)}
 .lede{font-size:clamp(19px,2.2vw,24px);line-height:1.36;color:var(--muted);max-width:680px;margin:24px auto 0;letter-spacing:-.02em}
 .ctas{display:flex;gap:28px;justify-content:center;align-items:center;margin-top:32px;font-size:19px;flex-wrap:wrap}
 .hero-stage{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:40px;margin-top:64px}
@@ -101,8 +101,6 @@ sup a{color:inherit}
 .vc .num small{font-size:16px;color:var(--muted);font-weight:500;margin-left:4px;letter-spacing:-.01em}
 .vc .num em{display:block;font:400 13px/1.4 var(--text);font-style:normal;color:var(--muted);margin-top:8px;letter-spacing:-.01em}
 .signs{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:40px}
-.signs span{background:var(--tile);border-radius:999px;padding:9px 16px;font-size:15px}
-.signs span::before{content:"✓";color:var(--good);font-weight:700;margin-right:8px}
 @media(max-width:860px){.verdicts{grid-template-columns:1fr}}
 
 /* try */
@@ -198,6 +196,55 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
 .notes .foot a{color:var(--muted)}
 .proto{position:fixed;right:14px;bottom:14px;z-index:30;background:rgba(29,29,31,.9);color:#f5f5f7;font-size:12px;border-radius:999px;padding:8px 14px;backdrop-filter:blur(10px)}
 .proto a{color:#2997ff;margin-left:8px}
+
+/* ---------- motion ---------- */
+:root{--ease:cubic-bezier(.2,.8,.2,1);--ease-io:cubic-bezier(.65,0,.35,1)}
+.nav{transition:background .3s,box-shadow .3s}
+.nav.scrolled{background:rgba(251,251,253,.94);box-shadow:0 1px 0 rgba(0,0,0,.06),0 8px 24px -18px rgba(0,0,0,.25)}
+.nav a.l{transition:opacity .2s}.nav a.l:hover{opacity:1;text-decoration:none}.nav a.l.on{opacity:1;font-weight:600}
+.btn{transition:background .2s,transform .18s var(--ease),box-shadow .2s}
+.btn:hover{box-shadow:0 6px 18px -8px rgba(0,113,227,.6)}
+.btn:active{transform:scale(.97)}
+.chev::after{display:inline-block;transition:transform .25s var(--ease)}
+.chev:hover{text-decoration:none}.chev:hover::after{transform:translateX(4px)}
+.opt{transition:border-color .2s,box-shadow .2s,transform .18s var(--ease)}
+.opt:hover{box-shadow:0 4px 14px -10px rgba(0,0,0,.35)}
+.opt:active{transform:scale(.985)}
+@keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+.hero .eyebrow,.hero h1 .ln,.hero .lede,.hero .ctas,.hero-stage{animation:rise 1s var(--ease) both}
+.hero h1 .ln{display:inline-block}
+.hero .eyebrow{animation-delay:.05s}.hero h1 .ln:nth-of-type(1){animation-delay:.12s}.hero h1 .ln:nth-of-type(2){animation-delay:.24s}
+.hero .lede{animation-delay:.36s}.hero .ctas{animation-delay:.46s}.hero-stage{animation-delay:.58s}
+.ringkey div{animation:rise .8s var(--ease) both}.ringkey div:nth-child(1){animation-delay:.9s}.ringkey div:nth-child(2){animation-delay:1.02s}.ringkey div:nth-child(3){animation-delay:1.14s}
+/* scroll reveal: only elements that start below the fold get .pre, so the page is complete at rest */
+.pre{opacity:0;transform:translateY(28px)}
+.pre.in{opacity:1;transform:none;transition:opacity .9s var(--ease),transform .9s var(--ease);transition-delay:var(--d,0ms)}
+.rail .span{transform-origin:var(--o,50%) 50%;transition:transform 1.1s var(--ease) calc(var(--d,0ms) + .25s)}
+.rail .dot{transition:transform .5s var(--ease) calc(var(--d,0ms) + .15s)}
+.rail .lbl{transition:opacity .6s var(--ease) calc(var(--d,0ms) + .9s)}
+.rrow.pre:not(.in) .span{transform:scaleX(0)}.rrow.pre:not(.in) .dot{transform:scale(0)}.rrow.pre:not(.in) .lbl{opacity:0}
+.tbar .b{transition:transform 1s var(--ease) calc(var(--d,0ms) + .2s)}
+.tbar .b.lo{transform-origin:100% 50%}.tbar .b.hi{transform-origin:0 50%}
+.tbar .n{transition:opacity .5s calc(var(--d,0ms) + .9s)}
+.trow.pre:not(.in) .b{transform:scaleX(0)}.trow.pre:not(.in) .n{opacity:0}
+/* live result: positions glide instead of jumping */
+.mini .s{transition:left .55s var(--ease),width .55s var(--ease)}
+.mini .d{transition:left .55s var(--ease)}
+.vtag{transition:background .3s,color .3s}
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.08)}100%{transform:scale(1)}}
+.vtag.pop{animation:pop .45s var(--ease)}
+.collapse{display:grid;grid-template-rows:1fr;transition:grid-template-rows .45s var(--ease),opacity .35s,margin .45s var(--ease)}
+.collapse>div{overflow:hidden;min-height:0}
+.collapse.shut{grid-template-rows:0fr;opacity:0;margin-top:0!important}
+.collapse .warn,.collapse .alt{margin-top:0}
+.collapse{margin-top:18px}
+.tile,.svc .s,.vc,.proof .p{transition:transform .35s var(--ease),box-shadow .35s}
+.tile:hover,.svc .s:hover,.vc:hover{transform:translateY(-4px);box-shadow:0 18px 40px -24px rgba(0,0,0,.35)}
+.signs{display:block;color:var(--muted);font-size:17px;margin-top:40px}
+.signs b{color:var(--ink);font-weight:600}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-delay:0ms!important;transition-duration:.01ms!important;transition-delay:0ms!important;scroll-behavior:auto!important}
+}
 </style>
 </head>
 <body>
@@ -215,7 +262,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
 
 <header class="hero wrap center">
   <p class="eyebrow">Trigeneration screening for Tunisian hotels</p>
-  <h1>Make your own energy.<br><span>Only if it pays.</span></h1>
+  <h1><span class="ln">Make your own energy.</span><br><span class="ln">Only if it pays.</span></h1>
   <p class="lede">One gas engine on site makes electricity, hot water and the heat that runs an absorption chiller. Our free screening tool tells you in two minutes whether your hotel is a fit, and says so plainly when it isn’t.</p>
   <div class="ctas"><a class="btn" href="#try">Screen my hotel</a><a class="chev" href="#how">See how it works</a></div>
 
@@ -248,7 +295,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
   <h2 class="sec-h">Most hotels will hear “not yet”.</h2>
   <p class="sec-p">The tool is a screening tool. It is built to find the few hotels where a plant pays, and to say so plainly everywhere else.</p>
   <div class="verdicts" id="verdicts"></div>
-  <div class="signs"><span>Large</span><span>Open all year</span><span>Heated pool or spa</span><span>On the gas network</span></div>
+  <p class="signs center">It tends to pay where a hotel is <b>large</b>, <b>open all year</b>, has a <b>heated pool or spa</b> and is <b>on the gas network</b>.</p>
 </div></section>
 
 <section class="sec wrap" id="try">
@@ -377,12 +424,24 @@ function rings(size, stroke) {
 const demo = sizeHotel({ rooms: 300, city: 'djerba', pool: true });
 const cov = coverage(demo);
 $('#hero-rings').innerHTML = rings(320, 32);
-$('#hero-key').innerHTML = RINGS.map((r) => `<div><b>${Math.round(cov[r.k] * 100)}%</b><i style="background:${r.color}"></i>${r.label}</div>`).join('');
-requestAnimationFrame(() => setTimeout(() => {
+$('#hero-key').innerHTML = RINGS.map((r) => `<div><b data-to="${Math.round(cov[r.k] * 100)}">${Math.round(cov[r.k] * 100)}%</b><i style="background:${r.color}"></i>${r.label}</div>`).join('');
+const REDUCE = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const easeOut = (t) => 1 - Math.pow(1 - t, 3);
+/** Tween a number shown in el from its last value to `to`; format with f. */
+function tween(el, to, f = (v) => Math.round(v), dur = 700) {
+  const from = el._v ?? to; el._v = to;
+  if (REDUCE || from === to) { el.textContent = f(to); return; }
+  const t0 = performance.now();
+  cancelAnimationFrame(el._raf);
+  const step = (now) => { const t = Math.min(1, (now - t0) / dur); el.textContent = f(from + (to - from) * easeOut(t)); if (t < 1) el._raf = requestAnimationFrame(step); };
+  el._raf = requestAnimationFrame(step);
+}
+setTimeout(() => {
   document.querySelectorAll('#hero-rings .ring').forEach((el) => {
     el.style.strokeDashoffset = String(el.dataset.len * (1 - Math.max(0.02, cov[el.dataset.k])));
   });
-}, 150));
+  document.querySelectorAll('#hero-key b').forEach((b, i) => { b._v = 0; b.textContent = '0%'; setTimeout(() => tween(b, +b.dataset.to, (v) => Math.round(v) + '%', 1400), 120 * i); });
+}, REDUCE ? 0 : 650);
 
 const S = demo.scenarios;
 $('#demo-plant').textContent = `${demo.engineKwe} kWe engine + ${demo.chillerKwc} kWc chiller`;
@@ -390,7 +449,7 @@ function bigRail(vals, max, unit, ticks) {
   const [f, c, u] = vals, pct = (v) => (Math.min(v, max) / max) * 100;
   const lo = Math.min(f, u), hi = Math.max(f, u);
   return `<div class="rail"><div class="track"></div>
-    <div class="span" style="left:${pct(lo)}%;width:${pct(hi) - pct(lo)}%"></div>
+    <div class="span" style="left:${pct(lo)}%;width:${pct(hi) - pct(lo)}%;--o:${((pct(c) - pct(lo)) / (pct(hi) - pct(lo))) * 100}%"></div>
     <span class="lbl" style="left:${pct(f)}%">${f}</span><span class="lbl c" style="left:${pct(c)}%">${c}</span><span class="lbl" style="left:${pct(u)}%">${u}</span>
     <div class="dot" style="left:${pct(c)}%"></div>
     ${ticks.map((t) => `<span class="tick" style="left:${pct(t)}%">${t}${unit}</span>`).join('')}</div>`;
@@ -418,28 +477,49 @@ $('#verdicts').innerHTML = examples.map((ex) => {
 // ---------- try it ----------
 const state = { rooms: 300, city: 'djerba', pool: true };
 $('#cities').innerHTML = CITIES.map((c) => `<button class="opt" data-city="${c.id}"><span>${c.name}<small>${c.note}</small></span></button>`).join('');
-function mini(vals, max, fmtv) {
-  const [a, c, b] = vals, pct = (v) => (Math.min(v, max) / max) * 100, lo = Math.min(a, b), hi = Math.max(a, b);
-  return `<div class="mini"><div class="t"></div><div class="s" style="left:${pct(lo)}%;width:${Math.max(1, pct(hi) - pct(lo))}%"></div><div class="d" style="left:${pct(c)}%"></div></div>
-    <div class="ends" style="margin-top:6px"><span>${fmtv(0)}</span><span>${fmtv(max)}</span></div>`;
-}
+const fmtYrs = (v) => (Math.round(v * 2) / 2).toString();
+const fmtK = (v) => k(Math.round(v / 1000) * 1000);
+const fmtT = (v) => Math.round(v / 10) * 10;
+const LROWS = [
+  { key: 'pay', label: 'Payback', unit: 'yrs', max: 30, ends: ['0', '30 yrs'], f: fmtYrs, vals: (s) => [s.favourable.paybackYears, s.central.paybackYears, s.unfavourable.paybackYears] },
+  { key: 'sav', label: 'Savings a year', unit: 'TND', max: 500000, ends: ['0', '500k'], f: fmtK, vals: (s) => [s.unfavourable.annualSavingsTnd, s.central.annualSavingsTnd, s.favourable.annualSavingsTnd] },
+  { key: 'co2', label: 'CO₂ avoided a year', unit: 't', max: 500, ends: ['0', '500 t'], f: fmtT, vals: (s) => [s.unfavourable.co2AvoidedTonnes, s.central.co2AvoidedTonnes, s.favourable.co2AvoidedTonnes] },
+];
+$('#result').innerHTML = `
+  <div class="top"><div class="plant"><span data-x="kwe">0</span> kWe engine<span id="chw"> + <span data-x="kwc">0</span> kWc chiller</span><small><span data-x="flh">0</span> full-load hours a year, central case</small></div>
+    <span class="vtag" id="vtag"></span></div>
+  ${LROWS.map((r) => `<div class="lrow"><div class="h"><span>${r.label}</span><b><span data-x="${r.key}-lo"></span>–<span data-x="${r.key}-hi"></span><small>${r.unit}</small></b></div>
+    <div class="mini"><div class="t"></div><div class="s" id="${r.key}-s"></div><div class="d" id="${r.key}-d"></div></div>
+    <div class="ends" style="margin-top:6px"><span>${r.ends[0]}</span><span>${r.ends[1]}</span></div></div>`).join('')}
+  <div class="collapse shut" id="warnbox"><div><div class="warn" id="warn"></div></div></div>
+  <div class="collapse shut" id="altbox"><div><div class="alt" id="alt"></div></div></div>
+  <div class="go"><a class="btn" href="#study">Request a study</a><a class="chev" href="#">Open the full tool</a></div>
+  <p class="fine">The dot marks the central case. These are ranges, not promises: a feasibility study confirms the numbers for your site.</p>`;
+const X$ = (k) => $(`[data-x="${k}"]`);
+let lastVerdict = '';
 function update() {
   const r = sizeHotel(state), s = r.scenarios, best = r.options.best;
   $('#rooms-v').textContent = state.rooms;
-  const el = $('#rooms'); el.style.setProperty('--p', ((state.rooms - 50) / 750) * 100 + '%');
+  $('#rooms').style.setProperty('--p', ((state.rooms - 50) / 750) * 100 + '%');
   document.querySelectorAll('[data-city]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.city === state.city)));
   document.querySelectorAll('[data-pool]').forEach((b) => b.setAttribute('aria-pressed', String((b.dataset.pool === '1') === state.pool)));
+  tween(X$('kwe'), r.engineKwe); tween(X$('kwc'), r.chillerKwc); tween(X$('flh'), s.central.fullLoadHours, (v) => fmt(Math.round(v / 100) * 100));
+  $('#chw').hidden = !r.chillerKwc;
+  for (const row of LROWS) {
+    const [a, c, b] = row.vals(s), lo = Math.min(a, b), hi = Math.max(a, b), pct = (v) => (Math.min(v, row.max) / row.max) * 100;
+    tween(X$(row.key + '-lo'), lo, row.f); tween(X$(row.key + '-hi'), hi, row.f);
+    const sp = $(`#${row.key}-s`); sp.style.left = pct(lo) + '%'; sp.style.width = Math.max(1, pct(hi) - pct(lo)) + '%';
+    $(`#${row.key}-d`).style.left = pct(c) + '%';
+  }
+  const vt = $('#vtag'), vc = vclass(r.verdict);
+  vt.className = 'vtag ' + vc; vt.textContent = vlabel(r.verdict);
+  if (lastVerdict && lastVerdict !== vc) { vt.classList.remove('pop'); void vt.offsetWidth; vt.classList.add('pop'); }
+  lastVerdict = vc;
+  if (r.warnings.length) $('#warn').textContent = r.warnings.join(' ');
+  $('#warnbox').classList.toggle('shut', !r.warnings.length);
   const chp = best.chillerKwc === 0 && best.scenarios.central.paybackYears < s.central.paybackYears;
-  $('#result').innerHTML = `
-    <div class="top"><div class="plant">${r.engineKwe} kWe engine${r.chillerKwc ? ` + ${r.chillerKwc} kWc chiller` : ''}<small>${fmt(s.central.fullLoadHours)} full-load hours a year, central case</small></div>
-      <span class="vtag ${vclass(r.verdict)}">${vlabel(r.verdict)}</span></div>
-    <div class="lrow"><div class="h"><span>Payback</span><b>${s.favourable.paybackYears}–${s.unfavourable.paybackYears}<small>yrs</small></b></div>${mini([s.favourable.paybackYears, s.central.paybackYears, s.unfavourable.paybackYears], 30, (v) => v + ' yrs')}</div>
-    <div class="lrow"><div class="h"><span>Savings a year</span><b>${k(s.unfavourable.annualSavingsTnd)}–${k(s.favourable.annualSavingsTnd)}<small>TND</small></b></div>${mini([s.unfavourable.annualSavingsTnd, s.central.annualSavingsTnd, s.favourable.annualSavingsTnd], 500000, (v) => k(v))}</div>
-    <div class="lrow"><div class="h"><span>CO₂ avoided a year</span><b>${s.unfavourable.co2AvoidedTonnes}–${s.favourable.co2AvoidedTonnes}<small>t</small></b></div>${mini([s.unfavourable.co2AvoidedTonnes, s.central.co2AvoidedTonnes, s.favourable.co2AvoidedTonnes], 500, (v) => v + ' t')}</div>
-    ${r.warnings.length ? `<div class="warn">${r.warnings.join(' ')}</div>` : ''}
-    ${chp ? `<div class="alt"><b>Faster option: ${best.engineKwe} kWe, hot water and pool only.</b> No chiller, ${best.scenarios.favourable.paybackYears}–${best.scenarios.unfavourable.paybackYears} years (central ${best.scenarios.central.paybackYears}). The chiller can be added later.</div>` : ''}
-    <div class="go"><a class="btn" href="#study">Request a study</a><a class="chev" href="#">Open the full tool</a></div>
-    <p class="fine">Central case marked by the dot. Ranges, not promises: a feasibility study confirms the numbers for your site.</p>`;
+  if (chp) $('#alt').innerHTML = `<b>Faster option: ${best.engineKwe} kWe, hot water and pool only.</b> No chiller, ${best.scenarios.favourable.paybackYears}–${best.scenarios.unfavourable.paybackYears} years (central ${best.scenarios.central.paybackYears}). The chiller can be added later.`;
+  $('#altbox').classList.toggle('shut', !chp);
 }
 $('#rooms').addEventListener('input', (e) => { state.rooms = +e.target.value; update(); });
 $('#cities').addEventListener('click', (e) => { const b = e.target.closest('[data-city]'); if (b) { state.city = b.dataset.city; update(); } });
@@ -459,6 +539,24 @@ const lo = 5, hi = 13, X = (v) => ((v - lo) / (hi - lo)) * 100, C = 9;
 $('#tornado').innerHTML = T.map(([n, d, u, f]) => `<div class="trow"><div class="k">${n}<small>${d}</small></div>
   <div class="tbar"><div class="b lo" style="left:${X(f)}%;width:${X(C) - X(f)}%"></div><div class="b hi" style="left:${X(C)}%;width:${X(u) - X(C)}%"></div>
   <span class="n" style="left:calc(${Math.min(X(f), X(C))}% - 40px)">${f} y</span><span class="n" style="left:calc(${Math.max(X(u), X(C))}% + 8px)">${u} y</span><div class="axis" style="left:${X(C)}%"></div></div></div>`).join('');
+
+// ---------- motion: scroll reveals (only for what starts below the fold) ----------
+if (!REDUCE && 'IntersectionObserver' in window) {
+  const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' });
+  const mark = (el, d = 0) => { if (el.getBoundingClientRect().top > innerHeight * 0.92) { el.classList.add('pre'); el.style.setProperty('--d', d + 'ms'); io.observe(el); } };
+  ['.sec-h', '.sec-p', '.dark h2', '.dark .meta', '.dark .fine', '.signs', '.quote', '.tlegend', '.final h2', '.final p', '.final .ctas', '.try .panel', '.result', '.notes ol'].forEach((q) => document.querySelectorAll(q).forEach((el) => mark(el)));
+  ['.flow .tile', '.verdicts .vc', '.ranges .rrow', '.svc .s', '.proof .p', '.tornado .trow'].forEach((q) => document.querySelectorAll(q).forEach((el, i) => mark(el, Math.min(i, 6) * 90)));
+  setTimeout(() => document.querySelectorAll('.pre:not(.in)').forEach((el) => el.getBoundingClientRect().top < innerHeight && el.classList.add('in')), 50);
+}
+// nav: firmer bar once scrolled, and the section in view is highlighted
+const nav = $('.nav'), links = [...document.querySelectorAll('.nav a.l[href^="#"]')];
+const onScroll = () => {
+  nav.classList.toggle('scrolled', scrollY > 8);
+  let cur = null;
+  for (const a of links) { const t = document.querySelector(a.getAttribute('href')); if (t && t.getBoundingClientRect().top < innerHeight * 0.4) cur = a; }
+  links.forEach((a) => a.classList.toggle('on', a === cur));
+};
+addEventListener('scroll', onScroll, { passive: true }); onScroll();
 </script>
 </body>
 </html>

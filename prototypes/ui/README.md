@@ -17,6 +17,13 @@ open http://localhost:8765/prototypes/ui/
 ```
 
 Screenshots: `node prototypes/ui/screenshot.cjs` (needs Playwright; writes to `screenshots/`).
+Walkthrough video: `node prototypes/ui/record.cjs` (webm). `REDUCE=1 node prototypes/ui/record.cjs` runs the same flow with reduced motion and reports page errors.
+
+## Motion
+
+- Landing: staged hero entrance, rings draw and their percentages count up, scroll reveals (only for content that starts below the fold, so the page is complete at rest), range rails grow out from the central case, the tornado bars grow from the 9-year axis, the live tool glides its rails and tweens its numbers instead of re-rendering, the nav firms up and tracks the section in view.
+- Admin: page transition on route change, sliding tab indicator with a panel fade, staggered card entrance on every filter change, KPI and tile count-ups on first load, highlighted new history rows and notes, popping status pill, rails and rings animate on the lead overview, swaying palms and drifting sea glints in the header, drag-and-drop upload with a real file picker.
+- Everything collapses to instant under `prefers-reduced-motion: reduce`.
 
 ## Decisions to carry into the real build
 

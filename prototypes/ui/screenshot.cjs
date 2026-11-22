@@ -28,6 +28,11 @@ const SHOTS = [
     page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
     await page.goto(BASE + s.url, { waitUntil: 'networkidle' });
     await page.waitForTimeout(1900);
+    if (s.full) { // scroll through so scroll-triggered reveals have played
+      const h = await page.evaluate(() => document.body.scrollHeight);
+      for (let y = 0; y < h; y += Math.round(s.h * 0.6)) { await page.evaluate((yy) => window.scrollTo(0, yy), y); await page.waitForTimeout(120); }
+      await page.waitForTimeout(1500); await page.evaluate(() => window.scrollTo(0, 0)); await page.waitForTimeout(400);
+    }
     await page.addStyleTag({ content: '.proto{display:none!important}' });
     await page.screenshot({ path: path.join(OUT, s.name + '.png'), fullPage: !!s.full });
     console.log(s.name, errors.length ? errors : 'ok');
