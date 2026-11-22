@@ -111,7 +111,7 @@ export default async function SourcesPage() {
                           <span className="font-semibold text-ink">{t('assumptions.source')}: </span>
                           {src.text}
                           {src.urls.map((u, i) => (
-                            <a key={u} href={u} target="_blank" rel="noopener noreferrer" className="ml-1 text-link underline-offset-2 hover:underline">
+                            <a key={u} href={u} target="_blank" rel="noopener noreferrer" className="ml-1 text-link underline underline-offset-2">
                               {t('assumptions.link')}
                               {src.urls.length > 1 ? ` ${i + 1}` : ''}
                             </a>

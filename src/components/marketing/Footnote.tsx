@@ -12,7 +12,7 @@ export function Footnote({ id, className }: { id: string; className?: string }) 
       <a
         href={referenceHref(id)}
         aria-label={t('label', { n, title: ref.title })}
-        className="tabular rounded px-0.5 text-current opacity-70 hover:text-link hover:underline hover:opacity-100"
+        className="tabular rounded px-0.5 text-current hover:text-link hover:underline"
       >
         {n}
       </a>

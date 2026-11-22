@@ -27,7 +27,7 @@
         "won": "study signed",
         "lost": "closed"
       },
-      "count": "{status}: {count, plural, one {# lead} other {# leads}}"
+      "leads": "{count, plural, one {lead} other {leads}}"
     },
     "filters": {
       "label": "Filters",

@@ -27,7 +27,6 @@ export async function StatusTiles({ counts, filters }: { counts: Record<LeadStat
               <Link
                 href={href}
                 aria-current={active ? 'true' : undefined}
-                aria-label={t('count', { status: ts(s), count: counts[s] })}
                 data-tile={s}
                 className={cn(
                   'flex h-full flex-col rounded-[14px] p-4 text-white transition-colors',
@@ -42,6 +41,7 @@ export async function StatusTiles({ counts, filters }: { counts: Record<LeadStat
                   <span className={cn('text-[12px]', active ? 'text-muted' : 'text-dark-muted')}>{t(`notes.${s}`)}</span>
                 </span>
                 <span className="tabular mt-3 font-display text-[34px] leading-none font-semibold">{counts[s]}</span>
+                <span className="sr-only">{t('leads', { count: counts[s] })}</span>
               </Link>
             </li>
           );
