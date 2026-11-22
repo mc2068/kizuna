@@ -13,6 +13,8 @@ Scope: the complete Next.js + Supabase website (14 pages). The pitch and the vid
 
 Each task is a **GitHub issue**, titled with the member's name (e.g. `[Hamza] ...`), assigned to them, and labelled with their name and role. Filter by label: `mohamed`, `hamza`, `ahmed`, `gaith`.
 
+> Hamza (`@Boomerang128`) and Ahmed (`@Ahmedbenslama`) are not collaborators on this repo yet, so GitHub cannot assign their issues. Mohamed invites them (Settings → Collaborators, write access); once they accept, their issues get assigned.
+
 ## Issues by member
 
 | Member | Issues, in order |
