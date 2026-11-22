@@ -33,10 +33,16 @@ export function serviceClient() {
  * quickly; auth.spec.ts covers the real email round trip.
  */
 export async function signInAs(page: Page, email: string, next = '/projects'): Promise<void> {
-  const { data, error } = await serviceClient().auth.admin.generateLink({ type: 'magiclink', email });
-  if (error) throw error;
-  const params = new URLSearchParams({ token_hash: data.properties.hashed_token, type: 'magiclink', next });
-  await page.goto(`/auth/callback?${params}`);
+  // A new magic link for a user expires the one before it, so two tests signing in the same seeded
+  // user at once can lose the race (callback answers otp_expired). Ask for a fresh link and retry.
+  for (let attempt = 1; ; attempt++) {
+    const { data, error } = await serviceClient().auth.admin.generateLink({ type: 'magiclink', email });
+    if (error) throw error;
+    const params = new URLSearchParams({ token_hash: data.properties.hashed_token, type: 'magiclink', next });
+    await page.goto(`/auth/callback?${params}`);
+    if (attempt >= 4 || !new URL(page.url()).pathname.startsWith('/sign-in')) break;
+    await page.waitForTimeout(200 * attempt + Math.random() * 300);
+  }
   await expect(page).toHaveURL(next);
 }
 
