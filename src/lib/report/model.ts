@@ -86,6 +86,8 @@ export type ReportModel = {
     rows: { key: RangeKey; label: string; cells: string[] }[];
     warningsTitle: string;
     warnings: string[];
+    /** Shown when warnings is empty. */
+    noWarnings: string;
     fasterOption: string | null;
     notes: string[];
   };
@@ -217,6 +219,7 @@ export function buildReport(data: ReportData, t: Translate = reportTranslator())
       })),
       warningsTitle: t('report.results.warnings'),
       warnings: r.warnings.map((w) => warningText(w, t)),
+      noWarnings: t('report.results.noWarnings'),
       fasterOption: faster,
       notes: [t('report.readAs'), t('report.results.peakNote')],
     },
