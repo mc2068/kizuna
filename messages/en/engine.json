@@ -8,5 +8,76 @@
     "lowFullLoadHours": "Only {hours, number} full-load hours a year (below {threshold, number}).",
     "lowPrimaryEnergySaving": "Primary energy saving below {threshold, number, percent}: not high-efficiency cogeneration under the EU test.",
     "longPayback": "Central payback above {threshold, number} years."
+  },
+  "report": {
+    "title": "Trigeneration screening report",
+    "subtitle": "A first estimate of whether an on-site gas engine with heat recovery pays for this hotel.",
+    "preparedFor": "Prepared for",
+    "calculated": "Calculated on {date}",
+    "context": "{rooms, number} rooms · {city} · {pool, select, true {pool} other {no pool}}",
+    "cities": {
+      "djerba": "Djerba",
+      "sousse": "Sousse",
+      "hammamet": "Hammamet",
+      "tozeur": "Tozeur"
+    },
+    "tariff": "STEG medium-voltage time-of-use prices, before VAT",
+    "flatTariff": "Electricity at {price} TND/kWh, before VAT",
+    "verdict": "Verdict",
+    "headlinePlant": "Proposed plant",
+    "plant": "{engineKwe, number} kWe engine + {chillerKwc, number} kWc absorption chiller",
+    "plantNoChiller": "{engineKwe, number} kWe engine, no chiller",
+    "headlinePayback": "Payback",
+    "readAs": "Ranges read low to high, with the central case in brackets.",
+    "page": "Page {page} of {total}",
+    "results": {
+      "title": "Results",
+      "intro": "Each number is worked out three times: favourable, central and unfavourable assumptions.",
+      "trigeneration": "Trigeneration",
+      "chpOnly": "Electricity and hot water only",
+      "warnings": "Checks the plant does not pass",
+      "noWarnings": "The plant passes every check: full-load hours, EU primary energy test and payback.",
+      "fasterOption": "The plant without a chiller pays back faster ({years} central). Most of the value is year-round hot water and pool heat, not summer cooling.",
+      "metrics": {
+        "capexTnd": "Investment",
+        "annualSavingsTnd": "Savings per year",
+        "paybackYears": "Payback",
+        "paybackYearsWithFte": "Payback with the FTE subsidy (eligibility unconfirmed)",
+        "co2AvoidedTonnes": "CO2 avoided",
+        "fullLoadHours": "Engine full-load hours",
+        "primaryEnergySaving": "Primary energy saving (EU method)",
+        "peakGridReliefKw": "Power taken off the grid at the summer peak"
+      },
+      "peakNote": "Peak relief only while the engine runs; no backup is modelled."
+    },
+    "hourly": {
+      "title": "A typical day, hour by hour",
+      "intro": "The proposed plant on a typical summer and winter day, central case. Shaded: what the hotel needs. Line: what the plant supplies.",
+      "summer": "Summer day",
+      "winter": "Winter day",
+      "electricity": "Electricity (kW)",
+      "heat": "Hot water and pool heat (kWth)",
+      "cooling": "Cooling (kWc)",
+      "need": "Hotel need",
+      "supplied": "From the plant"
+    },
+    "assumptions": {
+      "title": "Assumptions and sources",
+      "intro": "Every number the calculation uses, with its favourable, central and unfavourable value.",
+      "name": "Assumption",
+      "favourable": "Favourable",
+      "central": "Central",
+      "unfavourable": "Unfavourable",
+      "source": "Source",
+      "yes": "yes",
+      "no": "no"
+    },
+    "method": {
+      "title": "How this was calculated",
+      "limits": "What this screening does not cover",
+      "engineVersion": "Engine version {version}",
+      "stale": "Calculated with engine version {stored}; the current version is {current}. Re-run the project for up-to-date numbers.",
+      "disclaimer": "Screening estimate, not a quote. Two hotels with the same rooms, city and pool get the same result; a feasibility study uses your own STEG and gas bills, meter data and an installer quote."
+    }
   }
 }
