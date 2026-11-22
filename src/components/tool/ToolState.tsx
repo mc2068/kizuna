@@ -3,8 +3,6 @@
 // Shared state of the sizing tool: the inputs, the engine result and the URL.
 // The configurator writes the inputs; the summary, the full results (#10) and the hourly
 // dashboard (#11) read the result with useTool(), so they can sit anywhere under <ToolStateProvider>.
-// Until Hamza's engine port (#5) merges, @/lib/engine is the scaffold's fake: it ignores the inputs
-// and always returns the frozen Djerba demo, so the numbers only move once the real engine lands.
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { sizeHotel, type SizingInput, type SizingResult } from '@/lib/engine';
 import { sameInputs, toSearchString } from './url-state';
