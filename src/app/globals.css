@@ -1,0 +1,57 @@
+/* TEMPORARY (until #3/#4 merges): Gaith's design tokens (Contract 2) replace this file. */
+@import "tailwindcss";
+
+:root {
+  --bg: #fbfbfd;
+  --ink: #1d1d1f;
+  --muted: #6e6e73;
+  --faint: #86868b;
+  --line: #d2d2d7;
+  --tile: #f5f5f7;
+  --link: #0066cc;
+  --btn: #0071e3;
+  --elec: #f28c28;
+  --heat: #e5484d;
+  --cool: #0b8fc7;
+  --good: #1f8a4c;
+  --good-soft: #e3f3ea;
+  --maybe: #b26b00;
+  --maybe-soft: #fbefd9;
+  --weak: #8e8e93;
+  --weak-soft: #e5e5ea;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-line: var(--line);
+  --color-tile: var(--tile);
+  --color-link: var(--link);
+  --color-btn: var(--btn);
+  --color-elec: var(--elec);
+  --color-heat: var(--heat);
+  --color-cool: var(--cool);
+  --color-good: var(--good);
+  --color-good-soft: var(--good-soft);
+  --color-maybe: var(--maybe);
+  --color-maybe-soft: var(--maybe-soft);
+  --color-weak: var(--weak);
+  --color-weak-soft: var(--weak-soft);
+  --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+  --font-display: var(--font-inter-tight), -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  letter-spacing: -0.022em;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.035em;
+}
