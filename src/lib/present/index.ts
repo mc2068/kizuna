@@ -212,3 +212,42 @@ export function warningText(w: Warning, t: Translate): string {
   const { key, values } = warningMessage(w);
   return t(key, values);
 }
+
+// ---------------------------------------------------------------------------------------------------------------
+// Assumptions (Sources page, PDF report)
+// ---------------------------------------------------------------------------------------------------------------
+
+const precise = nf(4);
+
+/**
+ * An assumption value as written in the engine, at its own precision: fractions as percent (0.38 -> "38%"),
+ * yes/no flags as the given words, everything else as a number ("7,000", "0.068").
+ */
+export function formatAssumptionValue(value: number, unit: string, words: { yes: string; no: string }): string {
+  if (unit === 'fraction') return `${precise.format(Math.round(value * 1000) / 10)}%`;
+  if (unit === 'yes=1') return value ? words.yes : words.no;
+  return precise.format(value);
+}
+
+/** The unit printed after an assumption value: none for fractions (already a percent), flags and "-". */
+export function assumptionUnit(unit: string): string {
+  return unit === 'fraction' || unit === 'yes=1' || unit === '-' ? '' : unit;
+}
+
+export type SourcePart = { kind: 'text'; text: string } | { kind: 'link'; href: string; label: string };
+
+const SOURCE_URL = /https?:\/\/[^\s)]*[^\s).,;:]/g;
+
+/** An engine source note split into text and links; each link is labelled with its host ("energy.gov"). */
+export function sourceParts(source: string): SourcePart[] {
+  const parts: SourcePart[] = [];
+  let last = 0;
+  for (const match of source.matchAll(SOURCE_URL)) {
+    const at = match.index;
+    if (at > last) parts.push({ kind: 'text', text: source.slice(last, at) });
+    parts.push({ kind: 'link', href: match[0], label: new URL(match[0]).hostname.replace(/^www\./, '') });
+    last = at + match[0].length;
+  }
+  if (last < source.length) parts.push({ kind: 'text', text: source.slice(last) });
+  return parts;
+}
