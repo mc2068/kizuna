@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
-import { proof, sensitivity } from '@/content/method';
-import { formatNumber } from '@/lib/present';
+import { SENSITIVITY } from '@/content/method';
+import { PROOF as proof } from '../content';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Section, SectionHeading, Lede } from '../Section';
@@ -9,6 +9,7 @@ import { Footnote } from '../Footnote';
 import { Reveal } from '../Reveal';
 import { Tornado } from '../Tornado';
 import { requestStudyHref, toolHref } from '../demo';
+import { num } from '../format';
 
 /** "Screen your hotel": a CTA card until Ahmed's compact configurator (#9) can be embedded here. */
 export async function ScreenCta() {
@@ -40,7 +41,7 @@ export async function WhatMoves() {
     <Section labelledBy="tornado-title">
       <SectionHeading id="tornado-title">{t('title')}</SectionHeading>
       <Lede>
-        {t('lede', { years: formatNumber(sensitivity.baselineYears) })}
+        {t('lede', { years: num(SENSITIVITY.centralPaybackYears) })}
         <Footnote id="engine-model" />
       </Lede>
       <Reveal className="mt-14">

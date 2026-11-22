@@ -1,4 +1,26 @@
 {
+  "stub": {
+    "owner": "Owner: {owner}",
+    "note": "Placeholder page from the scaffold. The owner replaces it.",
+    "allPages": "All pages"
+  },
+  "pages": {
+    "home": "Home",
+    "howItWorks": "How it works",
+    "tool": "Sizing tool",
+    "services": "Services and pricing",
+    "caseStudyDjerba": "Djerba case study",
+    "about": "About",
+    "sources": "Sources and method",
+    "requestStudy": "Request a study",
+    "privacy": "Privacy",
+    "projects": "My projects",
+    "sharedProject": "Shared project",
+    "signIn": "Sign in",
+    "twin": "Digital twin",
+    "admin": "Admin: leads pipeline",
+    "adminLead": "Admin: lead detail"
+  },
   "meta": {
     "title": "{name}: trigeneration screening for Tunisian hotels",
     "description": "Find out in two minutes whether a gas engine that makes your hotel's electricity, hot water and cooling would pay. Honest ranges, cited sources, and feasibility studies."
@@ -30,7 +52,7 @@
     "legal": "Method and legal",
     "privacy": "Privacy",
     "sourcesNote": "Every claim is footnoted. See Sources and method.",
-    "copyright": "© {year} {name}"
+    "copyright": "© {name}"
   },
   "admin": {
     "railLabel": "Admin",
@@ -72,14 +94,11 @@
     "hammamet": "Hammamet",
     "tozeur": "Tozeur"
   },
-  "stub": {
-    "title": "{page}",
-    "body": "This page is being built by {owner}.",
-    "back": "Back to the home page"
-  },
   "notFound": {
     "title": "This page doesn't exist.",
     "body": "The link may be old, or the page may have moved.",
-    "home": "Go to the home page"
-  }
+    "home": "Go to the home page",
+    "code": "404"
+  },
+  "close": "Close"
 }

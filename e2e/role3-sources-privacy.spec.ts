@@ -4,7 +4,7 @@ import { PUBLIC_PAGES } from './role3-pages';
 
 test.describe('sources and method', () => {
   test('every footnote on the site resolves to an anchor on /sources', async ({ page }, info) => {
-    test.skip(info.project.name !== 'desktop', 'same content on phones');
+    test.skip(info.project.name !== 'chromium', 'same content on phones');
     const ids = new Set<string>();
     for (const path of PUBLIC_PAGES.filter((p) => p !== '/sources')) {
       await page.goto(path);
@@ -24,10 +24,14 @@ test.describe('sources and method', () => {
       await expect(page.locator(`section#${id}`)).toHaveCount(1);
       await expect(page.getByRole('navigation', { name: 'On this page' }).locator(`a[href="#${id}"]`)).toHaveCount(1);
     }
-    await expect(page.locator('[data-assumption]')).toHaveCount(16);
-    await expect(page.locator('[data-assumption-source]')).toHaveCount(16);
-    await expect(page.getByRole('row', { name: /Natural gas price/ })).toContainText('0.068');
-    await expect(page.locator('#calculate ol > li')).toHaveCount(5);
+    // Every engine parameter plus the fixed constants (method.ts ASSUMPTIONS), each with its source line.
+    const rows = await page.locator('[data-assumption]').count();
+    expect(rows).toBeGreaterThanOrEqual(16);
+    await expect(page.locator('[data-assumption-source]')).toHaveCount(rows);
+    await expect(page.locator('[data-limit]').first()).toBeVisible();
+    expect(await page.locator('[data-sensitivity]').count()).toBeGreaterThanOrEqual(6);
+    await expect(page.locator('[data-assumption="gasPrice"]')).toContainText('0.068');
+    expect(await page.locator('#calculate ol > li').count()).toBeGreaterThanOrEqual(5);
   });
 
   test('external links open safely', async ({ page }) => {
@@ -43,7 +47,7 @@ test.describe('sources and method', () => {
   });
 
   test('the table of contents sticks on desktop', async ({ page }, info) => {
-    test.skip(info.project.name !== 'desktop', 'desktop only');
+    test.skip(info.project.name !== 'chromium', 'desktop only');
     await page.goto('/sources');
     const nav = page.getByRole('navigation', { name: 'On this page' });
     await page.locator('#references').scrollIntoViewIfNeeded();

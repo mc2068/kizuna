@@ -96,7 +96,7 @@ Engine v2, demo hotel **300 rooms, Djerba, pool, STEG time-of-use prices before 
 | Result | Trigeneration (headline) | CHP only (hot water and pool) |
 |---|---|---|
 | Plant | **200 kWe + 64 kWc** | 100 kWe, no chiller |
-| Capex | 1.2 / 1.75 / 2.4 M TND | 0.6 / 0.85 / 1.1 M TND |
+| Capex | 1.24 / 1.75 / 2.36 M TND | 0.61 / 0.85 / 1.1 M TND |
 | Savings | 260k / 200k / 110k TND/yr | 135k / 110k / 70k TND/yr |
 | Payback | **5 / 9 / 21.5 years** | 4.5 / 7.5 / 15.5 years |
 | With FTE (eligibility unconfirmed) | 3.5 / 6 / 15 years | 3 / 5.5 / 11 years |

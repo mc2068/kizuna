@@ -30,10 +30,10 @@ test.describe('home', () => {
   test('shows the frozen Djerba numbers from the engine', async ({ page }) => {
     const demo = page.locator('#demo');
     await expect(demo).toContainText('200 kWe engine + 64 kWc chiller');
-    await expect(demo).toContainText('5–21.5 years');
-    await expect(demo).toContainText('110k–260k TND');
-    await expect(demo).toContainText('70–260 t');
-    await expect(demo).toContainText('3.5–15 years');
+    await expect(demo).toContainText('5 to 21.5 years');
+    await expect(demo).toContainText('110k to 260k TND');
+    await expect(demo).toContainText('70 to 260 t CO2/yr');
+    await expect(demo).toContainText('3.5 to 15 years');
     await expect(page.getByRole('img', { name: /electricity 53%, hot water 58%, cooling 3%/ })).toBeVisible();
   });
 

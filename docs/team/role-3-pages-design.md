@@ -51,7 +51,7 @@ unconfirmed" and is never the headline. Verdicts: "good fit" (central payback <=
 study" (<= 10), "weak fit". The tool shows the trigeneration option and, when it pays back faster, a CHP-only
 option (hot water and pool heat, no chiller).
 FROZEN DEMO NUMBERS (engine v2, docs/engine/spec.md, read as favourable / central / unfavourable):
-trigeneration 200 kWe + 64 kWc, capex 1.2 / 1.75 / 2.4 M TND, savings 260k / 200k / 110k TND/yr,
+trigeneration 200 kWe + 64 kWc, capex 1.24 / 1.75 / 2.36 M TND, savings 260k / 200k / 110k TND/yr,
 payback 5 / 9 / 21.5 yrs (with FTE 3.5 / 6 / 15), CO2 avoided 260 / 210 / 70 t/yr, full-load hours
 6,100 / 5,700 / 4,900, peak grid relief ~220 kW. CHP-only: 100 kWe, payback 4.5 / 7.5 / 15.5 yrs.
 Cooling coverage is only ~3%: the value is year-round hot water and pool heat, not summer cooling.
@@ -95,8 +95,12 @@ type Scenario = 'unfavourable' | 'central' | 'favourable';
 type SizingInput = { rooms: number; city: City; pool: boolean; elecPrice: number | null };
 type ScenarioResult = { capexTnd; annualSavingsTnd; demandChargeSavingTnd; co2AvoidedTonnes; paybackYears;
   paybackYearsWithFte; fullLoadHours; primaryEnergySaving; peakGridReliefKw }   // all numbers, rounded
-type PlantOption = { engineKwe: number; chillerKwc: number; verdict: Verdict; warnings: string[];
+type PlantOption = { engineKwe: number; chillerKwc: number; verdict: Verdict; warnings: Warning[];
   scenarios: Record<Scenario, ScenarioResult> };
+type Warning =                                 // never shown raw: warningText(w, t) -> messages/en/engine.json
+  | { code: 'lowFullLoadHours'; params: { hours; threshold } }
+  | { code: 'lowPrimaryEnergySaving'; params: { pes; threshold } }
+  | { code: 'longPayback'; params: { years; threshold } };
 type Verdict = 'good fit' | 'possible fit, needs a study' | 'weak fit';
 type HourRow = { hour; elecDemand; heatDemand; coolDemand; engineElec; recoveredHeat; chillerCool; gridImport };
 type SizingResult = PlantOption & {            // headline = trigeneration option if any, else best
@@ -106,8 +110,11 @@ type SizingResult = PlantOption & {            // headline = trigeneration optio
 export function sizeHotel(input: SizingInput): SizingResult;   // pure: no I/O, deterministic, < 20 ms
 export const ENGINE_VERSION: string;                           // e.g. '2.0.0', stored with every saved run
 It must match the reference model engine/model.mjs and pass the ported engine/model.test.mjs.
-Presentation helpers (src/lib/present/index.ts, Role 1): formatTnd, formatRange(scenarios, key, unit),
-verdictTone(verdict) -> 'good' | 'maybe' | 'weak', warningText(w). UI never formats engine numbers itself.
+Presentation helpers (src/lib/present/index.ts, Role 1): formatTnd, formatYears, formatKw, formatTonnes,
+formatPercent, formatHours, formatRange(option, key) -> { favourable, central, unfavourable, values, text,
+favourableEnd }, verdictTone(verdict) -> 'good' | 'maybe' | 'weak', verdictKey(verdict),
+warningText(w, useTranslations('engine')). Numbers shown exactly as the engine rounds them. UI never formats
+engine numbers itself.
 
 CONTRACT 2, design tokens (Role 3, src/app/globals.css as CSS variables + Tailwind theme; shadcn variables
 mapped to them): --bg #fbfbfd, --ink #1d1d1f, --muted #6e6e73, --faint #86868b, --line #d2d2d7,
@@ -121,14 +128,16 @@ in src/components/layout/ (Role 3), used by src/app/layout.tsx; <AdminShell/> fo
 CONTRACT 3, data (Role 4, Supabase; typed functions in src/lib/db/*.ts; everyone calls these, never
 Supabase directly). Tables: profiles(id = auth uid, role 'user' | 'admin', full_name);
 projects(id, owner_id, hotel_name, inputs jsonb, results jsonb, engine_version, share_token unique,
-created_at, updated_at); leads(id, project_id null, hotel_name, city, rooms, contact_name, email, phone,
-message, consent bool, inputs jsonb, results jsonb, status 'new'|'contacted'|'quoted'|'won'|'lost',
-owner_id -> admin profile, created_at); lead_notes(id, lead_id, author_id, body, created_at);
+created_at, updated_at); leads(id text 'L-1001', project_id null, hotel_name, city, rooms, contact_name,
+email, phone, message, consent bool, inputs jsonb, results jsonb, engine_version, status
+'new'|'contacted'|'quoted'|'won'|'lost', owner_id -> admin profile (default: fewest open leads), created_at); lead_notes(id, lead_id, author_id, body, created_at);
 lead_events(id, lead_id, kind 'created'|'status'|'owner'|'email'|'note'|'file', data jsonb, actor_id,
 created_at); lead_files(id, lead_id, path, name, size, uploaded_by, created_at). Private Storage bucket
 'lead-files', admins only. RLS: users see only their own projects; anyone can read a project by its
 share_token through getSharedProject; leads, notes, events, files: admins only (insert of a lead is open
-via the server action). Functions: getMyProjects(), getProject(id), saveProject({hotelName, inputs}),
+via the server action). Projects and leads are inserted by the server with the service role (results are
+server-computed); owners may only rename or delete a project, admins may only change a lead's status and
+owner. Database triggers log the created, status, owner, note and file events; the server logs emails. Functions: getMyProjects(), getProject(id), saveProject({hotelName, inputs}),
 deleteProject(id), getSharedProject(token), submitStudyRequest(form) -> {ok, leadId} | {ok:false, error},
 listLeads({status?, city?, mine?}), getLeadCounts(), getLead(id), setLeadStatus(id, status),
 assignLead(id, ownerId), addLeadNote(id, body), uploadLeadFile(id, file), getLeadFileUrl(fileId),

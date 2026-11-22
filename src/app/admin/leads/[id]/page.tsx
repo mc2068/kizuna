@@ -1,9 +1,5 @@
-// STAND-IN stub from the #3 scaffold. Ahmed replaces this page.
-import type { Metadata } from 'next';
-import { PageStub } from '@/components/layout/PageStub';
-
-export const metadata: Metadata = { title: 'Lead' };
+import { StubPage } from '@/components/stub-page';
 
 export default function Page() {
-  return <PageStub page="Lead" owner="Ahmed" />;
+  return <StubPage page="adminLead" />;
 }

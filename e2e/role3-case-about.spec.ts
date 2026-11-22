@@ -11,7 +11,7 @@ test.describe('Djerba case study', () => {
     const verdict = page.locator('[data-case-verdict]');
     await expect(verdict).toContainText('Possible fit');
     await expect(verdict).toContainText('200 kWe engine + 64 kWc absorption chiller');
-    await expect(verdict).toContainText('5–21.5 years, central 9 years');
+    await expect(verdict).toContainText('5 to 21.5 years, central 9 years');
   });
 
   test('shows a summer and a winter day with consistent winter figures', async ({ page }) => {
@@ -25,7 +25,7 @@ test.describe('Djerba case study', () => {
   test('compares trigeneration with CHP only, both from the engine', async ({ page }) => {
     await expect(page.locator('[data-option="trigeneration"]')).toContainText('200 kWe + 64 kWc');
     await expect(page.locator('[data-option="chp"]')).toContainText('100 kWe, no chiller');
-    await expect(page.locator('[data-option="chp"]')).toContainText('4.5–15.5 years');
+    await expect(page.locator('[data-option="chp"]')).toContainText('4.5 to 15.5 years');
   });
 
   test('has range rails, the tornado and CTAs that prefill the study', async ({ page }) => {

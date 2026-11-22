@@ -2,9 +2,10 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
-import { djerbaCase, sensitivity } from '@/content/method';
+import { SENSITIVITY } from '@/content/method';
+import { djerbaFacts } from '@/components/marketing/content';
 import type { PlantOption } from '@/lib/engine';
-import { formatNumber, formatRange, formatValue, verdictLabel, verdictTone } from '@/lib/present';
+import { verdictTone } from '@/lib/present';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Section, SectionHeading, Lede } from '@/components/marketing/Section';
@@ -17,6 +18,7 @@ import { ResultRails } from '@/components/marketing/ResultRails';
 import { Tornado } from '@/components/marketing/Tornado';
 import { DEMO_INPUT, demoResult, requestStudyHref, toolHref } from '@/components/marketing/demo';
 import { cn } from '@/lib/utils';
+import { rangeText, num } from '@/components/marketing/format';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('marketing.caseStudy.meta');
@@ -26,7 +28,9 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function DjerbaCaseStudyPage() {
   const t = await getTranslations('marketing.caseStudy');
+  const tv = await getTranslations('common.verdict');
   const demo = demoResult();
+  const facts = djerbaFacts();
   const s = demo.scenarios;
   const { summer, winter } = demo.hourly;
   const summerPeak = Math.round(Math.max(...summer.map((r) => r.elecDemand)));
@@ -54,7 +58,7 @@ export default async function DjerbaCaseStudyPage() {
           <div className="mt-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
               <p className="text-[21px] font-semibold tracking-tight" data-case-facts>
-                {t('hero.facts', { rooms: DEMO_INPUT.rooms, stars: djerbaCase.hotel.stars })}
+                {t('hero.facts', { rooms: DEMO_INPUT.rooms, stars: facts.stars })}
               </p>
               <p className="mt-1 text-[15px] text-muted">
                 {t('hero.note')}
@@ -64,11 +68,11 @@ export default async function DjerbaCaseStudyPage() {
             <div className="rounded-[22px] bg-tile p-5 md:min-w-[340px]" data-case-verdict>
               <p className="text-[13px] font-semibold tracking-wide text-muted uppercase">{t('verdict.label')}</p>
               <Badge variant={verdictTone(demo.verdict)} className="mt-2 text-[15px]">
-                {verdictLabel(demo.verdict)}
+                {tv(verdictTone(demo.verdict))}
               </Badge>
               <p className="tabular mt-3 font-semibold">{t('verdict.plant', { kwe: demo.engineKwe, kwc: demo.chillerKwc })}</p>
               <p className="tabular text-[15px] text-muted">
-                {t('verdict.payback', { range: formatRange(s, 'paybackYears', 'years'), central: formatNumber(s.central.paybackYears) })}
+                {t('verdict.payback', { range: rangeText(s, 'paybackYears'), central: num(s.central.paybackYears) })}
               </p>
             </div>
           </div>
@@ -95,8 +99,8 @@ export default async function DjerbaCaseStudyPage() {
                 <DayChart
                   rows={d.rows}
                   label={t('demand.chartLabel', { season, peak, engine })}
-                  hoursLabel={t('demand.hours')}
                   kwLabel={t('demand.kw')}
+                  hourTick={(h) => t('demand.hourTick', { h })}
                 />
               </figure>
             );
@@ -122,20 +126,20 @@ export default async function DjerbaCaseStudyPage() {
             {
               key: 'winter',
               values: {
-                occupancy: Math.round(djerbaCase.winterOccupancy * 100),
+                occupancy: Math.round(facts.winterOccupancy * 100),
                 low: winterLow,
                 high: winterHigh,
-                days: djerbaCase.winterDays,
+                days: facts.winterDays,
               },
             },
-            { key: 'minLoad', values: { pct: Math.round(djerbaCase.minLoad * 100), oldKwe: djerbaCase.v1.engineKwe } },
+            { key: 'minLoad', values: { pct: Math.round(facts.minLoad * 100), oldKwe: facts.old.engineKwe } },
             {
               key: 'hours',
               values: {
-                oldKwe: djerbaCase.v1.engineKwe,
-                oldHours: formatNumber(djerbaCase.v1.fullLoadHours, 0),
+                oldKwe: facts.old.engineKwe,
+                oldHours: num(facts.old.fullLoadHours, 0),
                 kwe: demo.engineKwe,
-                hours: formatNumber(s.central.fullLoadHours, 0),
+                hours: num(s.central.fullLoadHours, 0),
               },
             },
           ]
@@ -152,7 +156,7 @@ export default async function DjerbaCaseStudyPage() {
           ))}
         </ul>
         <p className="tabular mx-auto mt-10 max-w-[40rem] text-center text-headline font-semibold">
-          {t('smaller.result', { central: formatNumber(s.central.paybackYears), oldYears: djerbaCase.v1.paybackYears })}
+          {t('smaller.result', { central: num(s.central.paybackYears), oldYears: num(facts.old.paybackYears) })}
           <Footnote id="engine-model" />
         </p>
       </Section>
@@ -175,18 +179,18 @@ export default async function DjerbaCaseStudyPage() {
             const o = option.scenarios;
             const rows = [
               { k: 'plant', v: option.chillerKwc ? `${option.engineKwe} kWe + ${option.chillerKwc} kWc` : `${option.engineKwe} kWe, ${t('options.noChiller')}` },
-              { k: 'payback', v: formatRange(o, 'paybackYears', 'years') },
-              { k: 'fte', v: formatRange(o, 'paybackYearsWithFte', 'years') },
-              { k: 'capex', v: formatRange(o, 'capexTnd', 'TND') },
-              { k: 'savings', v: formatRange(o, 'annualSavingsTnd', 'TND') },
-              { k: 'co2', v: formatRange(o, 'co2AvoidedTonnes', 't') },
-              { k: 'hours', v: formatValue(o.central.fullLoadHours) },
+              { k: 'payback', v: rangeText(o, 'paybackYears') },
+              { k: 'fte', v: rangeText(o, 'paybackYearsWithFte') },
+              { k: 'capex', v: rangeText(o, 'capexTnd') },
+              { k: 'savings', v: rangeText(o, 'annualSavingsTnd') },
+              { k: 'co2', v: rangeText(o, 'co2AvoidedTonnes') },
+              { k: 'hours', v: num(o.central.fullLoadHours, 0) },
             ];
             return (
               <article key={key} data-option={key} className="rounded-[22px] bg-white p-6 md:p-8">
                 <div className="flex items-center justify-between gap-3">
                   <h3 className="text-[26px] font-semibold tracking-tight">{t(`options.${key}`)}</h3>
-                  <Badge variant={verdictTone(option.verdict)}>{verdictLabel(option.verdict)}</Badge>
+                  <Badge variant={verdictTone(option.verdict)}>{tv(verdictTone(option.verdict))}</Badge>
                 </div>
                 <p className="mt-1 text-muted">{note}</p>
                 <dl className="mt-6 divide-y divide-line/70">
@@ -210,7 +214,7 @@ export default async function DjerbaCaseStudyPage() {
       <Section labelledBy="moves-title">
         <SectionHeading id="moves-title">{t('moves.title')}</SectionHeading>
         <Lede>
-          {t('moves.lede', { years: formatNumber(sensitivity.baselineYears) })}
+          {t('moves.lede', { years: num(SENSITIVITY.centralPaybackYears) })}
           <Footnote id="engine-model" />
         </Lede>
         <div className="mt-14">

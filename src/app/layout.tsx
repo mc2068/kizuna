@@ -1,38 +1,40 @@
-// STAND-IN for #3 (Mohamed owns this file). Uses Role 3's fonts, header and footer.
+import { Suspense } from 'react';
 import type { Metadata, Viewport } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
-import { getTranslations } from 'next-intl/server';
 import { siteConfig } from '@/config/site';
-import { getCurrentUser } from '@/lib/db';
-import { fontClassName } from './fonts';
-import { SiteHeader } from '@/components/layout/SiteHeader';
+import { SiteHeaderView } from '@/components/layout/SiteHeader';
+import { SiteHeaderWithUser } from '@/components/layout/SiteHeaderWithUser';
 import { SiteFooter } from '@/components/layout/SiteFooter';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { Toaster } from '@/components/ui/sonner';
+import { fontClassName } from './fonts';
 import './globals.css';
 
-export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations('common.meta');
-  return {
-    metadataBase: new URL(siteConfig.url),
-    title: { default: t('title', { name: siteConfig.name }), template: `%s · ${siteConfig.name}` },
-    description: t('description'),
-    openGraph: { siteName: siteConfig.name, type: 'website', locale: 'en' },
-  };
-}
+export const metadata: Metadata = {
+  metadataBase: new URL(siteConfig.url),
+  title: { default: siteConfig.name, template: `%s · ${siteConfig.name}` },
+  description: siteConfig.description,
+  openGraph: { siteName: siteConfig.name, type: 'website', locale: siteConfig.locale },
+};
 
 export const viewport: Viewport = { themeColor: '#fbfbfd' };
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const user = await getCurrentUser();
+// Role 3: fonts (src/app/fonts.ts), <SiteHeader/> and <SiteFooter/> (hidden on /admin, where
+// <AdminShell/> takes over), tooltips and toasts. The header's signed-in part streams in
+// (cacheComponents), so every page keeps a static shell.
+export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
-    <html lang="en" className={fontClassName}>
-      <body className="min-h-dvh">
+    <html lang={siteConfig.locale} className={`h-full antialiased ${fontClassName}`}>
+      <body className="flex min-h-full flex-col">
         <NextIntlClientProvider>
           <TooltipProvider>
-            <SiteHeader user={user} />
-            {children}
-            <SiteFooter />
+            <Suspense fallback={<SiteHeaderView user={null} pathname="" />}>
+              <SiteHeaderWithUser />
+            </Suspense>
+            <div className="flex-1">{children}</div>
+            <Suspense fallback={null}>
+              <SiteFooter />
+            </Suspense>
             <Toaster />
           </TooltipProvider>
         </NextIntlClientProvider>

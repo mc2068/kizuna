@@ -52,7 +52,8 @@
       "central": "central {value}",
       "owner": "Owner",
       "open": "Open lead",
-      "openLabel": "Open lead {hotel}"
+      "openLabel": "Open lead {hotel}",
+      "unassigned": "Unassigned"
     },
     "empty": {
       "title": "No leads match these filters.",

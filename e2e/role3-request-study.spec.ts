@@ -7,7 +7,7 @@ test.describe('request a study', () => {
     const summary = page.locator('[data-screening-summary]');
     await expect(summary).toContainText('Possible fit');
     await expect(summary).toContainText('200 kWe engine + 64 kWc chiller');
-    await expect(summary).toContainText('Payback 5–21.5 years, central 9 years');
+    await expect(summary).toContainText('Payback 5 to 21.5 years, central 9 years');
     await expect(page.getByLabel('Rooms')).toHaveValue('300');
     await expect(page.getByRole('combobox', { name: 'City' })).toContainText('Djerba');
     await expect(page.getByRole('switch', { name: 'Heated pool' })).toHaveAttribute('aria-checked', 'true');

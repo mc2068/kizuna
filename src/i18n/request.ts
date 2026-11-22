@@ -1,13 +1,17 @@
-// STAND-IN for #3 (Mohamed owns src/i18n). next-intl without locale routing: English only,
-// one JSON file per namespace in messages/en/. Add a namespace here when you add its file.
+// next-intl WITHOUT locale routing: English only at launch. Every user-facing string lives in
+// messages/en/<namespace>.json; French is added later as messages/fr/ without changing URLs.
 import { getRequestConfig } from 'next-intl/server';
+import { siteConfig } from '@/config/site';
+import { NAMESPACES } from './namespaces';
 
-export const NAMESPACES = ['common', 'marketing', 'forms', 'admin', 'privacy'] as const;
-
-export default getRequestConfig(async () => {
-  const locale = 'en';
+export async function loadMessages(locale: string) {
   const entries = await Promise.all(
     NAMESPACES.map(async (ns) => [ns, (await import(`../../messages/${locale}/${ns}.json`)).default] as const),
   );
-  return { locale, messages: Object.fromEntries(entries), timeZone: 'Africa/Tunis' };
+  return Object.fromEntries(entries);
+}
+
+export default getRequestConfig(async () => {
+  const locale = siteConfig.locale;
+  return { locale, messages: await loadMessages(locale) };
 });

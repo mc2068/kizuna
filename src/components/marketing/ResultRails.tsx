@@ -1,7 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import type { ScenarioResult, SizingResult } from '@/lib/engine';
-import { formatRange, formatValue, rangeOf } from '@/lib/present';
 import { RangeRail } from './RangeRail';
+import { rangeText, rangeOf, valueText } from './format';
 
 type Row = { key: 'payback' | 'savings' | 'capex' | 'co2'; field: keyof ScenarioResult; unit: string; max: number };
 export const RESULT_ROWS: Row[] = [
@@ -34,8 +34,8 @@ export async function ResultRails({ result }: { result: SizingResult }) {
               max={row.max}
             />
             <div className="md:text-right">
-              <p className="tabular font-display text-[30px] leading-none font-semibold tracking-tight">{formatRange(s, row.field, row.unit)}</p>
-              <p className="mt-1 text-[14px] text-muted">{t(`${row.key}.central`, { value: formatValue(r.central, row.unit) })}</p>
+              <p className="tabular font-display text-[30px] leading-none font-semibold tracking-tight">{rangeText(s, row.field)}</p>
+              <p className="mt-1 text-[14px] text-muted">{t(`${row.key}.central`, { value: valueText(r.central, row.unit) })}</p>
             </div>
           </div>
         );

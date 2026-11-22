@@ -3,14 +3,16 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+import { connection } from 'next/server';
 import { getTranslations } from 'next-intl/server';
-import { getCurrentUser, getLeadCounts, listAdmins, listLeads } from '@/lib/db';
-import { formatNumber, formatRange, rangeOf, verdictLabel } from '@/lib/present';
+import { getCurrentUser, getLead, getLeadCounts, listAdmins, listLeads } from '@/lib/db';
 import { KpiStrip } from '@/components/admin/pipeline/KpiStrip';
 import { StatusTiles } from '@/components/admin/pipeline/StatusTiles';
 import { FilterBar } from '@/components/admin/pipeline/FilterBar';
 import { LeadCards, type LeadCardData } from '@/components/admin/pipeline/LeadCards';
-import { filtersHref, kpis, leadVerdict, parseFilters, timeAgo } from '@/components/admin/pipeline/pipeline';
+import { filtersHref, kpis, leadVerdict, parseFilters, timeAgo, wonDate } from '@/components/admin/pipeline/pipeline';
+import { rangeText, rangeOf, num } from '@/components/marketing/format';
+import { verdictTone } from '@/lib/present';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('admin.pipeline.meta');
@@ -18,20 +20,28 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function AdminPipelinePage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
+  // Layouts and pages render in parallel, so the page checks too before it asks for admin data.
+  await connection();
+  const me = await getCurrentUser().catch(() => null);
+  if (!me || me.role !== 'admin') redirect('/sign-in?next=/admin');
   const t = await getTranslations('admin.pipeline');
+  const tv = await getTranslations('common.verdict');
   const ts = await getTranslations('common.status');
   const tc = await getTranslations('common.cities');
   const filters = parseFilters(await searchParams);
-  // Layouts and pages render in parallel, so the page checks too before it asks for admin data.
-  const me = await getCurrentUser();
-  if (!me || me.role !== 'admin') redirect('/sign-in?next=/admin');
   const [all, counts, admins] = await Promise.all([listLeads(), getLeadCounts(), listAdmins()]);
   // Status, city and "mine" go to the data layer; the verdict is read from the stored results.
   const filtered = (await listLeads({ status: filters.status, city: filters.city, mine: filters.mine })).filter(
     (l) => !filters.verdict || leadVerdict(l) === filters.verdict,
   );
   const now = new Date();
-  const ownerName = (id: string) => admins.find((a) => a.id === id)?.fullName ?? id;
+  // "Won this quarter" needs the date each lead was won, from its history.
+  const wonAt: Record<string, string> = {};
+  for (const d of await Promise.all(all.filter((l) => l.status === 'won').map((l) => getLead(l.id)))) {
+    const at = d && wonDate(d);
+    if (d && at) wonAt[d.id] = at;
+  }
+  const ownerName = (id: string | null) => (id ? (admins.find((a) => a.id === id)?.fullName ?? id) : t('card.unassigned'));
 
   const cards: LeadCardData[] = filtered.map((l) => {
     const s = l.results.scenarios;
@@ -44,9 +54,9 @@ export default async function AdminPipelinePage({ searchParams }: { searchParams
       pool: l.inputs.pool,
       plant: l.results.chillerKwc ? `${l.results.engineKwe} kWe + ${l.results.chillerKwc} kWc` : `${l.results.engineKwe} kWe`,
       verdict: leadVerdict(l),
-      verdictLabel: verdictLabel(l.results.verdict),
-      paybackRange: formatRange(s, 'paybackYears', 'yrs'),
-      paybackCentral: formatNumber(r.central),
+      verdictLabel: tv(verdictTone(l.results.verdict)),
+      paybackRange: rangeText(s, 'paybackYears'),
+      paybackCentral: num(r.central),
       rail: r,
       status: l.status,
       statusLabel: ts(l.status),
@@ -64,7 +74,7 @@ export default async function AdminPipelinePage({ searchParams }: { searchParams
         <p className="mt-1 text-muted">{t('lede')}</p>
       </header>
 
-      <KpiStrip k={kpis(all, now)} />
+      <KpiStrip k={kpis(all, now, wonAt)} />
       <StatusTiles counts={counts} filters={filters} />
       <FilterBar filters={filters} />
 

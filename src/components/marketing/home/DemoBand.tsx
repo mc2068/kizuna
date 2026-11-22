@@ -1,12 +1,12 @@
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 import type { ScenarioResult, SizingResult, Scenario } from '@/lib/engine';
-import { formatRange, formatValue, rangeOf } from '@/lib/present';
 import { Footnote } from '../Footnote';
 import { RangeRail } from '../RangeRail';
 import { Reveal } from '../Reveal';
 import { DEMO_INPUT } from '../demo';
-import { djerbaCase } from '@/content/method';
+import { DEMO_STARS } from '../content';
+import { rangeText, rangeOf, valueText } from '../format';
 
 type Row = { key: 'payback' | 'savings' | 'capex' | 'co2'; field: keyof ScenarioResult; unit: string; max: number };
 const ROWS: Row[] = [
@@ -34,7 +34,7 @@ export async function DemoBand({ demo, id = 'demo' }: { demo: SizingResult; id?:
         <ul className="mt-8 flex flex-wrap gap-2 text-[14px]">
           {(['hotel', 'pool', 'tariff'] as const).map((k) => (
             <li key={k} className="rounded-full bg-white/10 px-3 py-1">
-              {t(`chips.${k}`, { stars: djerbaCase.hotel.stars })}
+              {t(`chips.${k}`, { stars: DEMO_STARS })}
             </li>
           ))}
         </ul>
@@ -58,10 +58,10 @@ export async function DemoBand({ demo, id = 'demo' }: { demo: SizingResult; id?:
                   <RangeRail tone="dark" title={t(`rows.${row.key}.title`)} {...v} unit={row.unit} max={row.max} />
                   <div className="md:text-right">
                     <p className="tabular font-display text-[34px] leading-none font-semibold tracking-tight">
-                      {formatRange(s, row.field, row.unit)}
+                      {rangeText(s, row.field)}
                     </p>
                     <p className="mt-1 text-[14px] text-dark-muted">
-                      {t(`rows.${row.key}.central`, { value: formatValue(r.central, row.unit) })}
+                      {t(`rows.${row.key}.central`, { value: valueText(r.central, row.unit) })}
                     </p>
                   </div>
                 </div>
@@ -73,7 +73,7 @@ export async function DemoBand({ demo, id = 'demo' }: { demo: SizingResult; id?:
         <p className="mt-12 max-w-[46rem] text-[14px] text-dark-muted">
           {t('legend')}
           <Footnote id="engine-model" />{' '}
-          {t('fte', { range: formatRange(s, 'paybackYearsWithFte', 'years') })}
+          {t('fte', { range: rangeText(s, 'paybackYearsWithFte') })}
           <Footnote id="fte" />
         </p>
         <Link href="/case-study/djerba" className="text-link-chevron mt-8 inline-block text-[17px] text-[#2997ff] hover:underline">

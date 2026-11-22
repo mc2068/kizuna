@@ -1,30 +1,23 @@
 // The Djerba demo hotel and small helpers shared by the marketing pages. Every number comes from
-// sizeHotel() or src/content/method.ts, never typed into a page.
-import { djerbaCase } from '@/content/method';
-import { sizeHotel, type SizingInput, type SizingResult } from '@/lib/engine';
+// the engine or src/content/method.ts (Hamza), never typed into a page.
+import { DEMO, DEMO_INPUT as METHOD_DEMO_INPUT } from '@/content/method';
+import { PARAMS, toToolSearchParams, type ParamKey, type SizingInput, type SizingResult } from '@/lib/engine';
 
-export const DEMO_INPUT: SizingInput = {
-  rooms: djerbaCase.hotel.rooms,
-  city: djerbaCase.hotel.city,
-  pool: djerbaCase.hotel.pool,
-  elecPrice: null,
-};
+export const DEMO_INPUT: SizingInput = { ...METHOD_DEMO_INPUT };
 
 export function demoResult(): SizingResult {
-  return sizeHotel(DEMO_INPUT);
+  return DEMO.result;
 }
 
-/** Central value of an engine assumption, found by the start of its name. */
-export function assumption(result: SizingResult, nameStartsWith: string) {
-  const a = result.assumptions.find((x) => x.name.startsWith(nameStartsWith));
-  if (!a) throw new Error(`No engine assumption starts with "${nameStartsWith}"`);
-  return a;
+/** Central value of an engine parameter (PARAMS in @/lib/engine). */
+export function centralParam(key: ParamKey): number {
+  return PARAMS[key].values[1];
 }
 
-/** Query string the tool and the study form both understand. */
+/** Query string the tool and the study form both understand (the engine's own URL format). */
 export function inputQuery(input: SizingInput): string {
-  const q = new URLSearchParams({ rooms: String(input.rooms), city: input.city, pool: input.pool ? '1' : '0' });
-  if (input.elecPrice != null) q.set('price', String(input.elecPrice));
+  const q = new URLSearchParams(toToolSearchParams(input));
+  if (input.elecPrice == null) q.delete('price');
   return q.toString();
 }
 

@@ -5,9 +5,9 @@ import common from '../../messages/en/common.json';
 import marketing from '../../messages/en/marketing.json';
 import forms from '../../messages/en/forms.json';
 import admin from '../../messages/en/admin.json';
-import privacy from '../../messages/en/privacy.json';
+import engine from '../../messages/en/engine.json';
 
-export const messages = { common, marketing, forms, admin, privacy };
+export const messages = { common, marketing, forms, admin, engine };
 
 export function renderIntl(ui: React.ReactElement) {
   return render(

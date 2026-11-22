@@ -17,10 +17,16 @@ import { CITIES, type SizingInput } from '@/lib/engine';
 import { siteConfig } from '@/config/site';
 import { cn } from '@/lib/utils';
 import {
-  PRICE, ROOMS, studyRequestSchema, type FieldName, type StudyRequestInput, type StudyRequestState, type StudyRequestValues,
+  PRICE, ROOMS, studyRequestSchema, toFormData, type FieldName, type StudyRequestInput, type StudyRequestValues,
 } from './study-request';
+import type { StudyRequestResult } from '@/lib/db/types';
+import { CONTACT_EMAIL } from './content';
 
-type Action = (prev: StudyRequestState, input: StudyRequestInput) => Promise<StudyRequestState>;
+/** Mohamed's server action (src/app/request-study/actions.ts): requestStudy(previous, formData). */
+type Action = (previous: StudyRequestResult | null, formData: FormData) => Promise<StudyRequestResult>;
+
+/** Server field errors (English text) become the same codes the browser uses. */
+const SERVER_CODE: Partial<Record<FieldName, string>> = { email: 'email', city: 'city', rooms: 'rooms', elecPrice: 'elecPrice', consent: 'consent' };
 
 const ORDER: FieldName[] = ['contactName', 'email', 'phone', 'hotelName', 'city', 'rooms', 'pool', 'elecPrice', 'message', 'consent'];
 
@@ -40,7 +46,8 @@ function FormRound({ action, prefill, onAgain }: { action: Action; prefill: Part
   const uid = useId();
   const successRef = useRef<HTMLDivElement>(null);
   const summaryRef = useRef<HTMLParagraphElement>(null);
-  const [state, formAction, pending] = useActionState<StudyRequestState, StudyRequestInput>(action, { status: 'idle' });
+  const [state, formAction, pending] = useActionState<StudyRequestResult | null, FormData>(action, null);
+  const [sent, setSent] = useState({ contactName: '', hotelName: '' });
 
   const form = useForm<StudyRequestInput, unknown, StudyRequestValues>({
     resolver: zodResolver(studyRequestSchema),
@@ -64,14 +71,20 @@ function FormRound({ action, prefill, onAgain }: { action: Action; prefill: Part
 
   // Server-side field errors land on the same fields as the browser ones.
   useEffect(() => {
-    if (state.status === 'error') {
-      for (const [k, code] of Object.entries(state.fieldErrors)) setError(k as FieldName, { type: 'server', message: code });
+    if (state && !state.ok) {
+      for (const k of Object.keys(state.fieldErrors ?? {})) {
+        setError(k as FieldName, { type: 'server', message: SERVER_CODE[k as FieldName] ?? 'required' });
+      }
       summaryRef.current?.focus();
     }
-    if (state.status === 'success') successRef.current?.focus();
+    if (state?.ok) successRef.current?.focus();
   }, [state, setError]);
 
-  const onValid = () => startTransition(() => formAction(form.getValues()));
+  const onValid = () => {
+    const v = form.getValues();
+    setSent({ contactName: String(v.contactName).trim(), hotelName: String(v.hotelName).trim() });
+    startTransition(() => formAction(toFormData(v)));
+  };
   const onInvalid = () => {
     const first = ORDER.find((k) => errors[k]);
     if (first) form.setFocus(first);
@@ -86,12 +99,12 @@ function FormRound({ action, prefill, onAgain }: { action: Action; prefill: Part
   const describedBy = (k: FieldName, hint?: boolean) =>
     [errors[k] ? id(`${k}-error`) : null, hint ? id(`${k}-hint`) : null].filter(Boolean).join(' ') || undefined;
 
-  if (state.status === 'success') {
+  if (state?.ok) {
     return (
       <div ref={successRef} tabIndex={-1} role="status" data-study-success className="rounded-[28px] bg-white p-8 outline-none md:p-10">
         <CheckCircle2Icon className="size-10 text-good-text" aria-hidden="true" />
-        <h2 className="mt-4 text-[32px] font-semibold tracking-tight">{t('success.title', { name: state.contactName })}</h2>
-        <p className="mt-2 text-muted">{t('success.body', { hotel: state.hotelName, id: state.leadId })}</p>
+        <h2 className="mt-4 text-[32px] font-semibold tracking-tight">{t('success.title', { name: sent.contactName })}</h2>
+        <p className="mt-2 text-muted">{t('success.body', { hotel: sent.hotelName, id: state.leadId })}</p>
         <h3 className="mt-8 font-sans text-[17px] font-semibold">{t('success.next')}</h3>
         <ol className="mt-3 grid gap-3">
           {(['reply', 'call', 'quote'] as const).map((s, i) => (
@@ -139,10 +152,10 @@ function FormRound({ action, prefill, onAgain }: { action: Action; prefill: Part
         ref={summaryRef}
         tabIndex={-1}
         role="alert"
-        className={cn('mt-4 rounded-xl bg-destructive/10 px-4 py-3 text-[15px] text-destructive outline-none', !(hasErrors || state.status === 'error') && 'sr-only')}
+        className={cn('mt-4 rounded-xl bg-destructive/10 px-4 py-3 text-[15px] text-destructive outline-none', !(hasErrors || (state && !state.ok)) && 'sr-only')}
       >
-        {state.status === 'error' && state.formError === 'server'
-          ? t('errors.server', { email: siteConfig.contactEmail })
+        {state && !state.ok && !state.fieldErrors
+          ? t('errors.server', { email: CONTACT_EMAIL })
           : hasErrors
             ? t('errors.summary')
             : ''}

@@ -1,17 +1,12 @@
 // Role 3: Sources page helpers.
 import { describe, expect, it } from 'vitest';
-import { demoResult } from './demo';
-import { assumptionStatus, assumptionValue, splitSource } from './sources';
+import { ASSUMPTIONS } from '@/content/method';
+import { assumptionValue, splitSource, STATUS_BADGE } from './sources';
 
-describe('assumption status', () => {
-  it('reads "Estimated" from the engine note, "Sourced" otherwise', () => {
-    expect(assumptionStatus({ source: 'ESTIMATE: typical fan loads' })).toBe('estimated');
-    expect(assumptionStatus({ source: 'IPCC default 56.1 t CO2/TJ' })).toBe('sourced');
-  });
-  it('gives every engine assumption a status', () => {
-    const statuses = demoResult().assumptions.map(assumptionStatus);
-    expect(statuses.length).toBeGreaterThan(10);
-    expect(new Set(statuses)).toEqual(new Set(['sourced', 'estimated']));
+describe('assumption status badges', () => {
+  it('has a badge colour for every status the method uses', () => {
+    for (const a of ASSUMPTIONS) expect(STATUS_BADGE[a.status], a.id).toBeDefined();
+    expect(STATUS_BADGE).toEqual({ sourced: 'good', estimated: 'maybe', unconfirmed: 'weak' });
   });
 });
 
@@ -22,13 +17,8 @@ describe('splitSource', () => {
     expect(r.text).not.toMatch(/https?:/);
     expect(r.text).toMatch(/^DOE fact sheet/);
   });
-  it('keeps every engine link as https and drops trailing punctuation', () => {
-    for (const a of demoResult().assumptions) {
-      for (const u of splitSource(a.source).urls) {
-        expect(u).toMatch(/^https:\/\//);
-        expect(u).not.toMatch(/[.,;]$/);
-      }
-    }
+  it('leaves no raw URL in any assumption text', () => {
+    for (const a of ASSUMPTIONS) expect(splitSource(a.source).text, a.id).not.toMatch(/https?:\/\//);
   });
 });
 

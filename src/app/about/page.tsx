@@ -5,11 +5,11 @@ import { existsSync } from 'node:fs';
 import path from 'node:path';
 import Image from 'next/image';
 import { getTranslations } from 'next-intl/server';
-import { siteConfig } from '@/config/site';
 import { Button } from '@/components/ui/button';
 import { PageHero } from '@/components/marketing/PageHero';
 import { Section, SectionHeading, Lede } from '@/components/marketing/Section';
 import { Reveal } from '@/components/marketing/Reveal';
+import { CONTACT_EMAIL } from '@/components/marketing/content';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('marketing.about.meta');
@@ -88,7 +88,7 @@ export default async function AboutPage() {
             <Link href="/request-study">{t('contact.primary')}</Link>
           </Button>
           <Button asChild variant="chevron" size="lg">
-            <a href={`mailto:${siteConfig.contactEmail}`}>{t('contact.email', { email: siteConfig.contactEmail })}</a>
+            <a href={`mailto:${CONTACT_EMAIL}`}>{t('contact.email', { email: CONTACT_EMAIL })}</a>
           </Button>
         </div>
       </Section>

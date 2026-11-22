@@ -1,0 +1,12 @@
+{
+  "verdicts": {
+    "goodFit": "Good fit",
+    "possibleFit": "Possible fit, needs a study",
+    "weakFit": "Weak fit"
+  },
+  "warnings": {
+    "lowFullLoadHours": "Only {hours, number} full-load hours a year (below {threshold, number}).",
+    "lowPrimaryEnergySaving": "Primary energy saving below {threshold, number, percent}: not high-efficiency cogeneration under the EU test.",
+    "longPayback": "Central payback above {threshold, number} years."
+  }
+}

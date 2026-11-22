@@ -1,11 +1,14 @@
 // Role 3 (#24): pipeline filters, KPIs and relative dates.
 import { beforeEach, describe, expect, it } from 'vitest';
-import { resetFakeDb, store } from '@/lib/db/fake';
-import { applyFilters, filtersHref, kpis, leadVerdict, parseFilters, quarterStart, timeAgo, withFilter } from './pipeline';
+import { db, resetFakeDb } from '@/lib/db/fake/memory';
+import { DEMO_USERS } from '@/lib/db/fake/seed';
+import { applyFilters, filtersHref, kpis, leadVerdict, parseFilters, quarterStart, timeAgo, wonDate, withFilter } from './pipeline';
+
+const ME = DEMO_USERS.mohamed.id;
 
 const NOW = new Date('2026-11-22T12:00:00Z');
 
-beforeEach(() => resetFakeDb(NOW.getTime()));
+beforeEach(() => resetFakeDb());
 
 describe('filters in the URL', () => {
   it('parses known values and ignores the rest', () => {
@@ -30,10 +33,10 @@ describe('filters in the URL', () => {
 
 describe('applyFilters', () => {
   it('combines status, city, verdict and "assigned to me"', () => {
-    const leads = store().leads;
-    expect(applyFilters(leads, {}, 'mohamed')).toHaveLength(17);
+    const leads = db().leads;
+    expect(applyFilters(leads, {}, ME)).toHaveLength(17);
     expect(applyFilters(leads, { status: 'new' }, null)).toHaveLength(5);
-    expect(applyFilters(leads, { status: 'new', mine: true }, 'mohamed').map((l) => l.id).sort()).toEqual(['L-1048', 'L-1052']);
+    expect(applyFilters(leads, { status: 'new', mine: true }, ME).map((l) => l.id).sort()).toEqual(['L-1048', 'L-1052']);
     const weakDjerba = applyFilters(leads, { city: 'djerba', verdict: 'weak' }, null);
     for (const l of weakDjerba) expect([l.city, leadVerdict(l)]).toEqual(['djerba', 'weak']);
     expect(applyFilters(leads, { city: 'tozeur', status: 'lost' }, null)).toEqual([]);
@@ -42,7 +45,12 @@ describe('applyFilters', () => {
 
 describe('kpis', () => {
   it('counts open leads, new this week, won this quarter and the win rate', () => {
-    const k = kpis(store().leads, NOW);
+    const wonAt: Record<string, string> = {};
+    for (const l of db().leads.filter((x) => x.status === 'won')) {
+      const at = wonDate({ events: db().events.filter((e) => e.leadId === l.id) });
+      if (at) wonAt[l.id] = at;
+    }
+    const k = kpis(db().leads, NOW, wonAt);
     expect(k.open).toBe(13);
     expect(k.newLast7).toBe(5);
     expect(k.closed).toBe(4);

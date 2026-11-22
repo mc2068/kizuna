@@ -1,7 +1,7 @@
 // Role 3: marketing pages get their numbers from the engine or method.ts, never from the copy.
 import { describe, expect, it } from 'vitest';
 import marketing from '../../../messages/en/marketing.json';
-import { DEMO_INPUT, assumption, demoResult, inputQuery, requestStudyHref, toolHref } from './demo';
+import { DEMO_INPUT, centralParam, demoResult, inputQuery, requestStudyHref, toolHref } from './demo';
 
 /** Every string in a message tree, with its path. */
 function strings(o: unknown, at = ''): [string, string][] {
@@ -23,10 +23,9 @@ describe('demo helpers', () => {
     expect([r.scenarios.favourable.paybackYears, r.scenarios.central.paybackYears, r.scenarios.unfavourable.paybackYears]).toEqual([5, 9, 21.5]);
     expect(r.verdict).toBe('possible fit, needs a study');
   });
-  it('reads efficiencies from the engine assumptions', () => {
-    const r = demoResult();
-    expect(assumption(r, 'Engine electrical efficiency').central).toBe(0.38);
-    expect(() => assumption(r, 'No such thing')).toThrow();
+  it('reads efficiencies from the engine parameters', () => {
+    expect(centralParam('engineElecEff')).toBe(0.38);
+    expect(centralParam('engineThermalEff')).toBe(0.43);
   });
   it('builds tool and study links the form can prefill from', () => {
     expect(inputQuery(DEMO_INPUT)).toBe('rooms=300&city=djerba&pool=1');
@@ -40,7 +39,8 @@ describe('demo helpers', () => {
 
 describe('copy rules (messages/en/marketing.json)', () => {
   it('has no numbers typed into the copy: they come from the engine or method.ts', () => {
-    const offenders = strings(marketing).filter(([, s]) => typedNumber(s));
+    // The privacy notice quotes a law number (2004-63); it is legal text, not a figure.
+    const offenders = strings(marketing).filter(([at, s]) => !at.startsWith('privacy.') && typedNumber(s));
     expect(offenders).toEqual([]);
   });
   it('never promises blackout cover (island mode is not modelled)', () => {

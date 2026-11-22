@@ -38,7 +38,6 @@ export function SiteFooter() {
   const t = useTranslations('common');
   const pathname = usePathname() ?? '/';
   if (isAdminPath(pathname)) return null;
-  const year = new Date().getFullYear();
 
   return (
     <footer data-site-footer className="border-t border-line/70 bg-tile text-[13px] text-muted">
@@ -65,7 +64,7 @@ export function SiteFooter() {
         </div>
         <div className="mt-10 flex flex-col gap-2 border-t border-line pt-6 sm:flex-row sm:justify-between">
           <p>{t('footer.disclaimer')}</p>
-          <p className="shrink-0">{t('footer.copyright', { year, name: siteConfig.name })}</p>
+          <p className="shrink-0">{t('footer.copyright', { name: siteConfig.name })}</p>
         </div>
       </div>
     </footer>

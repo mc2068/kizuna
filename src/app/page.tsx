@@ -25,7 +25,7 @@ export default function HomePage() {
     <main id="main">
       <Hero demo={demo} />
       <DemoBand demo={demo} />
-      <Flow demo={demo} />
+      <Flow />
       <Honesty />
       <ScreenCta />
       <WhatMoves />

@@ -1,4 +1,5 @@
 'use client';
+/* eslint-disable react/jsx-no-literals -- dev-only showcase, deliberately not translated */
 
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';

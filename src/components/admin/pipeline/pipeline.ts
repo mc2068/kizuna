@@ -1,6 +1,6 @@
 // Role 3 (#24): pure helpers for the admin pipeline. Filters live in the URL search params.
 import { CITIES, type City } from '@/lib/engine';
-import type { Lead, LeadStatus } from '@/lib/db/types';
+import type { Lead, LeadDetail, LeadStatus } from '@/lib/db/types';
 import { verdictTone, type VerdictTone } from '@/lib/present';
 
 export const STATUSES: LeadStatus[] = ['new', 'contacted', 'quoted', 'won', 'lost'];
@@ -63,8 +63,11 @@ export function quarterStart(now: Date): Date {
 
 export type Kpis = { open: number; newLast7: number; wonThisQuarter: number; closed: number; winRate: number | null; quarterStart: Date };
 
-/** The KPI strip: open leads, new in the last 7 days, won this quarter, win rate of closed leads. */
-export function kpis(leads: Lead[], now = new Date()): Kpis {
+/**
+ * The KPI strip: open leads, new in the last 7 days, won this quarter, win rate of closed leads.
+ * wonAt: when each won lead was won (the 'status' event to 'won' in its history).
+ */
+export function kpis(leads: Lead[], now = new Date(), wonAt: Record<string, string> = {}): Kpis {
   const weekAgo = now.getTime() - 7 * 86_400_000;
   const q = quarterStart(now);
   const won = leads.filter((l) => l.status === 'won');
@@ -73,7 +76,7 @@ export function kpis(leads: Lead[], now = new Date()): Kpis {
   return {
     open: leads.filter((l) => OPEN.includes(l.status)).length,
     newLast7: leads.filter((l) => new Date(l.createdAt).getTime() >= weekAgo).length,
-    wonThisQuarter: won.filter((l) => new Date(l.statusChangedAt) >= q).length,
+    wonThisQuarter: won.filter((l) => wonAt[l.id] && new Date(wonAt[l.id]) >= q).length,
     closed,
     winRate: closed ? won.length / closed : null,
     quarterStart: q,
@@ -87,4 +90,12 @@ export function timeAgo(iso: string, now = new Date()): string {
   if (Math.abs(days) < 14) return rtf.format(days, 'day');
   if (Math.abs(days) < 60) return rtf.format(Math.round(days / 7), 'week');
   return rtf.format(Math.round(days / 30), 'month');
+}
+
+/** When a lead was won: the latest 'status' event that moved it to 'won'. */
+export function wonDate(detail: Pick<LeadDetail, 'events'>): string | null {
+  const ev = detail.events
+    .filter((e) => e.kind === 'status' && e.data.to === 'won')
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))[0];
+  return ev?.createdAt ?? null;
 }

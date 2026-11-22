@@ -1,6 +1,8 @@
+/* eslint-disable react/jsx-no-literals -- dev-only showcase, deliberately not translated */
 // Role 3: every design-system component on one page. Development only (404 in production).
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { getTranslations } from 'next-intl/server';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,8 +13,9 @@ import { Rings } from '@/components/marketing/Rings';
 import { RangeRail } from '@/components/marketing/RangeRail';
 import { coverage } from '@/components/marketing/coverage';
 import { sizeHotel } from '@/lib/engine';
-import { formatRange, verdictLabel, verdictTone } from '@/lib/present';
+import { verdictTone } from '@/lib/present';
 import { Demos } from './Demos';
+import { rangeText } from '@/components/marketing/format';
 
 export const metadata: Metadata = { title: 'UI kit', robots: { index: false } };
 
@@ -30,8 +33,9 @@ function Block({ title, children }: { title: string; children: React.ReactNode }
   );
 }
 
-export default function DevUiPage() {
+export default async function DevUiPage() {
   if (process.env.NODE_ENV === 'production') notFound();
+  const tv = await getTranslations('common.verdict');
   const demo = sizeHotel({ rooms: 300, city: 'djerba', pool: true, elecPrice: null });
   const s = demo.scenarios;
   const cov = coverage(demo);
@@ -62,7 +66,7 @@ export default function DevUiPage() {
           <Lede align="left">Lede: one gas engine on site makes electricity, hot water and cooling.</Lede>
           <p className="mt-4">
             Body 17/1.47 with a footnote
-            <Footnote id="doe-recip" />. Numbers are tabular: <span className="tabular">1,750,000 TND</span>.
+            <Footnote id="doe-chp-engines" />. Numbers are tabular: <span className="tabular">1,750,000 TND</span>.
           </p>
         </Block>
 
@@ -134,7 +138,7 @@ export default function DevUiPage() {
             {`<RangeRail title="Payback" favourable={5} central={9} unfavourable={21.5} unit="yrs" max={25} />`}
           </pre>
           <p className="mt-4 text-muted">
-            {verdictLabel(demo.verdict)} ({verdictTone(demo.verdict)}), payback {formatRange(s, 'paybackYears', 'years')}.
+            {tv(verdictTone(demo.verdict))} ({verdictTone(demo.verdict)}), payback {rangeText(s, 'paybackYears')}.
           </p>
         </Block>
 

@@ -5,15 +5,15 @@ import { getTranslations } from 'next-intl/server';
 import {
   CheckIcon, XIcon, LayersIcon, BadgeCheckIcon, BookOpenIcon, MapPinIcon, ReceiptTextIcon, HardHatIcon, FileTextIcon,
 } from 'lucide-react';
-import { tunisiaFacts, verdictRules } from '@/content/method';
-import { formatNumber } from '@/lib/present';
+import { TUNISIA_FACTS as tunisiaFacts, VERDICT_RULES as verdictRules } from '@/components/marketing/content';
 import { Button } from '@/components/ui/button';
 import { PageHero } from '@/components/marketing/PageHero';
 import { Section, SectionHeading, Lede } from '@/components/marketing/Section';
 import { EnergyFlow, type FlowLabels } from '@/components/marketing/EnergyFlow';
 import { Footnote } from '@/components/marketing/Footnote';
 import { Reveal } from '@/components/marketing/Reveal';
-import { assumption, demoResult } from '@/components/marketing/demo';
+import { centralParam } from '@/components/marketing/demo';
+import { num } from '@/components/marketing/format';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('marketing.howItWorks.meta');
@@ -22,9 +22,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function HowItWorksPage() {
   const t = await getTranslations('marketing.howItWorks');
-  const demo = demoResult();
-  const elec = Math.round(assumption(demo, 'Engine electrical efficiency').central * 100);
-  const heat = Math.round(assumption(demo, 'Engine useful heat recovery').central * 100);
+  const elec = Math.round(centralParam('engineElecEff') * 100);
+  const heat = Math.round(centralParam('engineThermalEff') * 100);
   const loss = 100 - elec - heat;
 
   const d = (k: string, v?: Record<string, number>) => t(`diagram.${k}`, v);
@@ -48,7 +47,7 @@ export default async function HowItWorksPage() {
       values: {
         good: verdictRules.goodMaxYears,
         possible: verdictRules.possibleMaxYears,
-        hours: formatNumber(verdictRules.minFullLoadHours, 0),
+        hours: num(verdictRules.minFullLoadHours, 0),
       },
     },
     { key: 'sources', icon: BookOpenIcon, values: {} },
@@ -74,7 +73,7 @@ export default async function HowItWorksPage() {
           caption={
             <>
               {t('diagram.caption', { total: elec + heat })}
-              <Footnote id="doe-recip" />
+              <Footnote id="doe-chp-engines" />
               <Footnote id="epa-catalog" />
             </>
           }

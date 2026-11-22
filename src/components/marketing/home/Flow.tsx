@@ -1,23 +1,22 @@
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 import { FlameIcon, ZapIcon, DropletsIcon, SnowflakeIcon } from 'lucide-react';
-import type { SizingResult } from '@/lib/engine';
 import { Section, SectionHeading, Lede } from '../Section';
 import { Footnote } from '../Footnote';
 import { Reveal } from '../Reveal';
-import { assumption } from '../demo';
+import { centralParam } from '../demo';
 import { cn } from '@/lib/utils';
 
 /** "One engine. Three jobs." The two efficiencies come from the engine's own assumptions. */
-export async function Flow({ demo }: { demo: SizingResult }) {
+export async function Flow() {
   const t = await getTranslations('marketing.home.flow');
-  const elecPct = Math.round(assumption(demo, 'Engine electrical efficiency').central * 100);
-  const heatPct = Math.round(assumption(demo, 'Engine useful heat recovery').central * 100);
+  const elecPct = Math.round(centralParam('engineElecEff') * 100);
+  const heatPct = Math.round(centralParam('engineThermalEff') * 100);
   const steps = [
     { key: 'gas', icon: FlameIcon, tint: 'bg-tile text-ink', values: {} },
-    { key: 'power', icon: ZapIcon, tint: 'bg-elec/15 text-elec-text', values: { pct: elecPct }, ref: 'doe-recip' },
-    { key: 'heat', icon: DropletsIcon, tint: 'bg-heat/15 text-heat-text', values: { pct: heatPct }, ref: 'doe-recip' },
-    { key: 'cold', icon: SnowflakeIcon, tint: 'bg-cool/15 text-cool-text', values: {}, ref: 'doe-absorption' },
+    { key: 'power', icon: ZapIcon, tint: 'bg-elec/15 text-elec-text', values: { pct: elecPct }, ref: 'doe-chp-engines' },
+    { key: 'heat', icon: DropletsIcon, tint: 'bg-heat/15 text-heat-text', values: { pct: heatPct }, ref: 'doe-chp-engines' },
+    { key: 'cold', icon: SnowflakeIcon, tint: 'bg-cool/15 text-cool-text', values: {}, ref: 'doe-absorption-chiller' },
   ] as const;
 
   return (

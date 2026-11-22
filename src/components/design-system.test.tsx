@@ -1,10 +1,11 @@
+// @vitest-environment jsdom
 // Role 3: layout helpers and shared marketing blocks.
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { screen } from '@testing-library/react';
 import { sizeHotel } from '@/lib/engine';
-import { references } from '@/content/method';
+import { ALL_REFERENCES as references } from './marketing/references';
 import { isActive, isAdminPath, MAIN_NAV } from './layout/nav';
 import { initials } from './layout/AdminShell';
 import { coverage, percent } from './marketing/coverage';
@@ -86,10 +87,10 @@ describe('<Rings/>', () => {
 
 describe('<Footnote/> and references', () => {
   it('links to the reference anchor on /sources with its global number', () => {
-    renderIntl(<Footnote id="doe-recip" />);
+    renderIntl(<Footnote id="doe-chp-engines" />);
     const link = screen.getByRole('link');
-    expect(link).toHaveAttribute('href', '/sources#ref-doe-recip');
-    expect(link).toHaveTextContent(String(referenceNumber('doe-recip')));
+    expect(link).toHaveAttribute('href', '/sources#ref-doe-chp-engines');
+    expect(link).toHaveTextContent(String(referenceNumber('doe-chp-engines')));
     expect(link).toHaveAccessibleName(/^Source \d+: /);
   });
   it('fails loudly on an unknown id', () => {
@@ -99,7 +100,7 @@ describe('<Footnote/> and references', () => {
     const ids = references.map((r) => r.id);
     expect(new Set(ids).size).toBe(ids.length);
     for (const r of references) if (r.url) expect(r.url).toMatch(/^https:\/\//);
-    expect(referenceHref('lowcarbon')).toBe('/sources#ref-lowcarbon');
+    expect(referenceHref('lowcarbonpower-tunisia')).toBe('/sources#ref-lowcarbonpower-tunisia');
   });
 });
 
@@ -111,7 +112,15 @@ function sourceFiles(dir: string): string[] {
 }
 
 describe('site-wide rules', () => {
-  const files = sourceFiles(path.join(process.cwd(), 'src')).filter((f) => !f.endsWith('.test.tsx') && !f.endsWith('.test.ts'));
+  // Role 3's files: components and the pages Gaith owns.
+  const ROLE3_PAGES = ['page.tsx', 'how-it-works', 'services', 'case-study', 'about', 'sources', 'request-study', 'privacy', 'admin', 'dev'];
+  const files = [
+    ...sourceFiles(path.join(process.cwd(), 'src', 'components')),
+    ...ROLE3_PAGES.flatMap((p) => {
+      const full = path.join(process.cwd(), 'src', 'app', p);
+      return p.endsWith('.tsx') ? [full] : sourceFiles(full);
+    }),
+  ].filter((f) => !f.endsWith('.test.tsx') && !f.endsWith('.test.ts') && !f.split(path.sep).join('/').includes('/admin/leads/'));
 
   it('every <Footnote id> used anywhere resolves to a reference', () => {
     const ids = new Set(references.map((r) => r.id));

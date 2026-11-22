@@ -1,15 +1,27 @@
 import { getTranslations } from 'next-intl/server';
-import { sensitivity } from '@/content/method';
-import { formatNumber } from '@/lib/present';
+import { SENSITIVITY } from '@/content/method';
+import { PARAMS } from '@/lib/engine';
+import { num as formatNumber } from './format';
 import { cn } from '@/lib/utils';
 
 /**
  * "What moves the answer": one bar per input, from the favourable to the unfavourable payback,
- * around the central case. Data from src/content/method.ts (sensitivity).
+ * around the central case. Data from SENSITIVITY in src/content/method.ts: the six inputs that move it most.
  */
 export async function Tornado({ tone = 'light', className }: { tone?: 'light' | 'dark'; className?: string }) {
   const t = await getTranslations('marketing.tornado');
-  const { baselineYears, rows } = sensitivity;
+  const baselineYears = SENSITIVITY.centralPaybackYears;
+  const rows = SENSITIVITY.rows.slice(0, 6).map((r) => {
+    const p = PARAMS[r.id];
+    const unit = p.unit === 'fraction' ? '' : ` ${p.unit}`;
+    const show = (v: number) => (p.unit === 'fraction' ? `${Math.round(v * 100)}%` : formatNumber(v, 3));
+    return {
+      input: r.label,
+      values: `${show(p.values[0])} / ${show(p.values[2])}${unit}`,
+      unfavourableYears: r.unfavourablePaybackYears,
+      favourableYears: r.favourablePaybackYears,
+    };
+  });
   const all = rows.flatMap((r) => [r.favourableYears, r.unfavourableYears]);
   const lo = Math.floor(Math.min(...all, baselineYears) - 1);
   const hi = Math.ceil(Math.max(...all, baselineYears) + 1);

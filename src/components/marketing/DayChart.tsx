@@ -4,7 +4,18 @@ import type { HourRow } from '@/lib/engine';
  * Static summary of one typical day: the hotel's electricity demand (grey area) and what the engine
  * supplies (orange area), hour by hour. A light stand-in until Ahmed's <HourlyChart/> can be reused.
  */
-export function DayChart({ rows, label, hoursLabel, kwLabel }: { rows: HourRow[]; label: string; hoursLabel: string; kwLabel: string }) {
+export function DayChart({
+  rows,
+  label,
+  kwLabel,
+  hourTick,
+}: {
+  rows: HourRow[];
+  label: string;
+  kwLabel: string;
+  /** Label for an hour tick, e.g. (6) => "06h". */
+  hourTick: (h: string) => string;
+}) {
   const W = 480;
   const H = 220;
   const pad = { l: 40, r: 8, t: 10, b: 28 };
@@ -30,13 +41,12 @@ export function DayChart({ rows, label, hoursLabel, kwLabel }: { rows: HourRow[]
       <path d={area((r) => r.engineElec)} fill="var(--elec)" opacity={0.85} />
       {[0, 6, 12, 18, 23].map((h) => (
         <text key={h} x={x(h)} y={H - 8} textAnchor="middle" fontSize={11} fill="var(--muted)">
-          {String(h).padStart(2, '0')}h
+          {hourTick(String(h).padStart(2, '0'))}
         </text>
       ))}
       <text x={4} y={pad.t + 4} fontSize={11} fill="var(--muted)">
         {kwLabel}
       </text>
-      <title>{`${label} (${hoursLabel})`}</title>
     </svg>
   );
 }

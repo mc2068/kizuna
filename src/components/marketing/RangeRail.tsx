@@ -1,6 +1,6 @@
 import { useTranslations } from 'next-intl';
-import { formatValue } from '@/lib/present';
 import { cn } from '@/lib/utils';
+import { valueText } from './format';
 
 export type RangeRailProps = {
   favourable: number;
@@ -39,7 +39,7 @@ export function RangeRail({
   const pct = (v: number) => Math.min(100, Math.max(0, ((v - min) / (top - min || 1)) * 100));
   const lo = Math.min(favourable, unfavourable);
   const hi = Math.max(favourable, unfavourable);
-  const f = (v: number) => formatValue(v, unit);
+  const f = (v: number) => valueText(v, unit);
   const l = labels ?? { favourable: f(favourable), central: f(central), unfavourable: f(unfavourable) };
   const dark = tone === 'dark';
   const left = pct(lo);

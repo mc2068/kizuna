@@ -1,11 +1,13 @@
-import type { Assumption } from '@/lib/engine';
+// Role 3: helpers for the Sources page. Statuses come from method.ts (ASSUMPTIONS), set by Hamza from
+// docs/research/assumptions-audit.md.
+import type { AssumptionStatus } from '@/content/method';
 
-export type AssumptionStatus = 'sourced' | 'estimated';
-
-/** The engine marks its own reasoning with "ESTIMATE" in the source note. */
-export function assumptionStatus(a: Pick<Assumption, 'source'>): AssumptionStatus {
-  return /\bESTIMATE\b/.test(a.source) ? 'estimated' : 'sourced';
-}
+/** Badge colour per assumption status. */
+export const STATUS_BADGE: Record<AssumptionStatus, 'good' | 'maybe' | 'weak'> = {
+  sourced: 'good',
+  estimated: 'maybe',
+  unconfirmed: 'weak',
+};
 
 /** Split an engine source note into readable text and the https links it contains. */
 export function splitSource(source: string): { text: string; urls: string[] } {
@@ -20,7 +22,7 @@ export function splitSource(source: string): { text: string; urls: string[] } {
   return { text, urls: Array.from(new Set(urls)) };
 }
 
-/** Engine values are fractions for efficiencies and shares: show them as written in the engine. */
+/** Values as the engine writes them, up to three decimals, en-GB. */
 export function assumptionValue(v: number): string {
-  return new Intl.NumberFormat('en-US', { maximumFractionDigits: 3 }).format(v);
+  return new Intl.NumberFormat('en-GB', { maximumFractionDigits: 3 }).format(v);
 }

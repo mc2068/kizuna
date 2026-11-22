@@ -1,18 +1,25 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const PORT = 3100;
+const port = Number(process.env.PORT ?? 3000);
+
+// #26 grows this into the full suite (mobile project, Supabase helpers).
 export default defineConfig({
   testDir: './e2e',
-  timeout: 30_000,
-  retries: process.env.CI ? 1 : 0,
-  use: { baseURL: `http://localhost:${PORT}`, trace: 'retain-on-failure' },
+  fullyParallel: true,
+  retries: 0,
+  reporter: process.env.CI ? [['html', { open: 'never' }], ['list']] : 'list',
+  use: { baseURL: `http://localhost:${port}`, trace: 'off' },
   projects: [
-    { name: 'desktop', use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 900 } } },
+    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+    // Role 3: the pages are checked at phone width too (360 px).
     { name: 'phone', use: { ...devices['Desktop Chrome'], viewport: { width: 360, height: 740 }, hasTouch: true } },
   ],
   webServer: {
-    command: `pnpm start -p ${PORT}`,
-    url: `http://localhost:${PORT}`,
+    command: `pnpm start --port ${port}`,
+    // The smoke test runs the production build on the in-memory fake (no database).
+    // FAKE_DB_USER=admin signs the fake in as the demo admin, so the admin pipeline can be tested.
+    env: { ALLOW_FAKE_DB: '1', FAKE_DB_USER: 'admin' },
+    url: `http://localhost:${port}`,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
   },

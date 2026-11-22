@@ -16,8 +16,13 @@ export type HeaderUser = { id: string; email: string; role: 'user' | 'admin' } |
 
 /** Frosted sticky header (Contract 2). Hidden on /admin, where <AdminShell/> takes over. */
 export function SiteHeader({ user }: { user: HeaderUser }) {
-  const t = useTranslations('common');
   const pathname = usePathname() ?? '/';
+  return <SiteHeaderView user={user} pathname={pathname} />;
+}
+
+/** The header for a known path. With pathname="" (a streaming fallback) nothing is marked current. */
+export function SiteHeaderView({ user, pathname }: { user: HeaderUser; pathname: string }) {
+  const t = useTranslations('common');
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 

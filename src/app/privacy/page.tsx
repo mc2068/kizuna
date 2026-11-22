@@ -3,9 +3,10 @@ import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { siteConfig } from '@/config/site';
 import { PageHero } from '@/components/marketing/PageHero';
+import { CONTACT_EMAIL } from '@/components/marketing/content';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations('privacy.meta');
+  const t = await getTranslations('marketing.privacy.meta');
   const description = t('description', { name: siteConfig.name });
   return { title: t('title'), description, openGraph: { title: t('title'), description } };
 }
@@ -25,9 +26,9 @@ function Block({ id, title, children }: { id: string; title: string; children: R
 }
 
 export default async function PrivacyPage() {
-  const t = await getTranslations('privacy');
+  const t = await getTranslations('marketing.privacy');
   const s = (k: string, v?: Record<string, string>) => t(`sections.${k}`, v);
-  const email = siteConfig.contactEmail;
+  const email = CONTACT_EMAIL;
   const tbc = t('toBeConfirmed');
   const mail = <a href={`mailto:${email}`} className="text-link hover:underline">{email}</a>;
 
