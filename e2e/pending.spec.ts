@@ -1,0 +1,31 @@
+// The key flows whose pages are not on the default branch yet. Each is a test.fixme (reported as
+// skipped) with the steps it will check; the owner of the blocking issue turns it into a real test
+// when the page merges, using the helpers in e2e/support. See e2e/README.md.
+import { test } from '@playwright/test';
+
+test.describe('tool (#9, #10)', () => {
+  // /tool defaults show the verdict "possible fit"; change city to Tozeur and rooms to 100, the
+  // verdict and numbers update with no submit; reload restores the same inputs and result from the URL.
+  test.fixme('run the tool and see a verdict', async () => {});
+});
+
+test.describe('save and share (#21, #22, #23)', () => {
+  // Signed out on /tool -> "Save this project" with a hotel name -> sign-in by magic link
+  // (magicLinkFromInbox) -> back on /tool?resume=1 the project saves itself once -> it appears
+  // exactly once in /projects.
+  test.fixme('save a project before sign-in and find it in My projects', async () => {});
+
+  // Copy the share link from /projects, open it in a fresh signed-out context: it shows the
+  // results, no owner email, and has noindex. The PDF link answers application/pdf.
+  test.fixme('open the share link signed out and download the PDF', async () => {});
+});
+
+test.describe('study request and admin pipeline (#20, #24, #25)', () => {
+  // From /tool's CTA, /request-study is prefilled; submit with consent and see the success state.
+  // Then as an admin (signInAs SEEDED.admin) the lead is in /admin with status "new".
+  test.fixme('request a study and see it in the admin pipeline', async () => {});
+
+  // On /admin/leads/[id]: change the status to "contacted" and see it in History; upload a small
+  // PDF in Files and see it listed and downloadable.
+  test.fixme('change a lead status and upload a file as an admin', async () => {});
+});

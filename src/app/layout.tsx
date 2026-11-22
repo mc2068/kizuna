@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import type { Metadata, Viewport } from 'next';
+import { Analytics } from '@vercel/analytics/next';
 import { NextIntlClientProvider } from 'next-intl';
 import { siteConfig } from '@/config/site';
 import { SiteHeaderView } from '@/components/layout/SiteHeader';
@@ -38,6 +39,9 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
             <Toaster />
           </TooltipProvider>
         </NextIntlClientProvider>
+        {/* Vercel Web Analytics: cookie-free, no consent banner. Only on Vercel, where the
+            /_vercel/insights script exists; elsewhere (local, CI) it would 404. */}
+        {process.env.VERCEL === '1' && <Analytics />}
       </body>
     </html>
   );

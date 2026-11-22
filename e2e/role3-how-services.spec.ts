@@ -11,7 +11,7 @@ test.describe('how it works', () => {
     const box = await visible.boundingBox();
     expect(box).not.toBeNull();
     // Wide diagram on desktop, tall one on phones.
-    if (info.project.name === 'chromium') expect(box!.width).toBeGreaterThan(box!.height);
+    if (info.project.name === 'role3-desktop') expect(box!.width).toBeGreaterThan(box!.height);
     else expect(box!.height).toBeGreaterThan(box!.width);
     for (const node of ['gas', 'engine', 'elec', 'heat', 'hotWater', 'chiller', 'cold', 'loss']) {
       await expect(visible.locator(`[data-node="${node}"]`)).toHaveCount(1);

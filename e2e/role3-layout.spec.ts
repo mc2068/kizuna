@@ -1,6 +1,6 @@
 // Role 3 (Gaith): header, footer and AdminShell on every page, at 1440 and 360 px.
 import { expect, test } from '@playwright/test';
-import { PUBLIC_PAGES } from './role3-pages';
+import { asAdmin, PUBLIC_PAGES } from './role3-pages';
 
 test.describe('layout', () => {
   for (const path of PUBLIC_PAGES) {
@@ -32,7 +32,7 @@ test.describe('layout', () => {
   });
 
   test('the mobile menu opens, lists every section and closes with Escape', async ({ page, isMobile }, info) => {
-    test.skip(info.project.name !== 'phone', 'phone only');
+    test.skip(info.project.name !== 'role3-phone', 'phone only');
     void isMobile;
     await page.goto('/');
     await expect(page.locator('[data-site-header]')).toHaveCount(1);
@@ -48,13 +48,14 @@ test.describe('layout', () => {
   });
 
   test('desktop nav marks the current page', async ({ page }, info) => {
-    test.skip(info.project.name !== 'chromium', 'desktop only');
+    test.skip(info.project.name !== 'role3-desktop', 'desktop only');
     await page.goto('/services');
     await expect(page.locator('[data-site-header]')).toHaveCount(1);
     await expect(page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Services' })).toHaveAttribute('aria-current', 'page');
   });
 
   test('admin pages use AdminShell instead of the public header and footer', async ({ page }) => {
+    await asAdmin(page);
     await page.goto('/admin');
     await expect(page.getByRole('complementary', { name: 'Admin' })).toBeVisible();
     await expect(page.locator('[data-site-header]')).toHaveCount(0);

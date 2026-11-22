@@ -1,8 +1,9 @@
 // Role 3 (Gaith): admin leads pipeline (#24), on the seeded fake data (17 leads), signed in as the demo
-// admin (FAKE_DB_USER=admin in playwright.config.ts). The redirect for non-admins is checked in Vitest. Other specs may
+// admin (FAKE_DB_USER=admin on the fake, signInAs on Supabase). The 404 for non-admins is checked in Vitest. Other specs may
 // add "new" leads to the shared in-memory store while this runs, so totals are read from the page
 // and exact counts are only asserted where those runs can't change them.
 import { expect, test, type Page } from '@playwright/test';
+import { asAdmin } from './role3-pages';
 
 async function total(page: Page): Promise<number> {
   const text = (await page.locator('[data-results-count]').textContent()) ?? '';
@@ -10,6 +11,8 @@ async function total(page: Page): Promise<number> {
 }
 
 test.describe('admin pipeline', () => {
+  test.beforeEach(({ page }) => asAdmin(page));
+
   test('shows the KPI strip, the status tiles and all lead cards', async ({ page }) => {
     await page.goto('/admin');
     await expect(page.getByRole('heading', { level: 1, name: 'Study requests' })).toBeVisible();
