@@ -5,7 +5,8 @@ import type { Scenario, ScenarioResult, Verdict } from "@/lib/engine";
 const grouped = new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 });
 
 export function formatNumber(value: number): string {
-  return grouped.format(value);
+  // Values that round to zero print as "0", never "-0".
+  return grouped.format(Math.abs(value) < 0.005 ? 0 : value);
 }
 
 /** 200000 -> "200k", 1750000 -> "1.75M" (TND, before VAT). */
@@ -32,6 +33,11 @@ export type FormattedRange = {
   lowValue: number;
   centralValue: number;
   highValue: number;
+  /** The same ends, by scenario (#10's range rails label each end). */
+  favourable: string;
+  unfavourable: string;
+  favourableValue: number;
+  unfavourableValue: number;
   unit: string;
   /** e.g. "5–21.5 yrs" */
   text: string;
@@ -56,9 +62,94 @@ export function formatRange(
     lowValue,
     highValue,
     centralValue,
+    favourable: formatValue(key, a),
+    unfavourable: formatValue(key, b),
+    favourableValue: a,
+    unfavourableValue: b,
     unit,
-    text: `${low}–${high}${unit ? ` ${unit}` : ""}`,
+    text: low === high ? `${low}${unit ? ` ${unit}` : ""}` : `${low}–${high}${unit ? ` ${unit}` : ""}`,
   };
+}
+
+// ---------------------------------------------------------------------------------------------
+// TEMPORARY (until Hamza's #12 helpers merge): extra helpers added by #10 for the full results.
+// ---------------------------------------------------------------------------------------------
+
+export type Scale = { max: number; ticks: number[] };
+
+/**
+ * Axis for a range rail: 0 to a round number at or above `value`, with 3 to 5 round ticks.
+ * `cap` stops one extreme value (e.g. a 64-year payback) from squashing the rest of the rail.
+ */
+export function niceScale(value: number, cap = Infinity): Scale {
+  const target = Math.min(Math.max(value, Number.EPSILON), cap);
+  const magnitude = 10 ** Math.floor(Math.log10(target));
+  for (const [m, step] of [
+    [1, 0.25],
+    [1.5, 0.5],
+    [2, 0.5],
+    [2.5, 0.5],
+    [3, 1],
+    [4, 1],
+    [5, 1],
+    [6, 2],
+    [8, 2],
+    [10, 2.5],
+  ] as const) {
+    const max = m * magnitude;
+    if (max >= target - 1e-9) {
+      const s = step * magnitude;
+      const ticks: number[] = [];
+      for (let v = 0; v <= max + 1e-9; v += s) ticks.push(Math.round(v / s) * s);
+      return { max, ticks };
+    }
+  }
+  return { max: target, ticks: [0, target] };
+}
+
+/** Payback rails stop at 30 years: beyond that the plant is out of the picture anyway. */
+export const PAYBACK_RAIL_CAP_YEARS = 30;
+
+const precise = new Intl.NumberFormat("en-US", { maximumFractionDigits: 4 });
+
+/** A number from the assumptions table, at full precision: fractions as %, yes/no flags as words. */
+export function formatAssumptionValue(value: number, unit: string, words: { yes: string; no: string }): string {
+  if (unit === "fraction") return `${precise.format(Math.round(value * 1000) / 10)}%`;
+  if (unit === "yes=1") return value ? words.yes : words.no;
+  return precise.format(value);
+}
+
+/** The unit shown next to an assumption: none for fractions (already %) and flags. */
+export function assumptionUnit(unit: string): string {
+  return unit === "fraction" || unit === "yes=1" || unit === "-" ? "" : unit;
+}
+
+export type SourcePart = { kind: "text"; text: string } | { kind: "link"; href: string; label: string };
+
+export function hasSourceLink(source: string): boolean {
+  return sourceParts(source).some((p) => p.kind === "link");
+}
+
+const URL_PATTERN = /https?:\/\/[^\s)]+[^\s).,;]/g;
+
+/** Splits an engine source note into text and links; a link is labelled with its host (e.g. "energy.gov"). */
+export function sourceParts(source: string): SourcePart[] {
+  const parts: SourcePart[] = [];
+  let last = 0;
+  for (const match of source.matchAll(URL_PATTERN)) {
+    const at = match.index ?? 0;
+    if (at > last) parts.push({ kind: "text", text: source.slice(last, at) });
+    let label = match[0];
+    try {
+      label = new URL(match[0]).hostname.replace(/^www\./, "");
+    } catch {
+      // keep the raw URL as the label
+    }
+    parts.push({ kind: "link", href: match[0], label });
+    last = at + match[0].length;
+  }
+  if (last < source.length) parts.push({ kind: "text", text: source.slice(last) });
+  return parts;
 }
 
 export type VerdictTone = "good" | "maybe" | "weak";
