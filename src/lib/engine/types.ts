@@ -31,11 +31,22 @@ export type ScenarioResult = {
   peakGridReliefKw: number;
 };
 
+/**
+ * A sanity check the plant failed. Never shown raw: src/lib/present turns it into the i18n message
+ * `engine.warnings.<code>` (messages/en/engine.json) with `params` as ICU values.
+ */
+export type Warning =
+  | { code: 'lowFullLoadHours'; params: { hours: number; threshold: number } }
+  | { code: 'lowPrimaryEnergySaving'; params: { pes: number; threshold: number } }
+  | { code: 'longPayback'; params: { years: number; threshold: number } };
+
+export type WarningCode = Warning['code'];
+
 export type PlantOption = {
   engineKwe: number;
   chillerKwc: number;
   verdict: Verdict;
-  warnings: string[];
+  warnings: Warning[];
   scenarios: Record<Scenario, ScenarioResult>;
 };
 

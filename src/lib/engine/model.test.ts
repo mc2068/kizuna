@@ -10,6 +10,8 @@ import {
   type City,
   type PlantOption,
   type SizingInput,
+  type SizingResult,
+  type Warning,
 } from './index';
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -161,8 +163,8 @@ describe('golden: other hotels (spec, headline option)', () => {
 
   it('100 rooms Djerba warns about low full-load hours and long payback', () => {
     expect(sizeHotel({ rooms: 100, city: 'djerba', pool: true, elecPrice: null }).warnings).toEqual([
-      'Only 2400 full-load hours a year (below 4,000).',
-      'Central payback above 10 years.',
+      { code: 'lowFullLoadHours', params: { hours: 2400, threshold: 4000 } },
+      { code: 'longPayback', params: { years: 22.5, threshold: 10 } },
     ]);
   });
 });
@@ -180,9 +182,39 @@ describe('parity with engine/model.mjs', async () => {
     for (const city of ['djerba', 'sousse', 'hammamet', 'tozeur'] as City[])
       for (const pool of [true, false])
         for (const elecPrice of [null, 0.296]) grid.push({ rooms, city, pool, elecPrice });
+  // Very cheap electricity: nothing pays back, and the only input family that fails the EU primary-energy test.
+  grid.push({ rooms: 310, city: 'djerba', pool: false, elecPrice: 0.05 });
+
+  // The only deliberate difference: the port emits { code, params } warnings, the reference English sentences.
+  const sentence = (w: Warning): string => {
+    switch (w.code) {
+      case 'lowFullLoadHours':
+        return `Only ${w.params.hours} full-load hours a year (below 4,000).`;
+      case 'lowPrimaryEnergySaving':
+        return 'Primary energy saving below 10%: not high-efficiency cogeneration under the EU test.';
+      case 'longPayback':
+        return 'Central payback above 10 years.';
+    }
+  };
+  const asReference = (o: PlantOption | null) => o && { ...o, warnings: o.warnings.map(sentence) };
+  const toReference = (r: SizingResult) => ({
+    ...r,
+    warnings: r.warnings.map(sentence),
+    options: { best: asReference(r.options.best), trigeneration: asReference(r.options.trigeneration) },
+  });
 
   it.each(grid)('%o', (input) => {
-    expect(sizeHotel(input)).toStrictEqual(ref.sizeHotel(input));
+    expect(toReference(sizeHotel(input))).toStrictEqual(ref.sizeHotel(input));
+  });
+
+  it('the grid exercises every warning code', () => {
+    const codes = new Set(
+      grid.flatMap((i) => {
+        const r = sizeHotel(i);
+        return [r, r.options.best, r.options.trigeneration].flatMap((o) => o?.warnings.map((w) => w.code) ?? []);
+      }),
+    );
+    expect([...codes].sort()).toEqual(['longPayback', 'lowFullLoadHours', 'lowPrimaryEnergySaving']);
   });
 });
 
