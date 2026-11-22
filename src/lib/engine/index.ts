@@ -2,7 +2,7 @@
 // The scaffold's src/lib/engine/fake.ts is kept for tests only.
 
 export * from './types';
-export { sizeHotel, evaluateSize, paramsFor, touSlot, CANDIDATE_SIZES, MIN_TRIGEN_CHILLER_KWC, WARN } from './model';
+export { sizeHotel, evaluateSize, evaluateWithParams, paramsFor, touSlot, CANDIDATE_SIZES, MIN_TRIGEN_CHILLER_KWC, WARN } from './model';
 export type { Evaluation } from './model';
 export { PARAMS, FIXED, STEG_TOU } from './params';
 export type { Param, ParamKey, ParamSet, TouSlot } from './params';

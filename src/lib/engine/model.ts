@@ -353,11 +353,22 @@ export function sizeHotel(input: Partial<SizingInput> = {}): SizingResult {
 
 /** Exposed for tests and the method content: evaluate a given engine size under a given scenario. */
 export function evaluateSize(opts: Partial<SizingInput>, kwe: number, scenario: Scenario): Evaluation {
+  return evaluateWithParams(opts, kwe, paramsFor(scenario));
+}
+
+/**
+ * Evaluate a given engine size with an explicit parameter set, e.g. the central case with one input moved
+ * (the sensitivity table in src/content/method.ts). Throws if the parameters break the energy balance.
+ */
+export function evaluateWithParams(opts: Partial<SizingInput>, kwe: number, p: ParamSet): Evaluation {
+  if (p.engineElecEff + p.engineThermalEff > FIXED.maxTotalEff + 1e-9) {
+    throw new Error(`total engine efficiency above ${FIXED.maxTotalEff}`);
+  }
   const input: NormalisedInput = {
     rooms: opts.rooms ?? 300,
     cityMult: CITY[opts.city ?? 'djerba'],
     pool: opts.pool ?? true,
     flatPrice: opts.elecPrice ?? null,
   };
-  return evaluate(input, kwe, paramsFor(scenario));
+  return evaluate(input, kwe, p);
 }

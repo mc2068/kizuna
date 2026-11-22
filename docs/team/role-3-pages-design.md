@@ -51,7 +51,7 @@ unconfirmed" and is never the headline. Verdicts: "good fit" (central payback <=
 study" (<= 10), "weak fit". The tool shows the trigeneration option and, when it pays back faster, a CHP-only
 option (hot water and pool heat, no chiller).
 FROZEN DEMO NUMBERS (engine v2, docs/engine/spec.md, read as favourable / central / unfavourable):
-trigeneration 200 kWe + 64 kWc, capex 1.2 / 1.75 / 2.4 M TND, savings 260k / 200k / 110k TND/yr,
+trigeneration 200 kWe + 64 kWc, capex 1.24 / 1.75 / 2.36 M TND, savings 260k / 200k / 110k TND/yr,
 payback 5 / 9 / 21.5 yrs (with FTE 3.5 / 6 / 15), CO2 avoided 260 / 210 / 70 t/yr, full-load hours
 6,100 / 5,700 / 4,900, peak grid relief ~220 kW. CHP-only: 100 kWe, payback 4.5 / 7.5 / 15.5 yrs.
 Cooling coverage is only ~3%: the value is year-round hot water and pool heat, not summer cooling.
